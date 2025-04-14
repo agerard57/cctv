@@ -158,6 +158,7 @@ export const SystemConfiguration: FC = () => {
 
       <SettingsCategoryContainer>
         <SettingsCategory settings={systemConfiguration} />
+        {/* TODO Grey the button, not making it disappear */}
         {!progress.isCCTVSystemDown && (
           <Box marginY={2}>
             <Button variant="contained" color="error" onClick={handleResetSystem}>
