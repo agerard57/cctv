@@ -1,10 +1,9 @@
-import { FC } from "react";
-import { SystemConfiguration } from "./SystemConfiguration";
 import { SettingsPageSections } from "../typings";
-import { CategoryLayout } from "../../../components";
 import { GeneralSettings } from "./GeneralSettings";
+import { SystemConfiguration } from "./SystemConfiguration";
 
-const categories = [
+// TODO Maybe do the same with control page
+export const categories = [
   {
     categoryName: SettingsPageSections.GENERAL_SETTINGS,
     content: <GeneralSettings />,
@@ -26,7 +25,3 @@ const categories = [
     content: <SystemConfiguration />,
   },
 ];
-
-export const SettingsPage: FC = () => {
-  return <CategoryLayout<SettingsPageSections> categories={categories} namespace={"SettingsPage"} />;
-};

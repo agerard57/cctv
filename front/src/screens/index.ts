@@ -1,2 +1,9 @@
 export { screens } from "./Screens";
-export { AccessLevels, AccountStatus, Shifts, UnlockedScreenPages } from "./unlockedScreen";
+export {
+  AccessLevels,
+  Shifts,
+  AccountStatus,
+  ControlCenterPageSections,
+  SettingsPageSections,
+  UnlockedScreenPages,
+} from "./unlockedScreen";

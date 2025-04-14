@@ -13,5 +13,8 @@
     "f2": "User Manager",
     "f3": "Control Center",
     "f4": "Settings"
+  },
+  "progressDialog": {
+    "percentComplete": "{{percent}}% Complete"
   }
 }

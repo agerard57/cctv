@@ -15,6 +15,7 @@ import { enableIconlessKeys, SupportedKeys } from "@/providers/keyState";
 import { ControlCard } from "./ControlCard";
 import { LoadChart } from "./LoadChart";
 import { AllMetrics } from "../ControlCenterPage";
+import { useTranslation } from "react-i18next";
 
 const styles = {
   statsGrid: {
@@ -43,6 +44,7 @@ interface Props {
 }
 
 export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics }) => {
+  const { t } = useTranslation("ControlCenterPage");
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState<boolean>(false);
 
   const { progress } = useProgress();
@@ -60,13 +62,11 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
         }
       },
       "2": () => {
-        console.log("Key 2 pressed");
         if (!isAuthDialogOpen) {
           setVentilationLightStatus((prev) => !prev);
         }
       },
       "3": () => {
-        console.log("Key 3 pressed");
         if (!isAuthDialogOpen) {
           setVentilationFanStatus((prev) => !prev);
         }
@@ -101,36 +101,48 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
   // Control button configurations
   const controls = [
     {
-      label: "Ventilation Door",
+      label: t("ventilationShaftControl.controls.ventilationDoor"),
       value: ventilationDoorStatus ? 1 : 0,
-      customDisplay: ventilationDoorStatus ? "On" : "Off",
+      customDisplay: ventilationDoorStatus
+        ? t("ventilationShaftControl.doorStatus.locked")
+        : t("ventilationShaftControl.doorStatus.unlocked"),
       threshold: 1,
       icon: <DoorFrontOutlined />,
-      buttonLabel: ventilationDoorStatus ? "Lock Ventilation Door" : "Unlock Ventilation Door",
+      buttonLabel: ventilationDoorStatus
+        ? t("ventilationShaftControl.controls.lockDoor")
+        : t("ventilationShaftControl.controls.unlockDoor"),
       onButtonClick: () => {
         setVentilationDoorStatus((prev) => !prev);
       },
       keyboardShortcut: "1",
     },
     {
-      label: "Light Status",
+      label: t("ventilationShaftControl.controls.lightStatus"),
       value: ventilationLightStatus ? 1 : 0,
-      customDisplay: ventilationLightStatus ? "On" : "Off",
+      customDisplay: ventilationLightStatus
+        ? t("ventilationShaftControl.lightStatus.on")
+        : t("ventilationShaftControl.lightStatus.off"),
       threshold: 1,
       icon: <LightbulbOutlined />,
-      buttonLabel: ventilationLightStatus ? "Turn Off Light" : "Turn On Light",
+      buttonLabel: ventilationLightStatus
+        ? t("ventilationShaftControl.controls.turnOffLight")
+        : t("ventilationShaftControl.controls.turnOnLight"),
       onButtonClick: () => {
         setVentilationLightStatus((prev) => !prev);
       },
       keyboardShortcut: "2",
     },
     {
-      label: "Fan Status",
+      label: t("ventilationShaftControl.controls.fanStatus"),
       value: ventilationFanStatus ? 1 : 0,
-      customDisplay: ventilationFanStatus ? "On" : "Off",
+      customDisplay: ventilationFanStatus
+        ? t("ventilationShaftControl.status.on")
+        : t("ventilationShaftControl.status.off"),
       threshold: 1,
       icon: <AirOutlined />,
-      buttonLabel: ventilationFanStatus ? "Turn Off Fan" : "Turn On Fan",
+      buttonLabel: ventilationFanStatus
+        ? t("ventilationShaftControl.controls.turnOffFan")
+        : t("ventilationShaftControl.controls.turnOnFan"),
       onButtonClick: () => {
         setVentilationFanStatus((prev) => !prev);
       },
@@ -141,21 +153,21 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
   // Environmental stats
   const otherStatsArray = [
     {
-      label: "Air Quality",
+      label: t("ventilationShaftControl.envStats.airQuality"),
       value: metrics.airQuality,
       unit: "%",
       threshold: 90,
       icon: <AirQualityIcon />,
     },
     {
-      label: "Humidity",
+      label: t("ventilationShaftControl.envStats.humidity"),
       value: metrics.humidity,
       unit: "%",
       threshold: 60,
       icon: <WaterDropOutlined />,
     },
     {
-      label: "Noise Level",
+      label: t("ventilationShaftControl.envStats.noiseLevel"),
       value: metrics.noiseLevel,
       unit: "dB",
       threshold: 50,

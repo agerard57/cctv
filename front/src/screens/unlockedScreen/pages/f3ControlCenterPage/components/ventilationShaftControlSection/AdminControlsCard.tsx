@@ -5,19 +5,22 @@ import { useProgress } from "@/providers";
 import { StatCard } from "../PowerStatsSection";
 import { ChargingStation, ElectricalServices } from "@mui/icons-material";
 import { ShortcutChip, ProgressDialog } from "../../../../components";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 
-const messages = [
-  "Initializing power management protocols...",
-  "Bypassing safety interlocks...",
-  "Preparing circuit isolation sequence...",
-  "Redirecting power from main grid...",
-  "Verifying ventilation shaft integrity...",
-  "Identifying electrical circuit pathways...",
-  "Applying gradual voltage reduction...",
-  "Monitoring amperage fluctuations...",
-  "Checking for residual current...",
-  "Neutralizing power surge risk...",
-  "Engaging final disconnection sequence...",
+// Convert messages array to use translations
+const getProgressMessages = (t: TFunction) => [
+  t("ventilationShaftControl.progressMessages.initPower"),
+  t("ventilationShaftControl.progressMessages.bypassSafety"),
+  t("ventilationShaftControl.progressMessages.prepareIsolation"),
+  t("ventilationShaftControl.progressMessages.redirectPower"),
+  t("ventilationShaftControl.progressMessages.verifyIntegrity"),
+  t("ventilationShaftControl.progressMessages.identifyCircuits"),
+  t("ventilationShaftControl.progressMessages.reduceVoltage"),
+  t("ventilationShaftControl.progressMessages.monitorAmperage"),
+  t("ventilationShaftControl.progressMessages.checkResidual"),
+  t("ventilationShaftControl.progressMessages.neutralizeSurge"),
+  t("ventilationShaftControl.progressMessages.finalSequence"),
 ];
 
 interface AdminControlsCardProps {
@@ -29,6 +32,7 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
   const [showSuccess, setShowSuccess] = useState(false);
   const [showProgressDialog, setShowProgressDialog] = useState(false);
   const { progress, setElectricalOutletDisconnected } = useProgress();
+  const { t } = useTranslation("ControlCenterPage");
 
   // Handler for successful authentication - now just shows progress dialog
   const handleAuthSuccess = () => {
@@ -38,7 +42,6 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
 
   // Handler for when progress completes - now shows success snackbar
   const handleProgressDone = () => {
-    console.log("AdminControls: handleProgressDone called"); // Debug log
     setShowProgressDialog(false);
     setShowSuccess(true);
     setElectricalOutletDisconnected(true);
@@ -69,16 +72,20 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
         >
           <div>
             <Typography variant="subtitle1" sx={{ fontWeight: "bold", marginBottom: 1, fontSize: "1.2rem" }}>
-              Admin Controls
+              {t("ventilationShaftControl.adminControls")}
             </Typography>
             <Typography sx={{ margin: "1vh 0", color: "#ffffffb0", lineHeight: 1.5 }}>
-              Manage the power supply to the electrical outlet in the ventilation shaft.
+              {t("ventilationShaftControl.manageDescription")}
             </Typography>
           </div>
 
           <StatCard
-            label="Electrical Outlet Status"
-            value={progress.isElectricalOutletDisconnected && !showProgressDialog ? "Off" : "On"}
+            label={t("ventilationShaftControl.outletStatus")}
+            value={
+              progress.isElectricalOutletDisconnected && !showProgressDialog
+                ? t("ventilationShaftControl.statusOff")
+                : t("ventilationShaftControl.statusOn")
+            }
             icon={<ChargingStation />}
             backgroundColor="transparent"
           />
@@ -94,7 +101,7 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
           >
             {!progress.isElectricalOutletDisconnected && (
               <Typography sx={{ color: "#ff9800", fontSize: "0.9rem", padding: "1vh 0.3vw" }}>
-                You must be an admin to make this change
+                {t("ventilationShaftControl.adminMessage")}
               </Typography>
             )}
             <Button
@@ -109,7 +116,7 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
               }}
               disabled={progress.isElectricalOutletDisconnected}
             >
-              Disconnect Electrical Outlet
+              {t("ventilationShaftControl.disconnectButton")}
               {!progress.isElectricalOutletDisconnected && <ShortcutChip shortcut="4" />}
             </Button>
           </div>
@@ -128,10 +135,10 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
           <>
             {/* TODO Change icon */}
             <ElectricalServices />
-            Disconnecting Electrical Outlet
+            {t("ventilationShaftControl.disconnectingTitle")}
           </>
         }
-        messages={messages}
+        messages={getProgressMessages(t)}
         onProgressDone={handleProgressDone}
       />
 
@@ -139,7 +146,7 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
         open={showSuccess}
         autoHideDuration={3000}
         onClose={() => setShowSuccess(false)}
-        message="Electrical outlet disconnected successfully"
+        message={t("ventilationShaftControl.successMessage")}
       />
     </>
   );

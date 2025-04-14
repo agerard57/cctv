@@ -1,1 +1,128 @@
-{}
+{
+  "powerStats": {
+    "title": "Power Stats",
+    "metrics": {
+      "voltage": "Voltage",
+      "currentLoad": "Current Load",
+      "temperature": "Temperature",
+      "powerFactor": "Power Factor",
+      "frequency": "Frequency",
+      "energyConsumption": "Energy Consumption",
+      "reactivePower": "Reactive Power",
+      "apparentPower": "Apparent Power",
+      "loadImbalance": "Load Imbalance"
+    }
+  },
+  "systemHealth": {
+    "title": "System Health",
+    "stats": {
+      "fanSpeed": "Fan Speed",
+      "systemHealth": "System Health",
+      "powerEfficiency": "Power Efficiency",
+      "batteryHealth": "Battery Health",
+      "thermalEfficiency": "Thermal Efficiency",
+      "systemStability": "System Stability"
+    },
+    "charts": {
+      "fanSpeedOverTime": "Fan Speed Over Time",
+      "systemEfficiencyOverTime": "System Efficiency Over Time",
+      "fanSpeedAxisLabel": "Speed in RPM",
+      "systemEfficiencyAxisLabel": "Efficiency in %"
+    }
+  },
+  "ventilationShaftControl": {
+    "loadChart": {
+      "title": "Current Load",
+      "currentLoad": "Current Load",
+      "remainingCapacity": "Remaining Capacity"
+    },
+    "title": "Ventilation Shaft Control",
+    "adminControls": "Admin Controls",
+    "manageDescription": "Manage the power supply to the electrical outlet in the ventilation shaft.",
+    "outletStatus": "Electrical Outlet Status",
+    "statusOn": "On",
+    "statusOff": "Off",
+    "adminMessage": "You must be an admin to make this change",
+    "disconnectButton": "Disconnect Electrical Outlet",
+    "disconnectingTitle": "Disconnecting Electrical Outlet",
+    "successMessage": "Electrical outlet disconnected successfully",
+    "progressMessages": {
+      "initPower": "Initializing power management protocols...",
+      "bypassSafety": "Bypassing safety interlocks...",
+      "prepareIsolation": "Preparing circuit isolation sequence...",
+      "redirectPower": "Redirecting power from main grid...",
+      "verifyIntegrity": "Verifying ventilation shaft integrity...",
+      "identifyCircuits": "Identifying electrical circuit pathways...",
+      "reduceVoltage": "Applying gradual voltage reduction...",
+      "monitorAmperage": "Monitoring amperage fluctuations...",
+      "checkResidual": "Checking for residual current...",
+      "neutralizeSurge": "Neutralizing power surge risk...",
+      "finalSequence": "Engaging final disconnection sequence..."
+    },
+    "controls": {
+      "ventilationDoor": "Ventilation Door",
+      "lightStatus": "Light Status",
+      "fanStatus": "Fan Status",
+      "lockDoor": "Lock Ventilation Door",
+      "unlockDoor": "Unlock Ventilation Door",
+      "turnOnLight": "Turn On Light",
+      "turnOffLight": "Turn Off Light",
+      "turnOnFan": "Turn On Fan",
+      "turnOffFan": "Turn Off Fan"
+    },
+    "envStats": {
+      "airQuality": "Air Quality",
+      "humidity": "Humidity",
+      "noiseLevel": "Noise Level"
+    },
+    "status": {
+      "on": "On",
+      "off": "Off"
+    },
+    "doorStatus": {
+      "locked": "Locked",
+      "unlocked": "Unlocked"
+    },
+    "lightStatus": {
+      "on": "On",
+      "off": "Off"
+    }
+  },
+  "units": {
+    "rpm": "RPM",
+    "percent": "%",
+    "volts": "V",
+    "celsius": "°C",
+    "hertz": "Hz",
+    "kilowattHour": "kWh",
+    "kiloVoltAmpereReactive": "kVAR",
+    "kiloVoltAmpere": "kVA"
+  },
+  "charts": {
+    "voltageOverTime": "Voltage Over Time",
+    "harmonicDistortionOverTime": "Harmonic Distortion Over Time",
+    "voltage": "Voltage",
+    "harmonicDistortion": "Harmonic Distortion",
+    "voltageAxisLabel": "Voltage (V)",
+    "harmonicDistortionAxisLabel": "Harmonic Distortion (%)",
+    "timeAxisLabel": "Time (seconds)",
+    "metricsAxisLabel": "Metrics",
+    "loadOverTime": "Load Distribution Over Time",
+    "currentLoad": "Current Load",
+    "loadAxisLabel": "Load in %"
+  },
+  "time": {
+    "now": "Now",
+    "ago": "{{time}}s ago"
+  },
+  "adminAuthentication": {
+    "title": "Admin Authentication Required",
+    "description": "This action requires administrative privileges. Please enter the PIN code and password:",
+    "userId": "User ID",
+    "password": "Password",
+    "completePinFirst": "(Complete PIN first)",
+    "invalidCredentials": "Invalid ID or password.",
+    "close": "Close",
+    "enter": "Enter"
+  }
+}

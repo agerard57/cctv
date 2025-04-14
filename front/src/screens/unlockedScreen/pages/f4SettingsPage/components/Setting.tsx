@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Typography, Switch, Slider, Select, MenuItem, Button, Box } from "@mui/material";
 import styled from "@emotion/styled";
-import { ShortcutChip } from "../../../../components";
+import { ShortcutChip } from "../../../components";
 
 const SettingContainer = styled(Box)`
   display: flex;

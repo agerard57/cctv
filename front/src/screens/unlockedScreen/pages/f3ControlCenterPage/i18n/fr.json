@@ -1,1 +1,140 @@
-{}
+{
+  "powerStats": {
+    "title": "Statistiques d'Énergie",
+    "metrics": {
+      "voltage": "Tension",
+      "currentLoad": "Charge Actuelle",
+      "temperature": "Température",
+      "powerFactor": "Facteur de Puissance",
+      "frequency": "Fréquence",
+      "energyConsumption": "Consommation d'Énergie",
+      "reactivePower": "Puissance Réactive",
+      "apparentPower": "Puissance Apparente",
+      "loadImbalance": "Déséquilibre de Charge"
+    }
+  },
+  "systemHealth": {
+    "title": "Santé du Système",
+    "stats": {
+      "fanSpeed": "Vitesse du Ventilateur",
+      "systemHealth": "Santé du Système",
+      "powerEfficiency": "Efficacité Énergétique",
+      "batteryHealth": "Santé de la Batterie",
+      "thermalEfficiency": "Efficacité Thermique",
+      "systemStability": "Stabilité du Système"
+    },
+    "charts": {
+      "fanSpeedOverTime": "Vitesse du Ventilateur dans le Temps",
+      "systemEfficiencyOverTime": "Efficacité du Système dans le Temps",
+      "fanSpeedAxisLabel": "Vitesse en tr/min",
+      "systemEfficiencyAxisLabel": "Efficacité en %"
+    }
+  },
+  "ventilationShaftControl": {
+    "loadChart": {
+      "title": "Charge Actuelle",
+      "currentLoad": "Charge Actuelle",
+      "remainingCapacity": "Capacité Restante"
+    },
+    "title": "Conduit de Ventilation",
+    "adminControls": "Contrôles Administrateur",
+    "manageDescription": "Gérer l'alimentation électrique de la prise située dans le conduit de ventilation.",
+    "outletStatus": "État de la Prise Électrique",
+    "statusOn": "Activée",
+    "statusOff": "Désactivée",
+    "adminMessage": "Vous devez être administrateur pour effectuer ce changement",
+    "disconnectButton": "Déconnecter la Prise Électrique",
+    "disconnectingTitle": "Déconnexion de la Prise Électrique",
+    "successMessage": "Prise électrique déconnectée avec succès",
+    "progressMessages": {
+      "initPower": "Initialisation des protocoles de gestion d'énergie...",
+      "bypassSafety": "Contournement des verrouillages de sécurité...",
+      "prepareIsolation": "Préparation de la séquence d'isolation du circuit...",
+      "redirectPower": "Redirection de l'énergie du réseau principal...",
+      "verifyIntegrity": "Vérification de l'intégrité du conduit de ventilation...",
+      "identifyCircuits": "Identification des voies de circuit électrique...",
+      "reduceVoltage": "Application d'une réduction progressive de tension...",
+      "monitorAmperage": "Surveillance des fluctuations d'ampérage...",
+      "checkResidual": "Vérification du courant résiduel...",
+      "neutralizeSurge": "Neutralisation du risque de surtension...",
+      "finalSequence": "Engagement de la séquence finale de déconnexion..."
+    },
+    "controls": {
+      "ventilationDoor": "Ventilation",
+      "lightStatus": "Lumière",
+      "fanStatus": "État du Ventilateur",
+      "lockDoor": "Verrouiller la Ventilation",
+      "unlockDoor": "Déverrouiller la Ventilation",
+      "turnOnLight": "Allumer la Lumière",
+      "turnOffLight": "Éteindre la Lumière",
+      "turnOnFan": "Allumer le Ventilateur",
+      "turnOffFan": "Éteindre le Ventilateur"
+    },
+    "envStats": {
+      "airQuality": "Qualité de l'Air",
+      "humidity": "Humidité",
+      "noiseLevel": "Niveau Sonore"
+    },
+    "status": {
+      "on": "Activé",
+      "off": "Désactivé"
+    },
+    "doorStatus": {
+      "locked": "Verrouillée",
+      "unlocked": "Déverrouillée"
+    },
+    "lightStatus": {
+      "on": "Allumée",
+      "off": "Éteinte"
+    }
+  },
+  "adminAuthentication": {
+    "title": "Authentification Administrateur Requise",
+    "description": "Cette action nécessite des privilèges administratifs. Veuillez saisir le code PIN et le mot de passe:",
+    "userId": "Identifiant",
+    "password": "Mot de passe",
+    "completePinFirst": "(PIN en premier)",
+    "invalidCredentials": "Identifiant ou mot de passe invalide.",
+    "close": "Fermer",
+    "enter": "Entrer"
+  },
+  "stats": {
+    "fanSpeed": "Vitesse du Ventilateur",
+    "systemHealth": "Santé du Système",
+    "powerEfficiency": "Efficacité Énergétique",
+    "batteryHealth": "Santé de la Batterie",
+    "thermalEfficiency": "Efficacité Thermique",
+    "systemStability": "Stabilité du Système"
+  },
+  "units": {
+    "rpm": "tr/min",
+    "percent": "%",
+    "volts": "V",
+    "celsius": "°C",
+    "hertz": "Hz",
+    "kilowattHour": "kWh",
+    "kiloVoltAmpereReactive": "kVAR",
+    "kiloVoltAmpere": "kVA"
+  },
+  "charts": {
+    "fanSpeedOverTime": "Vitesse du Ventilateur dans le Temps",
+    "systemEfficiencyOverTime": "Efficacité du Système dans le Temps",
+    "fanSpeedAxisLabel": "Vitesse en tr/min",
+    "systemEfficiencyAxisLabel": "Efficacité en %",
+    "voltageOverTime": "Tension au Fil du Temps",
+    "harmonicDistortionOverTime": "Distorsion Harmonique au Fil du Temps",
+    "voltage": "Tension",
+    "harmonicDistortion": "Distorsion Harmonique",
+    "voltageAxisLabel": "Tension en V",
+    "harmonicDistortionAxisLabel": "Distorsion en %",
+    "timeAxisLabel": "Temps (secondes)",
+    "metricsAxisLabel": "Métriques",
+    "loadOverTime": "Distribution de Charge dans le Temps",
+    "currentLoad": "Charge Actuelle",
+    "loadAxisLabel": "Charge en %"
+  },
+  "time": {
+    "now": "Maintenant",
+    "ago": "Il y a {{time}}s"
+  }
+}

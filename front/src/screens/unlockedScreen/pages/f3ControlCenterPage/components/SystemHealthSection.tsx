@@ -11,6 +11,8 @@ import {
 } from "@mui/icons-material";
 import { useKeyState } from "../../../../../providers";
 import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
+import { useTranslation } from "react-i18next";
+import { generateTimeLabels } from "../utils/timeHelpers";
 
 const styles = {
   statsGrid: {
@@ -47,6 +49,7 @@ interface SystemHealthProps {
 }
 
 export const SystemHealthSection: FC<SystemHealthProps> = ({ metrics, graphData }) => {
+  const { t } = useTranslation("ControlCenterPage");
   // Remove local state management since it's handled by parent
   const { updateKeyState, resetKeyStates } = useKeyState();
 
@@ -58,36 +61,54 @@ export const SystemHealthSection: FC<SystemHealthProps> = ({ metrics, graphData 
     return () => {
       resetKeyStates();
     };
-  }, [updateKeyState]);
+  }, [updateKeyState, resetKeyStates]);
 
   const statsArray = [
-    { label: "Fan Speed", value: metrics.fanSpeed, unit: "RPM", threshold: 2000, icon: <AirOutlined /> },
-    { label: "System Health", value: metrics.systemHealth, unit: "%", threshold: 100, icon: <FavoriteOutlined /> },
     {
-      label: "Power Efficiency",
+      label: t("systemHealth.stats.fanSpeed"),
+      value: metrics.fanSpeed,
+      unit: t("units.rpm"),
+      threshold: 2000,
+      icon: <AirOutlined />,
+    },
+    {
+      label: t("systemHealth.stats.systemHealth"),
+      value: metrics.systemHealth,
+      unit: t("units.percent"),
+      threshold: 100,
+      icon: <FavoriteOutlined />,
+    },
+    {
+      label: t("systemHealth.stats.powerEfficiency"),
       value: metrics.powerEfficiency,
-      unit: "%",
+      unit: t("units.percent"),
       threshold: 100,
       icon: <BatteryChargingFullOutlined />,
     },
-    { label: "Battery Health", value: metrics.batteryHealth, unit: "%", threshold: 100, icon: <BatteryStdOutlined /> },
     {
-      label: "Thermal Efficiency",
+      label: t("systemHealth.stats.batteryHealth"),
+      value: metrics.batteryHealth,
+      unit: t("units.percent"),
+      threshold: 100,
+      icon: <BatteryStdOutlined />,
+    },
+    {
+      label: t("systemHealth.stats.thermalEfficiency"),
       value: metrics.systemEfficiency,
-      unit: "%",
+      unit: t("units.percent"),
       threshold: 100,
       icon: <AcUnitOutlined />,
     },
     {
-      label: "System Stability",
+      label: t("systemHealth.stats.systemStability"),
       value: metrics.systemStability,
-      unit: "%",
+      unit: t("units.percent"),
       threshold: 100,
       icon: <VerifiedOutlined />,
     },
   ];
 
-  const timeLabels = Array.from({ length: 30 }, (_, i) => (30 - i).toString()).concat("Now");
+  const timeLabels = generateTimeLabels(30, t);
 
   return (
     <Box sx={{ padding: "2vh 0px" }}>
@@ -100,26 +121,26 @@ export const SystemHealthSection: FC<SystemHealthProps> = ({ metrics, graphData 
       <div style={styles.chartsRow}>
         <div style={styles.chartContainer}>
           <ChartCard
-            title="Fan Speed Over Time"
+            title={t("systemHealth.charts.fanSpeedOverTime")}
             labels={timeLabels}
-            data={graphData.fanSpeedHistory.filter((value): value is number => value !== null)}
-            label="Fan Speed"
-            borderColor="#7c63d5"
+            data={graphData.fanSpeedHistory.map((v) => (v === null ? 0 : v))}
+            label={t("systemHealth.stats.fanSpeed")}
+            borderColor="#5bc6ef"
             backgroundColor="rgba(76, 175, 80, 0.2)"
-            yAxisLabel="Fan Speed (RPM)"
+            yAxisLabel={t("systemHealth.charts.fanSpeedAxisLabel")}
             chartType="line"
           />
         </div>
 
         <div style={styles.chartContainer}>
           <ChartCard
-            title="System Efficiency Over Time"
+            title={t("systemHealth.charts.systemEfficiencyOverTime")}
             labels={timeLabels}
-            data={graphData.systemEfficiencyHistory.filter((value): value is number => value !== null)}
-            label="System Efficiency"
+            data={graphData.systemEfficiencyHistory.map((v) => (v === null ? 0 : v))}
+            label={t("systemHealth.stats.thermalEfficiency")}
             borderColor="#ff9800"
             backgroundColor="rgba(255, 152, 0, 0.2)"
-            yAxisLabel="System Efficiency (%)"
+            yAxisLabel={t("systemHealth.charts.systemEfficiencyAxisLabel")}
             chartType="line"
           />
         </div>

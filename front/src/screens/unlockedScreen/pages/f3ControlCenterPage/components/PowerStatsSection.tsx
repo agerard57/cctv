@@ -14,12 +14,12 @@ import {
 } from "@mui/icons-material";
 import { useKeyState } from "../../../../../providers";
 import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
+import { useTranslation } from "react-i18next";
+import { generateTimeLabels } from "../utils/timeHelpers";
 
 interface PowerStatsProps {
   metrics: {
     voltage: number;
-    currentLoad: number;
-    temperature: number;
     powerEfficiency: number;
     batteryHealth: number;
     powerFactor: number;
@@ -128,162 +128,167 @@ export const ChartCard: FC<{
   backgroundColor: string;
   yAxisLabel: string;
   chartType?: "line" | "bar"; // Add chartType prop
-}> = ({ title, labels, data, label, borderColor, backgroundColor, yAxisLabel, chartType = "line" }) => (
-  <Card
-    sx={{
-      backgroundColor: "#00000017",
-      color: "#fff",
-      height: "100%",
-      boxShadow: "none",
-    }}
-  >
-    <CardContent>
-      <Typography
-        variant="subtitle1"
-        sx={{
-          fontWeight: "bold",
-          marginBottom: 2,
-          fontSize: "1.2rem",
-          color: "#fffff",
-        }}
-      >
-        {title}
-      </Typography>
-      {chartType === "line" ? (
-        <Line
-          data={{
-            labels,
-            datasets: [
-              {
-                label,
-                data,
-                borderColor,
-                backgroundColor,
-              },
-            ],
+}> = ({ title, labels, data, label, borderColor, backgroundColor, yAxisLabel, chartType = "line" }) => {
+  const { t } = useTranslation("ControlCenterPage");
+
+  return (
+    <Card
+      sx={{
+        backgroundColor: "#00000017",
+        color: "#fff",
+        height: "100%",
+        boxShadow: "none",
+      }}
+    >
+      <CardContent>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: "bold",
+            marginBottom: 2,
+            fontSize: "1.2rem",
+            color: "#fffff",
           }}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: true,
-                labels: {
-                  font: {
-                    size: 14,
-                  },
-                  color: "#ffffffb0",
+        >
+          {title}
+        </Typography>
+        {chartType === "line" ? (
+          <Line
+            data={{
+              labels,
+              datasets: [
+                {
+                  label,
+                  data,
+                  borderColor,
+                  backgroundColor,
                 },
-              },
-            },
-            scales: {
-              x: {
-                ticks: {
-                  color: "#ffffffb0",
-                  font: {
-                    size: 14,
-                  },
-                },
-                title: {
+              ],
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
                   display: true,
-                  text: "Time (seconds)",
-                  font: {
-                    size: 14,
+                  labels: {
+                    font: {
+                      size: 14,
+                    },
+                    color: "#ffffffb0",
                   },
-                  color: "#ffffffb0",
                 },
               },
-              y: {
-                ticks: {
-                  color: "#ffffffb0",
-                  font: {
-                    size: 14,
+              scales: {
+                x: {
+                  ticks: {
+                    color: "#ffffffb0",
+                    font: {
+                      size: 14,
+                    },
+                  },
+                  title: {
+                    display: true,
+                    text: t("charts.timeAxisLabel"),
+                    font: {
+                      size: 14,
+                    },
+                    color: "#ffffffb0",
                   },
                 },
-                title: {
+                y: {
+                  ticks: {
+                    color: "#ffffffb0",
+                    font: {
+                      size: 14,
+                    },
+                  },
+                  title: {
+                    display: true,
+                    text: yAxisLabel,
+                    font: {
+                      size: 14,
+                    },
+                    color: "#ffffffb0",
+                  },
+                },
+              },
+            }}
+            style={{ maxHeight: "200px", maxWidth: "100%" }}
+          />
+        ) : (
+          <Bar
+            data={{
+              labels,
+              datasets: [
+                {
+                  label,
+                  data,
+                  backgroundColor,
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
                   display: true,
-                  text: yAxisLabel,
-                  font: {
-                    size: 14,
+                  labels: {
+                    font: {
+                      size: 14,
+                    },
+                    color: "#ffffffb0",
                   },
-                  color: "#ffffffb0",
                 },
               },
-            },
-          }}
-          style={{ maxHeight: "200px", maxWidth: "100%" }}
-        />
-      ) : (
-        <Bar
-          data={{
-            labels,
-            datasets: [
-              {
-                label,
-                data,
-                backgroundColor,
-              },
-            ],
-          }}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: true,
-                labels: {
-                  font: {
-                    size: 14,
+              scales: {
+                x: {
+                  ticks: {
+                    color: "#ffffffb0",
+                    font: {
+                      size: 14,
+                    },
                   },
-                  color: "#ffffffb0",
-                },
-              },
-            },
-            scales: {
-              x: {
-                ticks: {
-                  color: "#ffffffb0",
-                  font: {
-                    size: 14,
+                  title: {
+                    display: true,
+                    text: t("charts.metricsAxisLabel"),
+                    font: {
+                      size: 14,
+                    },
+                    color: "#ffffffb0",
                   },
                 },
-                title: {
-                  display: true,
-                  text: "Metrics",
-                  font: {
-                    size: 14,
+                y: {
+                  ticks: {
+                    color: "#ffffffb0",
+                    font: {
+                      size: 14,
+                    },
                   },
-                  color: "#ffffffb0",
+                  title: {
+                    display: true,
+                    text: yAxisLabel,
+                    font: {
+                      size: 14,
+                    },
+                    color: "#ffffffb0",
+                  },
                 },
               },
-              y: {
-                ticks: {
-                  color: "#ffffffb0",
-                  font: {
-                    size: 14,
-                  },
-                },
-                title: {
-                  display: true,
-                  text: yAxisLabel,
-                  font: {
-                    size: 14,
-                  },
-                  color: "#ffffffb0",
-                },
-              },
-            },
-          }}
-          style={{ maxHeight: "200px", maxWidth: "100%" }}
-        />
-      )}
-    </CardContent>
-  </Card>
-);
+            }}
+            style={{ maxHeight: "200px", maxWidth: "100%" }}
+          />
+        )}
+      </CardContent>
+    </Card>
+  );
+};
 
 export const PowerStatsSection: FC<PowerStatsProps> = ({ metrics, graphData }) => {
   // Remove local state and random updates since they're now handled by parent
   const { updateKeyState, resetKeyStates } = useKeyState();
+  const { t } = useTranslation("ControlCenterPage");
 
   useEffect(() => {
     updateKeyState({
@@ -293,65 +298,72 @@ export const PowerStatsSection: FC<PowerStatsProps> = ({ metrics, graphData }) =
     return () => {
       resetKeyStates();
     };
-  }, [updateKeyState]);
+  }, [updateKeyState, resetKeyStates]);
 
-  const timeLabels = Array.from({ length: 30 }, (_, i) => (30 - i).toString()).concat("Now");
+  // Replace hardcoded timeLabels with the helper function
+  const timeLabels = generateTimeLabels(30, t);
 
   const statsArray = [
-    { label: "Voltage", value: metrics.voltage, unit: "V", threshold: thresholds.voltage, icon: <BoltOutlined /> },
     {
-      label: "Current Load",
+      label: t("powerStats.metrics.voltage"),
+      value: metrics.voltage,
+      unit: t("units.volts"),
+      threshold: thresholds.voltage,
+      icon: <BoltOutlined />,
+    },
+    {
+      label: t("powerStats.metrics.currentLoad"),
       value: metrics.currentLoad,
-      unit: "%",
+      unit: t("units.percent"),
       threshold: thresholds.currentLoad,
       icon: <SpeedOutlined />,
     },
     {
-      label: "Temperature",
+      label: t("powerStats.metrics.temperature"),
       value: metrics.temperature,
-      unit: "°C",
+      unit: t("units.celsius"),
       threshold: thresholds.temperature,
       icon: <ThermostatOutlined />,
     },
     {
-      label: "Power Factor",
+      label: t("powerStats.metrics.powerFactor"),
       value: metrics.powerFactor,
       unit: "",
       threshold: thresholds.powerFactor,
       icon: <BalanceOutlined />,
     },
     {
-      label: "Frequency",
+      label: t("powerStats.metrics.frequency"),
       value: metrics.frequency,
-      unit: "Hz",
+      unit: t("units.hertz"),
       threshold: thresholds.frequency,
       icon: <WavesOutlined />,
     },
     {
-      label: "Energy Consumption",
+      label: t("powerStats.metrics.energyConsumption"),
       value: metrics.energyConsumption,
-      unit: "kWh",
+      unit: t("units.kilowattHour"),
       threshold: thresholds.energyConsumption,
       icon: <PowerOutlined />,
     },
     {
-      label: "Reactive Power",
+      label: t("powerStats.metrics.reactivePower"),
       value: metrics.reactivePower,
-      unit: "kVAR",
+      unit: t("units.kiloVoltAmpereReactive"),
       threshold: thresholds.reactivePower,
       icon: <ElectricBoltOutlined />,
     },
     {
-      label: "Apparent Power",
+      label: t("powerStats.metrics.apparentPower"),
       value: metrics.apparentPower,
-      unit: "kVA",
+      unit: t("units.kiloVoltAmpere"),
       threshold: thresholds.apparentPower,
       icon: <SettingsInputComponentOutlined />,
     },
     {
-      label: "Load Imbalance",
+      label: t("powerStats.metrics.loadImbalance"),
       value: metrics.loadImbalance,
-      unit: "%",
+      unit: t("units.percent"),
       threshold: thresholds.loadImbalance,
       icon: <CompareArrowsOutlined />,
     },
@@ -365,31 +377,28 @@ export const PowerStatsSection: FC<PowerStatsProps> = ({ metrics, graphData }) =
         ))}
       </div>
 
-      {/* TODO Graph doesnt work anymore... */}
       <div style={styles.chartsRow}>
         <div style={styles.chartContainer}>
           <ChartCard
-            title="Voltage Over Time"
+            title={t("charts.voltageOverTime")}
             labels={timeLabels}
-            /* TODO Test this GPT ass answer */
-            data={graphData.voltageHistory.filter((value): value is number => value !== null)}
-            label="Voltage"
+            data={graphData.voltageHistory.map((v) => (v === null ? 0 : v))}
+            label={t("charts.voltage")}
             borderColor="#4caf50"
             backgroundColor="rgba(76, 175, 80, 0.2)"
-            yAxisLabel="Voltage (V)"
+            yAxisLabel={t("charts.voltageAxisLabel")}
           />
         </div>
 
         <div style={styles.chartContainer}>
           <ChartCard
-            title="Harmonic Distortion Over Time"
+            title={t("charts.harmonicDistortionOverTime")}
             labels={timeLabels}
-            /* TODO Test this GPT ass answer */
-            data={graphData.harmonicDistortionHistory.filter((value): value is number => value !== null)}
-            label="Harmonic Distortion"
+            data={graphData.harmonicDistortionHistory.map((v) => (v === null ? 0 : v))}
+            label={t("charts.harmonicDistortion")}
             borderColor="#673ab7"
             backgroundColor="rgba(103, 58, 183, 0.2)"
-            yAxisLabel="Harmonic Distortion (%)"
+            yAxisLabel={t("charts.harmonicDistortionAxisLabel")}
           />
         </div>
       </div>

@@ -11,7 +11,10 @@
   "title": {
     "f1": "Lecteur Vidéo",
     "f2": "Gestionnaire des utilisateurs",
-    "f3": "Alimentation du système",
+    "f3": "Centre de contrôle",
     "f4": "Paramètres"
+  },
+  "progressDialog": {
+    "percentComplete": "{{percent}}% Terminé"
   }
 }

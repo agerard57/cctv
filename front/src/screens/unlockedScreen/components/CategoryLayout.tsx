@@ -1,21 +1,22 @@
-import { FC, Fragment, ReactNode, useState } from "react";
+import { FC, Fragment, JSX, ReactNode, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import styled from "@emotion/styled";
 import { useKeyDown } from "../../../providers/keyState/hooks";
 import { BlackContainerBase } from "../styles";
 import { Chart, registerables } from "chart.js";
+import { useTranslation } from "react-i18next";
+import { ControlCenterPageSections, SettingsPageSections } from "../pages";
 
 Chart.register(...registerables);
 
-interface Category {
-  categoryName: string;
+interface Category<T = string> {
+  categoryName: T;
   content?: ReactNode;
 }
 
-interface CategoryLayoutProps {
-  categories: Category[];
-  selectedCategory?: string;
-  onCategoryChange?: (categoryName: string) => void;
+interface CategoryLayoutProps<T = string> {
+  categories: Category<T>[];
+  namespace: string;
 }
 
 const WhiteContainerBase = styled.div<{ background: string }>`
@@ -27,7 +28,7 @@ const WhiteContainerBase = styled.div<{ background: string }>`
 
 const SidebarContainer = styled(BlackContainerBase)`
   padding: 20px;
-  width: 15vw;
+  width: 18vw;
 
   flex: 0 0 auto; /* Don't grow, don't shrink, use auto basis */
 `;
@@ -35,7 +36,7 @@ const SidebarContainer = styled(BlackContainerBase)`
 const CategoryText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== "isSelected",
 })<{ isSelected: boolean }>`
-  padding: 8px;
+  padding: 15px;
   opacity: ${(props) => (props.isSelected ? 1 : 0.6)};
   font-weight: ${(props) => (props.isSelected ? 700 : 400)}; /* Use numeric values for consistency */
   width: 100%;
@@ -44,16 +45,13 @@ const CategoryText = styled(Typography, {
   white-space: nowrap;
 `;
 
-export const CategoryLayout: FC<CategoryLayoutProps> = ({
+export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPageSections>({
   categories,
-  selectedCategory: externalSelectedCategory,
-  onCategoryChange,
-}) => {
-  const [internalSelectedCategory, setInternalSelectedCategory] = useState(categories[0]?.categoryName || "");
+  namespace,
+}: CategoryLayoutProps<T>): JSX.Element => {
+  const [selectedCategory, setSelectedCategory] = useState<T | undefined>(categories[0]?.categoryName || undefined);
   const theme = useTheme();
-
-  // Use either external or internal state based on what's provided
-  const selectedCategory = externalSelectedCategory !== undefined ? externalSelectedCategory : internalSelectedCategory;
+  const { t } = useTranslation(namespace);
 
   // Find the current index for navigation purposes
   const selectedIndex = categories.findIndex((c) => c.categoryName === selectedCategory);
@@ -79,14 +77,7 @@ export const CategoryLayout: FC<CategoryLayoutProps> = ({
     }
 
     // Only update if we found a different category
-    if (newIndex !== currentIndex) {
-      const newCategory = categories[newIndex].categoryName;
-      if (onCategoryChange) {
-        onCategoryChange(newCategory);
-      } else {
-        setInternalSelectedCategory(newCategory);
-      }
-    }
+    if (newIndex !== currentIndex) setSelectedCategory(categories[newIndex].categoryName);
   };
 
   // TODO Remove SupportedKeys from all useKeyDown
@@ -120,10 +111,15 @@ export const CategoryLayout: FC<CategoryLayoutProps> = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                color: category.categoryName === "System Configuration" ? "red" : category.content ? "inherit" : "grey",
+                color:
+                  (category.categoryName as SettingsPageSections) === SettingsPageSections.SYSTEM_CONFIGURATION
+                    ? "red"
+                    : category.content
+                      ? "inherit"
+                      : "grey",
               }}
             >
-              {category.categoryName}
+              {t(`${category.categoryName}.title`)}
             </CategoryText>
             {index !== categories.length - 1 && <hr style={{ opacity: 0.1 }} />}
           </Fragment>
@@ -132,7 +128,7 @@ export const CategoryLayout: FC<CategoryLayoutProps> = ({
 
       {/* Content Area */}
       <WhiteContainerBase background={theme.app.core.whiteTransparentBackground}>
-        <Typography variant="pageTitle">{selectedCategory}</Typography>
+        <Typography variant="pageTitle">{t(`${selectedCategory}.title`)}</Typography>
         <Box marginTop={2}>{categories.find((c) => c.categoryName === selectedCategory)?.content}</Box>
       </WhiteContainerBase>
     </div>

@@ -145,9 +145,7 @@ export const UnlockedScreen: FC = () => {
   const { settings } = useSettings();
 
   const appConstants = useConstants();
-  const [currentPage, setCurrentPage] = useState<UnlockedScreenPages>(
-    appConstants.unlockedScreen.userManager.DEFAULT_PAGE,
-  );
+  const [currentPage, setCurrentPage] = useState<UnlockedScreenPages>(appConstants.unlockedScreen.DEFAULT_PAGE);
 
   const functionButtons = {
     [UnlockedScreenPages.REPLAY_MANAGER]: {

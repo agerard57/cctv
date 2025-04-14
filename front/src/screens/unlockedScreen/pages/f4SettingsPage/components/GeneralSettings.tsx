@@ -1,15 +1,17 @@
 import { FC, useEffect } from "react";
 import styled from "@emotion/styled";
 import { SettingsCategory } from "./SettingsCategory";
-import { Languages, useKeyDown, useSettings, Wallpapers } from "../../../../../../providers";
-import { enableIconlessKeys, SupportedKeys, useKeyState } from "../../../../../../providers/keyState";
-import { PgDnKeyIcon, PgUpKeyIcon } from "../../../f1ReplayManagerPage/assets";
+import { Languages, useKeyDown, useSettings, Wallpapers } from "@/providers";
+import { enableIconlessKeys, SupportedKeys, useKeyState } from "@/providers";
+import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
+import { useTranslation } from "react-i18next";
 
 export const SettingsCategoryContainer = styled.div`
   margin: 4vh 0;
 `;
 
 export const GeneralSettings: FC = () => {
+  const { t } = useTranslation("SettingsPage");
   // General Settings
   const { settings, setLanguage, setWallpaper, setBrightness, setVolume } = useSettings();
 
@@ -49,9 +51,9 @@ export const GeneralSettings: FC = () => {
   });
 
   const generalSettings = [
-    { label: "Dark Mode", type: "toggle", value: true },
+    { label: t("generalSettings.darkMode"), type: "toggle", value: true },
     {
-      label: "Volume",
+      label: t("generalSettings.volume"),
       type: "slider",
       value: settings.volume,
       onChange: (value: number) => setVolume(value),
@@ -60,7 +62,7 @@ export const GeneralSettings: FC = () => {
       keyboardShortcut: ["2", "3"], // Left: Increment, Right: Decrement
     },
     {
-      label: "Brightness",
+      label: t("generalSettings.brightness"),
       type: "slider",
       value: settings.brightness,
       onChange: (value: number) => setBrightness(value),
@@ -71,9 +73,9 @@ export const GeneralSettings: FC = () => {
   ];
 
   const displaySettings = [
-    { label: "Screen Saver", type: "toggle", value: 0 },
+    { label: t("generalSettings.displaySettings.screenSaver"), type: "toggle", value: 0 },
     {
-      label: "Wallpaper",
+      label: t("generalSettings.displaySettings.wallpaper"),
       type: "select",
       // TODO Infer type T
       value: settings.wallpaper,
@@ -81,21 +83,21 @@ export const GeneralSettings: FC = () => {
         setWallpaper(value);
       },
       options: [
-        { value: Wallpapers.DEFAULT, label: "Default" },
-        { value: Wallpapers.LAS_VEGAS, label: "Las Vegas" },
-        { value: Wallpapers.MONEY, label: "Money" },
-        { value: Wallpapers.CATS, label: "Cats" },
+        { value: Wallpapers.DEFAULT, label: t("generalSettings.displaySettings.wallpaperOptions.default") },
+        { value: Wallpapers.LAS_VEGAS, label: t("generalSettings.displaySettings.wallpaperOptions.lasVegas") },
+        { value: Wallpapers.MONEY, label: t("generalSettings.displaySettings.wallpaperOptions.money") },
+        { value: Wallpapers.CATS, label: t("generalSettings.displaySettings.wallpaperOptions.cats") },
       ],
       keyboardShortcut: ["9"],
     },
     {
-      label: "Screen Resolution",
+      label: t("generalSettings.displaySettings.screenResolution"),
       type: "select",
       value: "4k",
-      options: [{ value: "4k", label: "4K" }],
+      options: [{ value: "4k", label: t("generalSettings.displaySettings.resolutionOptions.4k") }],
     },
     {
-      label: "Refresh Rate",
+      label: t("generalSettings.displaySettings.refreshRate"),
       type: "slider",
       value: 23,
     },
@@ -103,45 +105,45 @@ export const GeneralSettings: FC = () => {
 
   const regionalSettings = [
     {
-      label: "Timezone",
+      label: t("generalSettings.regionalSettings.timezone"),
       type: "select",
       // TODO The first shown language should be the one set in the settings
       value: settings.language === Languages.FR ? "utc" : "est",
       options: [
-        { value: "utc", label: "UTC" },
-        { value: "est", label: "EST" },
+        { value: "utc", label: t("generalSettings.regionalSettings.timezoneOptions.utc") },
+        { value: "est", label: t("generalSettings.regionalSettings.timezoneOptions.est") },
       ],
     },
     {
-      label: "Language",
+      label: t("generalSettings.regionalSettings.language"),
       type: "select",
       // TODO The first shown language should be the one set in the settings
       // default: settings.language
       value: settings.language,
       onChange: (lang: Languages) => setLanguage(lang),
       options: [
-        { value: Languages.FR, label: "French" },
-        { value: Languages.EN, label: "English" },
+        { value: Languages.FR, label: t("generalSettings.regionalSettings.languageOptions.french") },
+        { value: Languages.EN, label: t("generalSettings.regionalSettings.languageOptions.english") },
       ],
       keyboardShortcut: ["#"],
     },
     {
-      label: "Keyboard Layout",
+      label: t("generalSettings.regionalSettings.keyboardLayout"),
       type: "select",
       value: "t9",
-      options: [{ value: "t9", label: "Multi-tap keypad" }],
+      options: [{ value: "t9", label: t("generalSettings.regionalSettings.keyboardOptions.t9") }],
     },
-    { label: "Auto-Correct", type: "toggle", value: 0 },
+    { label: t("generalSettings.regionalSettings.autoCorrect"), type: "toggle", value: 0 },
   ];
 
   const securitySettings = [
-    { label: "Gesture Control", type: "toggle", value: 0 },
-    { label: "Face Recognition", type: "toggle", value: 0 },
+    { label: t("generalSettings.securitySettings.gestureControl"), type: "toggle", value: 0 },
+    { label: t("generalSettings.securitySettings.faceRecognition"), type: "toggle", value: 0 },
     {
-      label: "Unlock method",
+      label: t("generalSettings.securitySettings.unlockMethod"),
       type: "select",
       value: "both",
-      options: [{ value: "both", label: "Card + Pin" }],
+      options: [{ value: "both", label: t("generalSettings.securitySettings.unlockOptions.both") }],
     },
   ];
 
@@ -168,9 +170,9 @@ export const GeneralSettings: FC = () => {
   return (
     <SettingsCategoryContainer>
       <SettingsCategory settings={generalSettings} />
-      <SettingsCategory title="Display Settings" settings={displaySettings} />
-      <SettingsCategory title="Regional Settings" settings={regionalSettings} />
-      <SettingsCategory title="Security Settings" settings={securitySettings} />
+      <SettingsCategory title={t("generalSettings.displaySettings.title")} settings={displaySettings} />
+      <SettingsCategory title={t("generalSettings.regionalSettings.title")} settings={regionalSettings} />
+      <SettingsCategory title={t("generalSettings.securitySettings.title")} settings={securitySettings} />
     </SettingsCategoryContainer>
   );
 };

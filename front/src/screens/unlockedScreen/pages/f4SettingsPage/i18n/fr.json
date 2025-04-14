@@ -1,1 +1,82 @@
-{}
+{
+  "generalSettings": {
+    "title": "Paramètres généraux",
+    "darkMode": "Mode sombre",
+    "volume": "Volume",
+    "brightness": "Luminosité",
+    "displaySettings": {
+      "title": "Paramètres d'affichage",
+      "screenSaver": "Économiseur d'écran",
+      "wallpaper": "Fond d'écran",
+      "wallpaperOptions": {
+        "default": "Par défaut",
+        "lasVegas": "Las Vegas",
+        "money": "Argent",
+        "cats": "Chats"
+      },
+      "screenResolution": "Résolution d'écran",
+      "resolutionOptions": {
+        "4k": "4K"
+      },
+      "refreshRate": "Taux de rafraîchissement"
+    },
+    "regionalSettings": {
+      "title": "Paramètres régionaux",
+      "timezone": "Fuseau horaire",
+      "timezoneOptions": {
+        "utc": "UTC",
+        "est": "EST"
+      },
+      "language": "Langue",
+      "languageOptions": {
+        "french": "Français",
+        "english": "Anglais"
+      },
+      "keyboardLayout": "Disposition du clavier",
+      "keyboardOptions": {
+        "t9": "Clavier multi-tap"
+      },
+      "autoCorrect": "Correction automatique"
+    },
+    "securitySettings": {
+      "title": "Paramètres de sécurité",
+      "gestureControl": "Contrôle gestuel",
+      "faceRecognition": "Reconnaissance faciale",
+      "unlockMethod": "Méthode de déverrouillage",
+      "unlockOptions": {
+        "both": "Carte + Code PIN"
+      }
+    }
+  },
+  "userPreferences": { "title": "Préférences utilisateur" },
+  "privacySettings": { "title": "Paramètres de confidentialité" },
+  "accessibilitySettings": { "title": "Paramètres d'accessibilité" },
+  "notificationSettings": { "title": "Paramètres de notification" },
+  "systemConfiguration": {
+    "title": "Configuration du système",
+    "energySaverMode": "Mode économie d'énergie",
+    "autoUpdates": "Mises à jour automatiques",
+    "storageManagement": "Gestion du stockage",
+    "checkForUpdates": "Vérifier les mises à jour",
+    "statsForNerds": "Statistiques pour les nerds",
+    "backupFrequency": "Fréquence de sauvegarde",
+    "daily": "Quotidienne",
+    "checkingUpdates": "Vérification des mises à jour...",
+    "openingStorage": "Ouverture de la gestion du stockage...",
+    "shutdownSystem": "Éteindre le système CCTV",
+    "shuttingDown": "Arrêt du système CCTV",
+    "initializeShutdown": "Initialisation de la séquence d'arrêt...",
+    "disconnectingNetwork": "Déconnexion du réseau...",
+    "savingState": "Sauvegarde de l'état du système...",
+    "poweringDown": "Mise hors tension des composants...",
+    "finalizingShutdown": "Finalisation de l'arrêt...",
+    "shutdownSuccess": "Prise électrique déconnectée avec succès",
+    "dialog": {
+      "title": "Accès à la configuration du système",
+      "instruction": "Veuillez scanner votre carte RFID pour accéder à la configuration du système :",
+      "waitingForScan": "En attente du scan RFID...",
+      "invalidCard": "Carte RFID invalide. Veuillez réessayer.",
+      "closeButton": "Fermer"
+    }
+  }
+}

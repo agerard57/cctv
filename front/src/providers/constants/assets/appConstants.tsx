@@ -1,5 +1,11 @@
-import { AccessLevels, AccountStatus, Shifts } from "@/screens";
-import { UnlockedScreenPages } from "../../../screens";
+import {
+  AccessLevels,
+  AccountStatus,
+  ControlCenterPageSections,
+  SettingsPageSections,
+  UnlockedScreenPages,
+  Shifts,
+} from "@/screens";
 
 export const appConstants = {
   DEBUG_MODE: import.meta.env.VITE_DEBUG === "true",
@@ -15,9 +21,8 @@ export const appConstants = {
     },
   },
   unlockedScreen: {
+    DEFAULT_PAGE: UnlockedScreenPages.REPLAY_MANAGER,
     userManager: {
-      // TODO SET TO REPLAY MANAGER
-      DEFAULT_PAGE: UnlockedScreenPages.SETTINGS,
       CAPTCHA_CODE: "11037", // Alt. code that is more complex to read: "868171"
       USERS: [
         {
@@ -201,6 +206,12 @@ export const appConstants = {
           accountStatus: AccountStatus.ACTIVE,
         },
       ],
+    },
+    controlCenter: {
+      DEFAULT_SECTION: ControlCenterPageSections.POWER_STATS,
+    },
+    settings: {
+      DEFAULT_SECTION: SettingsPageSections.GENERAL_SETTINGS,
     },
   },
 } as const;

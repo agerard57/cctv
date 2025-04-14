@@ -1,5 +1,6 @@
 import { FC, useEffect, useState, ReactNode } from "react";
 import { Dialog, DialogTitle, DialogContent, LinearProgress, Typography, Box } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface ProgressDialogProps {
   open: boolean;
@@ -8,7 +9,10 @@ interface ProgressDialogProps {
   onProgressDone: () => void;
 }
 
+// TODO We shouldn't be able to move from one page to another while the progress is made
+
 export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages, onProgressDone }) => {
+  const { t } = useTranslation("UnlockedScreen");
   const [progress, setProgress] = useState(0);
   const [currentMessage, setCurrentMessage] = useState("");
 
@@ -111,7 +115,7 @@ export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages,
               fontFamily: "monospace",
             }}
           >
-            {Math.round(progress)}% Complete
+            {t("progressDialog.percentComplete", { percent: Math.round(progress) })}
           </Typography>
         </Box>
       </DialogContent>

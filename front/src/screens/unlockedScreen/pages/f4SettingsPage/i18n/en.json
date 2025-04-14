@@ -1,1 +1,82 @@
-{}
+{
+  "generalSettings": {
+    "title": "General Settings",
+    "darkMode": "Dark Mode",
+    "volume": "Volume",
+    "brightness": "Brightness",
+    "displaySettings": {
+      "title": "Display Settings",
+      "screenSaver": "Screen Saver",
+      "wallpaper": "Wallpaper",
+      "wallpaperOptions": {
+        "default": "Default",
+        "lasVegas": "Las Vegas",
+        "money": "Money",
+        "cats": "Cats"
+      },
+      "screenResolution": "Screen Resolution",
+      "resolutionOptions": {
+        "4k": "4K"
+      },
+      "refreshRate": "Refresh Rate"
+    },
+    "regionalSettings": {
+      "title": "Regional Settings",
+      "timezone": "Timezone",
+      "timezoneOptions": {
+        "utc": "UTC",
+        "est": "EST"
+      },
+      "language": "Language",
+      "languageOptions": {
+        "french": "French",
+        "english": "English"
+      },
+      "keyboardLayout": "Keyboard Layout",
+      "keyboardOptions": {
+        "t9": "Multi-tap keypad"
+      },
+      "autoCorrect": "Auto-Correct"
+    },
+    "securitySettings": {
+      "title": "Security Settings",
+      "gestureControl": "Gesture Control",
+      "faceRecognition": "Face Recognition",
+      "unlockMethod": "Unlock method",
+      "unlockOptions": {
+        "both": "Card + Pin"
+      }
+    }
+  },
+  "userPreferences": { "title": "User Preferences" },
+  "privacySettings": { "title": "Privacy Settings" },
+  "accessibilitySettings": { "title": "Accessibility Settings" },
+  "notificationSettings": { "title": "Notification Settings" },
+  "systemConfiguration": {
+    "title": "System Configuration",
+    "energySaverMode": "Energy Saver Mode",
+    "autoUpdates": "Auto Updates",
+    "storageManagement": "Storage Management",
+    "checkForUpdates": "Check for updates",
+    "statsForNerds": "Stats for nerds",
+    "backupFrequency": "Backup Frequency",
+    "daily": "Daily",
+    "checkingUpdates": "Checking for updates...",
+    "openingStorage": "Opening storage management...",
+    "shutdownSystem": "Shut Down CCTV System",
+    "shuttingDown": "Shutting Down CCTV System",
+    "initializeShutdown": "Initializing shutdown sequence...",
+    "disconnectingNetwork": "Disconnecting from network...",
+    "savingState": "Saving system state...",
+    "poweringDown": "Powering down components...",
+    "finalizingShutdown": "Finalizing shutdown...",
+    "shutdownSuccess": "Electrical outlet disconnected successfully",
+    "dialog": {
+      "title": "System Configuration Access",
+      "instruction": "Please scan your RFID card to access the system configuration:",
+      "waitingForScan": "Waiting for RFID scan...",
+      "invalidCard": "Invalid RFID card. Please try again.",
+      "closeButton": "Close"
+    }
+  }
+}

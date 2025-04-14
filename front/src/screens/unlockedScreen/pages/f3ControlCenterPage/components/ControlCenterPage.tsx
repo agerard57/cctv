@@ -3,6 +3,7 @@ import { CategoryLayout } from "@/screens/unlockedScreen/components/CategoryLayo
 import { PowerStatsSection } from "./PowerStatsSection";
 import { SystemHealthSection } from "./SystemHealthSection";
 import { VentilationShaftControlSection } from "./ventilationShaftControlSection";
+import { ControlCenterPageSections } from "../..";
 
 interface GraphData {
   voltageHistory: (number | null)[];
@@ -37,8 +38,6 @@ export interface AllMetrics {
 }
 
 export const ControlCenterPage: FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState("Power Stats");
-
   const [graphData, setGraphData] = useState<GraphData>({
     voltageHistory: Array(31)
       .fill(240)
@@ -82,26 +81,31 @@ export const ControlCenterPage: FC = () => {
     ventilationCurrentLoad: 75,
   });
 
-  // Update graph data consistently
   useEffect(() => {
     const interval = setInterval(() => {
-      // Update all graph data
       setGraphData((prev) => {
         // Calculate harmonic distortion based on previous value
         const latestHarmonic = prev.harmonicDistortionHistory[prev.harmonicDistortionHistory.length - 1] || 5;
         const newHarmonic = Math.max(3, Math.min(10, latestHarmonic + (Math.random() - 0.5) * 0.5));
 
+        // Get current values directly from metrics state and add random variations to all values
+        const voltageWithVariation = metrics.voltage + (Math.random() - 0.5) * 0.1;
+        const fanSpeedWithVariation = metrics.fanSpeed + (Math.random() - 0.5) * 20;
+        const systemEfficiencyWithVariation = metrics.systemEfficiency + (Math.random() - 0.5) * 1;
+
         return {
-          voltageHistory: [...prev.voltageHistory.slice(1), metrics.voltage],
+          voltageHistory: [...prev.voltageHistory.slice(1), voltageWithVariation],
           harmonicDistortionHistory: [...prev.harmonicDistortionHistory.slice(1), newHarmonic],
-          fanSpeedHistory: [...prev.fanSpeedHistory.slice(1), metrics.fanSpeed],
-          systemEfficiencyHistory: [...prev.systemEfficiencyHistory.slice(1), metrics.systemEfficiency],
+          fanSpeedHistory: [...prev.fanSpeedHistory.slice(1), fanSpeedWithVariation],
+          systemEfficiencyHistory: [...prev.systemEfficiencyHistory.slice(1), systemEfficiencyWithVariation],
         };
       });
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [metrics]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []); // Remove metrics from dependency array to prevent frequent resets
 
   // Helper function to create random interval between min and max milliseconds
   const getRandomInterval = (min: number, max: number) => {
@@ -238,15 +242,15 @@ export const ControlCenterPage: FC = () => {
 
   const categories = [
     {
-      categoryName: "Power Stats",
+      categoryName: ControlCenterPageSections.POWER_STATS,
       content: <PowerStatsSection metrics={metrics} graphData={graphData} />,
     },
     {
-      categoryName: "System Health",
+      categoryName: ControlCenterPageSections.SYSTEM_HEALTH,
       content: <SystemHealthSection metrics={metrics} graphData={graphData} />,
     },
     {
-      categoryName: "Ventilation Shaft Control",
+      categoryName: ControlCenterPageSections.VENTILATION_SHAFT_CONTROL,
       content: (
         <VentilationShaftControlSection
           metrics={metrics}
@@ -261,11 +265,5 @@ export const ControlCenterPage: FC = () => {
     },
   ];
 
-  return (
-    <CategoryLayout
-      categories={categories}
-      selectedCategory={selectedCategory}
-      onCategoryChange={setSelectedCategory}
-    />
-  );
+  return <CategoryLayout<ControlCenterPageSections> categories={categories} namespace="ControlCenterPage" />;
 };

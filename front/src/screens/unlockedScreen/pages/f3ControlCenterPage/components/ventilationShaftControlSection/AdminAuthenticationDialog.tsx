@@ -4,6 +4,7 @@ import { useKeyDown } from "@/providers";
 import { PinInputs, usePinInputs, KeyButton } from "@/core";
 import { MultiTapInput } from "./MultiTapInput";
 import { CancelKeyIcon, EnterKeyIcon } from "../../assets";
+import { useTranslation } from "react-i18next";
 
 interface AdminAuthenticationDialogProps {
   open: boolean;
@@ -12,6 +13,8 @@ interface AdminAuthenticationDialogProps {
 }
 
 export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ open, onClose, onSuccess }) => {
+  const { t } = useTranslation("ControlCenterPage");
+  // TODO ADD PWD ID TO THE CONSTS
   const CAPTCHA_CODE = "2342";
   const [pinInput, setPinInput] = useState("");
   const [password, setPassword] = useState("");
@@ -56,9 +59,9 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
       onClose();
     } else {
       // Failed authentication
-      setError("Invalid PIN code or password. Please try again.");
+      setError(t("adminAuthentication.invalidCredentials"));
     }
-  }, [pinInput, CAPTCHA_CODE, password, onClose, onSuccess]);
+  }, [pinInput, CAPTCHA_CODE, password, onClose, onSuccess, t]);
 
   // Reset form when dialog opens/closes
   useEffect(() => {
@@ -145,14 +148,14 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
         },
       }}
     >
-      <DialogTitle id="admin-authentication-dialog-title">Admin Authentication Required</DialogTitle>
+      <DialogTitle id="admin-authentication-dialog-title">{t("adminAuthentication.title")}</DialogTitle>
       <DialogContent sx={{ pt: 1, pb: 3 }}>
         <Typography variant="tableContent" sx={{ mb: 4 }}>
-          This action requires administrative privileges. Please enter the PIN code and password:
+          {t("adminAuthentication.description")}
         </Typography>
         <div style={{ display: "flex", gap: 2, justifyContent: "space-around" }}>
           <div>
-            <Typography style={{ paddingTop: "2vh" }}>User ID</Typography>
+            <Typography style={{ paddingTop: "2vh" }}>{t("adminAuthentication.userId")}</Typography>
             <Box sx={inputContainerStyle}>
               <PinInputs
                 pinShape="rectangle"
@@ -166,10 +169,10 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
           </div>
           <div>
             <Typography style={{ paddingTop: "2vh" }}>
-              Password
+              {t("adminAuthentication.password")}
               {!isPinComplete && (
                 <Typography variant="caption" color="rgba(255,255,255,0.5)" sx={{ ml: 1 }}>
-                  (Complete PIN first)
+                  {t("adminAuthentication.completePinFirst")}
                 </Typography>
               )}
             </Typography>
@@ -213,14 +216,14 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
                 alignItems: "center", // Center the flex children
               }}
             >
-              Invalid ID or password.
+              {error}
             </Alert>
           )}
         </div>
 
         <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
           <KeyButton
-            label="Close"
+            label={t("adminAuthentication.close")}
             icon={CancelKeyIcon}
             direction="row"
             padding="0 1vw"
@@ -228,7 +231,7 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
             // onClick={onClose}
           />
           <KeyButton
-            label="Enter"
+            label={t("adminAuthentication.enter")}
             icon={EnterKeyIcon}
             direction="row"
             padding="0 1vw"

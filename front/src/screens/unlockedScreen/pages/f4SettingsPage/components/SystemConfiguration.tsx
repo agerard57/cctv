@@ -2,14 +2,16 @@ import { FC, useEffect, useState } from "react";
 import { Button, Box, Snackbar } from "@mui/material";
 import { SettingsCategory } from "./SettingsCategory";
 import { SettingsCategoryContainer } from "./GeneralSettings";
-import { enableIconlessKeys, SupportedKeys, useKeyState } from "../../../../../../providers/keyState";
-import { PgDnKeyIcon, PgUpKeyIcon } from "../../../f1ReplayManagerPage/assets";
-import { ProgressDialog, ShortcutChip } from "../../../../components";
+import { enableIconlessKeys, SupportedKeys, useKeyDown, useKeyState } from "../../../../../providers/keyState";
+import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
+import { ProgressDialog, ShortcutChip } from "../../../components";
 import { SystemConfigurationDialog } from "./SystemConfigurationDialog";
 import { ElectricalServices } from "@mui/icons-material";
-import { useProgress } from "../../../../../../providers";
+import { useProgress } from "../../../../../providers";
+import { useTranslation } from "react-i18next";
 
 export const SystemConfiguration: FC = () => {
+  const { t } = useTranslation("SettingsPage");
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [energySaver, setEnergySaver] = useState<boolean>(false);
@@ -19,11 +21,11 @@ export const SystemConfiguration: FC = () => {
   const { progress, setCCTVSystemDown } = useProgress();
 
   const handleCheckUpdates = () => {
-    alert("Checking for updates...");
+    alert(t("systemConfiguration.checkingUpdates"));
   };
 
   const handleManageStorage = () => {
-    alert("Opening storage management...");
+    alert(t("systemConfiguration.openingStorage"));
   };
 
   const handleResetSystem = () => {
@@ -49,23 +51,65 @@ export const SystemConfiguration: FC = () => {
 
   const systemConfiguration = [
     {
-      label: "Energy Saver Mode",
+      label: t("systemConfiguration.energySaverMode"),
       type: "toggle",
       value: energySaver,
       onClick: setEnergySaver,
       keyboardShortcut: "1",
     },
-    { label: "Auto Updates", type: "toggle", value: autoUpdates, onClick: setAutoUpdates, keyboardShortcut: "3" },
-    { label: "Storage Management", type: "button", onClick: handleManageStorage, value: null },
-    { label: "Check for updates", type: "button", onClick: handleCheckUpdates, keyboardShortcut: "6", value: null },
-    { label: "Stats for nerds", type: "toggle", value: 0 },
     {
-      label: "Backup Frequency",
+      label: t("systemConfiguration.autoUpdates"),
+      type: "toggle",
+      value: autoUpdates,
+      onClick: setAutoUpdates,
+      keyboardShortcut: "3",
+    },
+    {
+      label: t("systemConfiguration.storageManagement"),
+      type: "button",
+      onClick: handleManageStorage,
+      value: null,
+    },
+    {
+      label: t("systemConfiguration.checkForUpdates"),
+      type: "button",
+      onClick: handleCheckUpdates,
+      keyboardShortcut: "6",
+      value: null,
+    },
+    {
+      label: t("systemConfiguration.statsForNerds"),
+      type: "toggle",
+      value: 0,
+    },
+    {
+      label: t("systemConfiguration.backupFrequency"),
       type: "select",
       value: "daily",
-      options: [{ value: "daily", label: "Daily" }],
+      options: [{ value: "daily", label: t("systemConfiguration.daily") }],
     },
   ];
+
+  useKeyDown(
+    {
+      1: () => {
+        setEnergySaver((prev) => !prev);
+      },
+      3: () => {
+        setAutoUpdates((prev) => !prev);
+      },
+      6: () => {
+        handleCheckUpdates();
+      },
+      7: () => {
+        if (!progress.isCCTVSystemDown) {
+          handleResetSystem();
+        }
+      },
+    },
+    undefined,
+    [progress.isCCTVSystemDown],
+  );
 
   const { updateKeyState, resetKeyStates } = useKeyState();
 
@@ -99,15 +143,15 @@ export const SystemConfiguration: FC = () => {
           <>
             {/* TODO Change icon */}
             <ElectricalServices />
-            Shutting Down CCTV System
+            {t("systemConfiguration.shuttingDown")}
           </>
         }
         messages={[
-          "Initializing shutdown sequence...",
-          "Disconnecting from network...",
-          "Saving system state...",
-          "Powering down components...",
-          "Finalizing shutdown...",
+          t("systemConfiguration.initializeShutdown"),
+          t("systemConfiguration.disconnectingNetwork"),
+          t("systemConfiguration.savingState"),
+          t("systemConfiguration.poweringDown"),
+          t("systemConfiguration.finalizingShutdown"),
         ]}
         onProgressDone={handleProgressDone} // Ensure this is passed
       />
@@ -117,7 +161,7 @@ export const SystemConfiguration: FC = () => {
         {!progress.isCCTVSystemDown && (
           <Box marginY={2}>
             <Button variant="contained" color="error" onClick={handleResetSystem}>
-              Shut Down CCTV System
+              {t("systemConfiguration.shutdownSystem")}
             </Button>
             <ShortcutChip shortcut="7" />
           </Box>
@@ -128,7 +172,7 @@ export const SystemConfiguration: FC = () => {
         open={showSuccess}
         autoHideDuration={3000}
         onClose={() => setShowSuccess(false)}
-        message="Electrical outlet disconnected successfully"
+        message={t("systemConfiguration.shutdownSuccess")}
       />
     </>
   );

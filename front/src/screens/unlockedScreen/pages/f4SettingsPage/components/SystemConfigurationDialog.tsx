@@ -4,7 +4,8 @@ import { useKeyDown } from "@/providers";
 import { KeyButton } from "@/core";
 import axios from "axios";
 import { DebugSystemConfigurationRfidButtons } from "./DebugSystemConfigurationRfidButtons";
-import { CancelKeyIcon, EnterKeyIcon } from "../../../f1ReplayManagerPage/assets";
+import { CancelKeyIcon, EnterKeyIcon } from "../../f1ReplayManagerPage/assets";
+import { useTranslation } from "react-i18next";
 
 interface SystemConfigurationDialogProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface SystemConfigurationDialogProps {
 }
 
 export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ open, onClose, onSuccess }) => {
+  const { t } = useTranslation("SettingsPage");
   const [rfidCode, setRfidCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,7 +70,7 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
         setProgressDialogOpen(true);
         onClose();
       } else {
-        setError("Invalid RFID card. Please try again.");
+        setError(t("systemConfiguration.dialog.invalidCard"));
       }
     }, 1000);
   };
@@ -106,10 +108,10 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
           },
         }}
       >
-        <DialogTitle id="system-configuration-dialog-title">System Configuration Access</DialogTitle>
+        <DialogTitle id="system-configuration-dialog-title">{t("systemConfiguration.dialog.title")}</DialogTitle>
         <DialogContent sx={{ pt: 1, pb: 3 }}>
           <Typography variant="tableContent" sx={{ mb: 4 }}>
-            Please scan your RFID card to access the system configuration:
+            {t("systemConfiguration.dialog.instruction")}
           </Typography>
           <Box
             sx={{
@@ -124,7 +126,7 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
               marginTop: "8px",
             }}
           >
-            <Typography>{rfidCode || "Waiting for RFID scan..."}</Typography>
+            <Typography>{rfidCode || t("systemConfiguration.dialog.waitingForScan")}</Typography>
           </Box>
           <Box marginY={2}>
             <DebugSystemConfigurationRfidButtons
@@ -173,20 +175,12 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
 
           <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
             <KeyButton
-              label="Close"
+              label={t("systemConfiguration.dialog.closeButton")}
               icon={CancelKeyIcon}
               direction="row"
               padding="0 1vw"
               isEnabled={true}
               // onClick={onClose}
-            />
-            <KeyButton
-              label="Enter"
-              icon={EnterKeyIcon}
-              direction="row"
-              padding="0 1vw"
-              isEnabled={!!rfidCode && !loading}
-              // onClick={handleAuthenticate}
             />
           </div>
         </DialogActions>

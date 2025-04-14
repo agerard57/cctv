@@ -1,3 +1,3 @@
 export { UnlockedScreenPages } from "./typings";
 export { CategoryLayout } from "./components";
-export { AccessLevels, AccountStatus, Shifts } from "./pages";
+export { AccessLevels, Shifts, AccountStatus, ControlCenterPageSections, SettingsPageSections } from "./pages";
