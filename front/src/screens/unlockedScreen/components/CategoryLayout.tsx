@@ -1,4 +1,4 @@
-import { FC, Fragment, JSX, ReactNode, useState } from "react";
+import { Fragment, JSX, ReactNode, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import styled from "@emotion/styled";
 import { useKeyDown } from "../../../providers/keyState/hooks";

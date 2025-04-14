@@ -4,7 +4,7 @@ import { useKeyDown } from "@/providers";
 import { KeyButton } from "@/core";
 import axios from "axios";
 import { DebugSystemConfigurationRfidButtons } from "./DebugSystemConfigurationRfidButtons";
-import { CancelKeyIcon, EnterKeyIcon } from "../../f1ReplayManagerPage/assets";
+import { CancelKeyIcon } from "../../f1ReplayManagerPage/assets";
 import { useTranslation } from "react-i18next";
 
 interface SystemConfigurationDialogProps {
@@ -17,7 +17,6 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
   const { t } = useTranslation("SettingsPage");
   const [rfidCode, setRfidCode] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [progressDialogOpen, setProgressDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -63,10 +62,10 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
   }, [open, progressDialogOpen]);
 
   const handleAuthenticate = () => {
-    setLoading(true);
+    // TODO See, 'cause maybe we need it
+    // setLoading(true);
     setTimeout(() => {
-      setLoading(false);
-      if (rfidCode === "123456") {
+      if (rfidCode) {
         setProgressDialogOpen(true);
         onClose();
       } else {

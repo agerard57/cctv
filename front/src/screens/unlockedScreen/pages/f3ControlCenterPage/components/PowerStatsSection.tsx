@@ -19,9 +19,11 @@ import { generateTimeLabels } from "../utils/timeHelpers";
 
 interface PowerStatsProps {
   metrics: {
+    currentLoad: any;
     voltage: number;
     powerEfficiency: number;
     batteryHealth: number;
+    temperature: number;
     powerFactor: number;
     frequency: number;
     energyConsumption: number;
