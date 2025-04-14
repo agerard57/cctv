@@ -3,9 +3,8 @@ import { TextField } from "@mui/material";
 
 interface MultiTapInputProps {
   onChange: (password: string) => void;
-  enabled?: boolean; 
+  enabled?: boolean;
 }
-
 
 const keys = [
   {
@@ -75,18 +74,17 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
   const [lastKeyPressed, setLastKeyPressed] = useState<string | null>(null);
   const [lastKeyPosition, setLastKeyPosition] = useState(-1);
   const [state, setState] = useState(0);
-  
+
   const [cursorVisible, setCursorVisible] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const cursorIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  
   useEffect(() => {
     cursorIntervalRef.current = setInterval(() => {
       setCursorVisible((prev) => !prev);
-    }, 500); 
+    }, 500);
 
     return () => {
       if (cursorIntervalRef.current) {
@@ -95,7 +93,6 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
     };
   }, []);
 
-  
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -104,14 +101,12 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
     };
   }, []);
 
-  
   useEffect(() => {
     if (enabled && inputRef.current) {
       inputRef.current.focus();
     }
   }, [enabled]);
 
-  
   useEffect(() => {
     onChange(input);
   }, [input, onChange]);
@@ -124,11 +119,9 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
 
   const handleBackspace = () => {
     if (input.length > 0) {
-      
       setInput((prev) => prev.slice(0, -1));
       setDisplayInput((prev) => prev.slice(0, -1));
 
-      
       if (lastKeyPosition === input.length - 1) {
         setLastKeyPressed(null);
         setState(0);
@@ -136,8 +129,9 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
     }
   };
 
+  // TODO Use useKeyDown hook
   const handleKeyDown = (event: KeyboardEvent) => {
-    space" || event.code === "NumpadDecimal") {
+    if (event.key === "Backspace" || event.code === "NumpadDecimal") {
       if (enabled) {
         handleBackspace();
         return;

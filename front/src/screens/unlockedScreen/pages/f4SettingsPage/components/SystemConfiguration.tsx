@@ -127,7 +127,7 @@ export const SystemConfiguration: FC = () => {
     return () => {
       resetKeyStates();
     };
-  }, [updateKeyState, resetKeyStates]);
+  }, [updateKeyState, resetKeyStates, progress.isCCTVSystemDown]);
 
   return (
     <>
@@ -159,14 +159,12 @@ export const SystemConfiguration: FC = () => {
       <SettingsCategoryContainer>
         <SettingsCategory settings={systemConfiguration} />
         {/* TODO Grey the button, not making it disappear */}
-        {!progress.isCCTVSystemDown && (
-          <Box marginY={2}>
-            <Button variant="contained" color="error" onClick={handleResetSystem}>
-              {t("systemConfiguration.shutdownSystem")}
-            </Button>
-            <ShortcutChip shortcut="7" />
-          </Box>
-        )}
+        <Box marginY={2}>
+          <Button variant="contained" color="error" onClick={handleResetSystem} disabled={progress.isCCTVSystemDown}>
+            {t("systemConfiguration.shutdownSystem")}
+          </Button>
+          {!progress.isCCTVSystemDown && <ShortcutChip shortcut="7" />}
+        </Box>
       </SettingsCategoryContainer>
 
       <Snackbar
