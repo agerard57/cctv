@@ -17,7 +17,6 @@ export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages,
   const [currentMessage, setCurrentMessage] = useState("");
 
   useEffect(() => {
-    // Reset progress when dialog opens
     if (open) {
       setProgress(0);
     }
@@ -27,21 +26,16 @@ export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages,
     let timer: NodeJS.Timeout;
 
     if (open) {
-      // Update progress every 250ms
       timer = setInterval(() => {
         setProgress((prevProgress) => {
-          // Medium progress increment (range: 3-7.5)
           const newProgress = prevProgress + Math.random() * 4.5 + 3;
 
-          // Choose message based on progress
           const messageIndex = Math.min(Math.floor(newProgress / (100 / messages.length)), messages.length - 1);
           setCurrentMessage(messages[messageIndex]);
 
-          // Complete when progress reaches 100
           if (newProgress >= 100) {
             clearInterval(timer);
 
-            // Wait a moment before completing (400ms)
             setTimeout(() => {
               onProgressDone();
             }, 400);

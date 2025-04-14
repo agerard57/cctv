@@ -5,7 +5,7 @@ import { KeyPressSFX, SuccessSFX, ErrorSFX } from "@/screens/lockedScreen/assets
 type UsePinInputs = (
   settings: {
     correctCode: string;
-    disableValidation?: boolean; // Add optional disableValidation flag
+    disableValidation?: boolean;
   },
   callbacks?: {
     onFilled?: () => void;
@@ -39,11 +39,11 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
     if (loading) return;
 
     if (pin.length >= codeLength) {
-      resetPin(); // Reset pins
-      setPin(key); // Immediately set the first value of the new input
+      resetPin();
+      setPin(key);
       setPins((prevPins) => {
         const newPinStatus = [...prevPins];
-        newPinStatus[0] = PinInputStatuses.FILLED; // Mark the first pin as filled
+        newPinStatus[0] = PinInputStatuses.FILLED;
         return newPinStatus;
       });
       return;
@@ -62,10 +62,8 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
 
       if (newPin.length === codeLength) {
         if (disableValidation) {
-          // Skip validation if disableValidation is true
           if (callbacks?.onFilled) callbacks.onFilled();
         } else {
-          // Otherwise proceed with normal validation
           setLoading(true);
           if (callbacks?.onFilled) callbacks.onFilled();
           validatePin(newPin);
@@ -77,17 +75,14 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
   };
 
   const handleBackspace = () => {
-    // Only clear all pins if validation is enabled and pin is full
     if (pin.length === codeLength && !disableValidation) {
-      resetPin(); // Clear all pins if the password is full and validation is enabled
+      resetPin();
       return;
     }
 
     // TODO REMOVE COMMENTS
-    // TODO TIMER LOCK SCREEN GOES 2 BY 2: 6 -> 4 -> 2...
-    if (pin.length === 0) return; // Do nothing if no pins are entered
+    if (pin.length === 0) return;
 
-    // Remove the last character
     setPin((prevPin) => {
       const newPin = prevPin.slice(0, -1);
 
@@ -102,7 +97,7 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
   };
 
   const validatePin = (enteredPin: string) => {
-    if (disableValidation) return; // Skip validation if disabled
+    if (disableValidation) return;
 
     if (errorTriggered.current) return;
     errorTriggered.current = true;

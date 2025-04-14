@@ -4,17 +4,10 @@ import { Wallpapers } from "./Wallpapers";
 export interface Settings {
   // TODO
   volume: number;
-  // TODO
   brightness: number;
-  // TODO
   wallpaper: Wallpapers;
   // TODO
   language: Languages;
-  // TODO
-  // TODO
-  // TODO
-  // TODO
-  // TODO
 }
 
 export const SettingsInitializer: Settings = {

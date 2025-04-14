@@ -20,7 +20,7 @@ const getInnerCircleColor = (theme: Theme, status: PinInputStatuses) => {
 interface Props {
   pins: { status: PinInputStatuses; value?: string }[];
   pinShape: "rectangle" | "circle";
-  transparent?: boolean; // Add new prop to control background transparency
+  transparent?: boolean;
 }
 
 export const PinInputs: FC<Props> = ({ pins, pinShape, transparent = false }) => {

@@ -8,7 +8,6 @@ import { ShortcutChip, ProgressDialog } from "../../../../components";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 
-// Convert messages array to use translations
 const getProgressMessages = (t: TFunction) => [
   t("ventilationShaftControl.progressMessages.initPower"),
   t("ventilationShaftControl.progressMessages.bypassSafety"),
@@ -34,13 +33,10 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
   const { progress, setElectricalOutletDisconnected } = useProgress();
   const { t } = useTranslation("ControlCenterPage");
 
-  // Handler for successful authentication - now just shows progress dialog
   const handleAuthSuccess = () => {
-    // Show progress dialog immediately after successful authentication
     setShowProgressDialog(true);
   };
 
-  // Handler for when progress completes - now shows success snackbar
   const handleProgressDone = () => {
     setShowProgressDialog(false);
     setShowSuccess(true);

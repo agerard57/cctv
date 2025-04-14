@@ -81,7 +81,6 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
     [setMetrics, progress.isElectricalOutletDisconnected, isAuthDialogOpen],
   );
 
-  // Key state management
   const { updateKeyState, resetKeyStates } = useKeyState();
 
   useEffect(() => {
@@ -98,7 +97,6 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
     };
   }, [updateKeyState, resetKeyStates, progress.isElectricalOutletDisconnected]);
 
-  // Control button configurations
   const controls = [
     {
       label: t("ventilationShaftControl.controls.ventilationDoor"),
@@ -150,7 +148,6 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
     },
   ];
 
-  // Environmental stats
   const otherStatsArray = [
     {
       label: t("ventilationShaftControl.envStats.airQuality"),

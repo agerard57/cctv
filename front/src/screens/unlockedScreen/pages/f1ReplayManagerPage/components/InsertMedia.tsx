@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { UsbMissingIcon, UsbValidIcon, UsbInvalidIcon, EnterKeyIcon } from "../assets";
 import { Typography, LinearProgress } from "@mui/material";
 import { KeyButton, LoadingSpinnerSvg } from "@/core";
-import { useInsertMedia } from "../hooks/useInsertMedia"; // Import the updated hook
+import { useInsertMedia } from "../hooks/useInsertMedia";
 import { useConstants } from "@/providers/constants";
 import { UsbStatuses } from "../typings";
 import { DebugInsertMedia } from "./DebugInsertMedia";

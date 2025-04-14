@@ -30,11 +30,11 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
   const { t } = useTranslation("UserManagerPage");
   const appConstants = useConstants();
 
-  const [input, setInput] = useState(""); // Track entered digits
-  const [noiseLevel, setNoiseLevel] = useState(10); // Start at max noise
+  const [input, setInput] = useState("");
+  const [noiseLevel, setNoiseLevel] = useState(10);
   const [loading, setLoading] = useState(false);
-  const [lastRefreshTime, setLastRefreshTime] = useState(0); // Track last refresh time
-  const [isSpacebarHeld, setIsSpacebarHeld] = useState(false); // Track if spacebar is held
+  const [lastRefreshTime, setLastRefreshTime] = useState(0);
+  const [isSpacebarHeld, setIsSpacebarHeld] = useState(false);
 
   const CAPTCHA_CODE = appConstants.unlockedScreen.userManager.CAPTCHA_CODE;
 
@@ -59,15 +59,15 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
   // TODO Fix this mess. Reentering code doesnt work
   const handlePinInput = (key: string) => {
     if (input.length < CAPTCHA_CODE.length) {
-      setInput((prev) => prev + key); // Update input state
-      originalHandlePinInput(key); // Call original handler
+      setInput((prev) => prev + key);
+      originalHandlePinInput(key);
     }
   };
 
   const handleBackspace = () => {
     if (input.length > 0) {
-      setInput((prev) => prev.slice(0, -1)); // Remove last character from input
-      originalHandleBackspace(); // Call original handler
+      setInput((prev) => prev.slice(0, -1));
+      originalHandleBackspace();
     }
   };
 
@@ -78,10 +78,8 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       g = Math.random() * 255;
       b = Math.random() * 255;
 
-      // Calculate luminance
       const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
 
-      // Ensure luminance is within a readable range (e.g., between 50 and 200)
       if (luminance > 50 && luminance < 200) break;
     } while (true);
 
@@ -96,7 +94,6 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Generate noise with random colors
     const noiseGenerator = new Noise(Math.random());
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const pixels = imageData.data;
@@ -107,16 +104,14 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       const value = noiseGenerator.simplex2(i % canvas.width, Math.floor(i / canvas.width)) * adjustedNoiseLevel * 255;
       const noiseValue = Math.floor(value);
 
-      // Assign random colors to each pixel
-      pixels[i] = 255 - noiseValue + Math.random() * 50; // Red channel
-      pixels[i + 1] = 255 - noiseValue + Math.random() * 50; // Green channel
-      pixels[i + 2] = 255 - noiseValue + Math.random() * 50; // Blue channel
-      pixels[i + 3] = 255; // Alpha (opacity)
+      pixels[i] = 255 - noiseValue + Math.random() * 50;
+      pixels[i + 1] = 255 - noiseValue + Math.random() * 50;
+      pixels[i + 2] = 255 - noiseValue + Math.random() * 50;
+      pixels[i + 3] = 255;
     }
 
     ctx.putImageData(imageData, 0, 0);
 
-    // Add random lines
     for (let i = 0; i < 5; i++) {
       ctx.beginPath();
       ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
@@ -126,7 +121,6 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       ctx.stroke();
     }
 
-    // Add random dots
     for (let i = 0; i < 50; i++) {
       const x = Math.random() * canvas.width;
       const y = Math.random() * canvas.height;
@@ -136,7 +130,6 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       ctx.fill();
     }
 
-    // Random transformations for CAPTCHA text with readable colors
     ctx.font = "bold 15px Arial";
 
     const xPosition = Math.random() * (canvas.width - 100);
@@ -151,7 +144,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
     let currentX = 0;
     for (let i = 0; i < CAPTCHA_CODE.length; i++) {
       const char = CAPTCHA_CODE[i];
-      ctx.fillStyle = generateReadableColor(); // Use readable color for each letter
+      ctx.fillStyle = generateReadableColor();
       ctx.fillText(char, currentX, 0);
       currentX += kerning;
     }
@@ -165,24 +158,23 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
 
   const handleRefresh = () => {
     const now = Date.now();
-    const cooldown = 1000; // 1-second cooldown
+    const cooldown = 1000;
 
-    if (loading || now - lastRefreshTime < cooldown || isSpacebarHeld) return; // Prevent refresh if cooldown or spacebar is held
+    if (loading || now - lastRefreshTime < cooldown || isSpacebarHeld) return;
 
-    setLastRefreshTime(now); // Update last refresh time
-    setLoading(true); // Set loading to true
+    setLastRefreshTime(now);
+    setLoading(true);
     setTimeout(() => {
-      // Reduce noise level by 30% of the current value, ensuring it doesn't drop below 0.1
       setNoiseLevel((prev) => Math.max(prev * 0.5, 0.1));
-      setLoading(false); // Reset loading after 1 second
-    }, 1000); // 1-second delay
+      setLoading(false);
+    }, 1000);
   };
 
   const handleSubmit = () => {
     if (loading) return;
 
     setLoading(true);
-    setTimeout(() => setLoading(false), 3000); // 3s loading
+    setTimeout(() => setLoading(false), 3000);
 
     if (input === CAPTCHA_CODE) {
       onSolve();
@@ -194,7 +186,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       Enter: handleSubmit,
       " ": () => {
         if (!isSpacebarHeld) {
-          setIsSpacebarHeld(true); // Mark spacebar as held
+          setIsSpacebarHeld(true);
           handleRefresh();
         }
       },
@@ -210,7 +202,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
     const handleKeyUp = (event: KeyboardEvent) => {
       // TODO Space has an enum
       if (event.code === "Space") {
-        setIsSpacebarHeld(false); // Reset spacebar held flag on key release
+        setIsSpacebarHeld(false);
       }
     };
 

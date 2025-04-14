@@ -179,7 +179,6 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
               direction="row"
               padding="0 1vw"
               isEnabled={true}
-              // onClick={onClose}
             />
           </div>
         </DialogActions>

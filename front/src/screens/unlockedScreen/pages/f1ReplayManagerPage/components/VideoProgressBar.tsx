@@ -58,7 +58,7 @@ export const VideoProgressBar: FC<{ progressPercentage: number; currentTime: num
   progressPercentage,
   currentTime,
 }) => {
-  const clampedProgress = Math.min(Math.max(progressPercentage, 0), 100); // Clamp progressPercentage between 0 and 100
+  const clampedProgress = Math.min(Math.max(progressPercentage, 0), 100);
 
   return (
     <VideoProgressBarContainer>

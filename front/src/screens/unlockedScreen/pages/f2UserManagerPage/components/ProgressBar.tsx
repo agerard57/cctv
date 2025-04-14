@@ -72,11 +72,10 @@ export const ProgressBar: FC<{
     const interval = setInterval(
       () => {
         setProgressBarValue((prev) => {
-          // Check if we should show the error and captcha
           if (!progress.isCaptchaSolved && prev + 5 >= 89 && !isCaptchaDisplayed && !captchaNeeded) {
             clearInterval(interval);
             setCaptchaNeeded(true);
-            return 89; // Fix at 89% until captcha is solved
+            return 89;
           }
 
           if (prev >= 100) {

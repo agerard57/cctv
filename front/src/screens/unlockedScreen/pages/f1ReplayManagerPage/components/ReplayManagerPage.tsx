@@ -45,7 +45,6 @@ export const ReplayManagerPage: FC = () => {
     currentTime,
   });
 
-  // Effect to handle loading state whenever component mounts
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {
@@ -55,7 +54,6 @@ export const ReplayManagerPage: FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Additional effect to reset loading when media status changes
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {

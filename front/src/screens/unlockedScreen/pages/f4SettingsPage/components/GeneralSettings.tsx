@@ -12,27 +12,23 @@ export const SettingsCategoryContainer = styled.div`
 
 export const GeneralSettings: FC = () => {
   const { t } = useTranslation("SettingsPage");
-  // General Settings
+
   const { settings, setLanguage, setWallpaper, setBrightness, setVolume } = useSettings();
 
   useKeyDown({
     2: () => {
-      // Decrement volume
       const newVolume = Math.max(settings.volume - 5, 0);
       setVolume(newVolume);
     },
     3: () => {
-      // Increment volume
       const newVolume = Math.min(settings.volume + 5, 100);
       setVolume(newVolume);
     },
     4: () => {
-      // Decrement brightness
       const newBrightness = Math.max(settings.brightness - 5, 40);
       setBrightness(newBrightness);
     },
     5: () => {
-      // Increment brightness
       const newBrightness = Math.min(settings.brightness + 5, 100);
       setBrightness(newBrightness);
     },
@@ -59,7 +55,7 @@ export const GeneralSettings: FC = () => {
       onChange: (value: number) => setVolume(value),
       min: 0,
       max: 100,
-      keyboardShortcut: ["2", "3"], // Left: Increment, Right: Decrement
+      keyboardShortcut: ["2", "3"],
     },
     {
       label: t("generalSettings.brightness"),
@@ -68,7 +64,7 @@ export const GeneralSettings: FC = () => {
       onChange: (value: number) => setBrightness(value),
       min: 40,
       max: 100,
-      keyboardShortcut: ["4", "5"], // Left: Increment, Right: Decrement
+      keyboardShortcut: ["4", "5"],
     },
   ];
 

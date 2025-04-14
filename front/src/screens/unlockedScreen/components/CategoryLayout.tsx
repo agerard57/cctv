@@ -53,30 +53,24 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
   const theme = useTheme();
   const { t } = useTranslation(namespace);
 
-  // Find the current index for navigation purposes
   const selectedIndex = categories.findIndex((c) => c.categoryName === selectedCategory);
 
   const handleCategoryNavigation = (direction: "up" | "down") => {
-    // Start from current index and find next/prev valid category with content
     let currentIndex = selectedIndex < 0 ? 0 : selectedIndex;
     let newIndex = currentIndex;
 
-    // Find the next category with content
     for (let i = 0; i < categories.length; i++) {
-      // Calculate the next potential index using modulo for wrap-around
       const tempIndex =
         direction === "down"
           ? (currentIndex + i + 1) % categories.length
           : (currentIndex - i - 1 + categories.length) % categories.length;
 
-      // If this category has content, select it
       if (categories[tempIndex].content && tempIndex !== currentIndex) {
         newIndex = tempIndex;
         break;
       }
     }
 
-    // Only update if we found a different category
     if (newIndex !== currentIndex) setSelectedCategory(categories[newIndex].categoryName);
   };
 

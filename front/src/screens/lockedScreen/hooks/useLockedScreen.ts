@@ -1,7 +1,7 @@
 import { useConstants, useKeyDown, useProgress } from "@/providers";
 import { PinInputStatuses, usePinInputs } from "@/core";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Screens } from "../../Screens";
 import { BlockedSFX, ErrorSFX, SuccessSFX } from "../assets";
@@ -24,6 +24,7 @@ export const useLockedScreen: UseLockedScreen = () => {
   const appConstants = useConstants();
   const navigate = useNavigate();
   const { setSessionUnlocked } = useProgress();
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [selectedMethod, setSelectedMethod] = useState<LoginMethods>(LoginMethods.KEYPAD);
   const [sessionStatus, setSessionStatus] = useState<SessionStatuses>(SessionStatuses.LOCKED);
@@ -106,16 +107,23 @@ export const useLockedScreen: UseLockedScreen = () => {
     setSessionStatus(SessionStatuses.BLOCKED);
     setBlockedTimer(appConstants.lockedScreen.keypad.BLOCK_DURATION);
 
-    const timer = setInterval(() => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+    }
+
+    timerIntervalRef.current = setInterval(() => {
       setBlockedTimer((prev) => {
-        if (prev === 1) {
-          clearInterval(timer);
+        if (prev === null || prev <= 1) {
+          if (timerIntervalRef.current) {
+            clearInterval(timerIntervalRef.current);
+            timerIntervalRef.current = null;
+          }
           setSessionStatus(SessionStatuses.LOCKED);
           setRemainingTries(appConstants.lockedScreen.keypad.MAX_TRIES);
           resetPin();
           return null;
         }
-        return prev! - 1;
+        return prev - 1;
       });
     }, 1000);
   };
@@ -155,6 +163,14 @@ export const useLockedScreen: UseLockedScreen = () => {
       return () => clearInterval(interval);
     }
   }, [selectedMethod, sessionStatus, loading]);
+
+  useEffect(() => {
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, []);
 
   return {
     selectedMethod,

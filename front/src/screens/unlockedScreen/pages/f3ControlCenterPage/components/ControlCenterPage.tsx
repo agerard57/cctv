@@ -54,7 +54,6 @@ export const ControlCenterPage: FC = () => {
   });
 
   const [metrics, setMetrics] = useState<AllMetrics>({
-    // Power metrics
     voltage: 240,
     currentLoad: 75,
     temperature: 35,
@@ -67,14 +66,12 @@ export const ControlCenterPage: FC = () => {
     apparentPower: 120,
     loadImbalance: 5,
 
-    // System health metrics
     fanSpeed: 1200,
     systemHealth: 90,
     systemEfficiency: 80,
     coolingLoad: 75,
     systemStability: 95,
 
-    // Ventilation shaft metrics
     airQuality: 85,
     humidity: 45,
     noiseLevel: 30,
@@ -84,11 +81,9 @@ export const ControlCenterPage: FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setGraphData((prev) => {
-        // Calculate harmonic distortion based on previous value
         const latestHarmonic = prev.harmonicDistortionHistory[prev.harmonicDistortionHistory.length - 1] || 5;
         const newHarmonic = Math.max(3, Math.min(10, latestHarmonic + (Math.random() - 0.5) * 0.5));
 
-        // Get current values directly from metrics state and add random variations to all values
         const voltageWithVariation = metrics.voltage + (Math.random() - 0.5) * 0.1;
         const fanSpeedWithVariation = metrics.fanSpeed + (Math.random() - 0.5) * 20;
         const systemEfficiencyWithVariation = metrics.systemEfficiency + (Math.random() - 0.5) * 1;
@@ -105,14 +100,12 @@ export const ControlCenterPage: FC = () => {
     return () => {
       clearInterval(interval);
     };
-  }, []); // Remove metrics from dependency array to prevent frequent resets
+  }, []);
 
-  // Helper function to create random interval between min and max milliseconds
   const getRandomInterval = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  // Randomized updates for power metrics - Group 1
   useEffect(() => {
     const updatePowerMetricsGroup1 = () => {
       setMetrics((prev) => ({
@@ -133,7 +126,6 @@ export const ControlCenterPage: FC = () => {
     };
   }, []);
 
-  // Randomized updates for power metrics - Group 2
   useEffect(() => {
     const updatePowerMetricsGroup2 = () => {
       setMetrics((prev) => ({
@@ -154,7 +146,6 @@ export const ControlCenterPage: FC = () => {
     };
   }, []);
 
-  // Randomized updates for power metrics - Group 3
   useEffect(() => {
     const updatePowerMetricsGroup3 = () => {
       setMetrics((prev) => ({
@@ -177,7 +168,6 @@ export const ControlCenterPage: FC = () => {
     };
   }, []);
 
-  // Randomized updates for system health metrics - Group 1
   useEffect(() => {
     const updateSystemHealthGroup1 = () => {
       setMetrics((prev) => ({
@@ -197,7 +187,6 @@ export const ControlCenterPage: FC = () => {
     };
   }, []);
 
-  // Randomized updates for system health metrics - Group 2
   useEffect(() => {
     const updateSystemHealthGroup2 = () => {
       setMetrics((prev) => ({
@@ -218,7 +207,6 @@ export const ControlCenterPage: FC = () => {
     };
   }, []);
 
-  // Randomized updates for ventilation shaft metrics
   useEffect(() => {
     const updateVentilationMetrics = () => {
       setMetrics((prev) => ({

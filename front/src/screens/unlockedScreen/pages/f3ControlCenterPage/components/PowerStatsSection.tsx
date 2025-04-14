@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import { Typography, Card, CardContent, Box } from "@mui/material";
-import { Line, Bar } from "react-chartjs-2"; // Import Bar chart
+import { Line, Bar } from "react-chartjs-2";
 import {
   BoltOutlined,
   SpeedOutlined,
@@ -49,7 +49,6 @@ const thresholds = {
   loadImbalance: 8,
 };
 
-// Add CSS styles for grid layout
 const styles = {
   statsGrid: {
     display: "grid",
@@ -59,7 +58,7 @@ const styles = {
   },
   chartsRow: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr", // 2 equal columns
+    gridTemplateColumns: "1fr 1fr",
     gap: "24px",
     width: "100%",
   },
@@ -74,8 +73,8 @@ export const StatCard: FC<{
   backgroundColor?: string;
   unit?: string;
   threshold?: number;
-  icon?: React.ReactNode; // Add icon prop
-  customDisplay?: string; // Add optional customDisplay prop
+  icon?: React.ReactNode;
+  customDisplay?: string;
 }> = ({ label, value, backgroundColor = "#00000017", unit, threshold, icon, customDisplay }) => {
   const style = {
     color: typeof value === "number" && value > (threshold ?? Number.MAX_VALUE) ? "orange" : "inherit",
@@ -129,7 +128,7 @@ export const ChartCard: FC<{
   borderColor: string;
   backgroundColor: string;
   yAxisLabel: string;
-  chartType?: "line" | "bar"; // Add chartType prop
+  chartType?: "line" | "bar";
 }> = ({ title, labels, data, label, borderColor, backgroundColor, yAxisLabel, chartType = "line" }) => {
   const { t } = useTranslation("ControlCenterPage");
 
@@ -288,7 +287,6 @@ export const ChartCard: FC<{
 };
 
 export const PowerStatsSection: FC<PowerStatsProps> = ({ metrics, graphData }) => {
-  // Remove local state and random updates since they're now handled by parent
   const { updateKeyState, resetKeyStates } = useKeyState();
   const { t } = useTranslation("ControlCenterPage");
 
@@ -302,7 +300,6 @@ export const PowerStatsSection: FC<PowerStatsProps> = ({ metrics, graphData }) =
     };
   }, [updateKeyState, resetKeyStates]);
 
-  // Replace hardcoded timeLabels with the helper function
   const timeLabels = generateTimeLabels(30, t);
 
   const statsArray = [

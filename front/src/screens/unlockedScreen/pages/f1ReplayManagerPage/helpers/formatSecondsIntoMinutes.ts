@@ -10,6 +10,5 @@ export const formatSecondsIntoMinutes: FormatSecondsIntoMinutes = (seconds: numb
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.round(seconds % 60);
 
-  // Format the minutes and seconds with leading zeros if needed
   return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
 };

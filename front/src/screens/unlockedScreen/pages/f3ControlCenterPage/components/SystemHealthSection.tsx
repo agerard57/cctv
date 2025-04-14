@@ -50,7 +50,7 @@ interface SystemHealthProps {
 
 export const SystemHealthSection: FC<SystemHealthProps> = ({ metrics, graphData }) => {
   const { t } = useTranslation("ControlCenterPage");
-  // Remove local state management since it's handled by parent
+
   const { updateKeyState, resetKeyStates } = useKeyState();
 
   useEffect(() => {

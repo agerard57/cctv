@@ -29,7 +29,7 @@ export const SystemConfiguration: FC = () => {
   };
 
   const handleResetSystem = () => {
-    setDialogOpen(true); // Open the dialog for keycard validation
+    setDialogOpen(true);
   };
 
   const handleDialogClose = () => {
@@ -37,13 +37,13 @@ export const SystemConfiguration: FC = () => {
   };
 
   const handleAuthenticationSuccess = () => {
-    console.log("SystemConfiguration: handleAuthenticationSuccess called"); // Debug log
+    console.log("SystemConfiguration: handleAuthenticationSuccess called");
     setDialogOpen(false);
     setProgressDialogOpen(true);
   };
 
   const handleProgressDone = () => {
-    console.log("SystemConfiguration: handleProgressDone called"); // Debug log
+    console.log("SystemConfiguration: handleProgressDone called");
     setProgressDialogOpen(false);
     setCCTVSystemDown(true);
     setShowSuccess(true);
@@ -153,7 +153,7 @@ export const SystemConfiguration: FC = () => {
           t("systemConfiguration.poweringDown"),
           t("systemConfiguration.finalizingShutdown"),
         ]}
-        onProgressDone={handleProgressDone} // Ensure this is passed
+        onProgressDone={handleProgressDone}
       />
 
       <SettingsCategoryContainer>

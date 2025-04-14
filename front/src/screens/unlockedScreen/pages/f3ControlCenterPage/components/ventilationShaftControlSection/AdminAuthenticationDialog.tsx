@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 interface AdminAuthenticationDialogProps {
   open: boolean;
   onClose: () => void;
-  onSuccess?: () => void; // Add this new prop
+  onSuccess?: () => void;
 }
 
 export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ open, onClose, onSuccess }) => {
@@ -22,10 +22,9 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
   const { pins, handlePinInput, handleBackspace } = usePinInputs(
     {
       correctCode: CAPTCHA_CODE,
-      disableValidation: true, // Add this to signal intent to disable validation
+      disableValidation: true,
     },
     {
-      // Empty callbacks prevent validation effects from running
       onFilled: () => {},
       onSuccess: () => {},
       onError: () => {},
@@ -40,45 +39,35 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
   };
 
   const handlePinBackspace = () => {
-    // Allow backspacing pins as long as there are pins to backspace
-    // and the password field is empty
     if (pinInput.length > 0 && password.length === 0) {
       setPinInput((prev) => prev.slice(0, -1));
       handleBackspace();
     }
   };
 
-  // Define handleAuthenticate using useCallback to ensure stable reference
   const handleAuthenticate = useCallback(() => {
     const trimmedPassword = password.trim();
 
-    // Check pin code and password - now using "abc" as the password
-    // TODO - Replace with actual password
-    if (pinInput === CAPTCHA_CODE && trimmedPassword === "a") {
-      onSuccess?.(); // Call onSuccess callback if provided
+    if (pinInput === CAPTCHA_CODE && trimmedPassword === "marc") {
+      onSuccess?.();
       onClose();
     } else {
-      // Failed authentication
       setError(t("adminAuthentication.invalidCredentials"));
     }
   }, [pinInput, CAPTCHA_CODE, password, onClose, onSuccess, t]);
 
-  // Reset form when dialog opens/closes
   useEffect(() => {
     if (!open) {
-      // Clear form on close
-      setPinInput(""); // Reset pinInput state to empty string
+      setPinInput("");
       setPassword("");
       setError("");
 
-      // Force pins to reset by calling handleBackspace repeatedly (in case pins not empty)
       for (let i = 0; i < CAPTCHA_CODE.length; i++) {
         handleBackspace();
       }
     }
   }, [open, handleBackspace, CAPTCHA_CODE.length]);
 
-  // Handle global key events
   useKeyDown(
     {
       Delete: () => {
@@ -95,11 +84,9 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
       },
       Backspace: () => {
         if (open) {
-          // Only process backspace on PIN if password is empty
           if (password.length === 0) {
             handlePinBackspace();
           }
-          // Otherwise, T9 component will handle backspace for the password
         }
       },
     },
@@ -111,19 +98,16 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
     [open, onClose, handleAuthenticate, handlePinBackspace, handlePinEntry],
   );
 
-  // Check if PIN is complete
   const isPinComplete = pinInput.length === CAPTCHA_CODE.length;
 
-  // Determine if authentication is possible (PIN complete AND password not empty)
   const canAuthenticate = isPinComplete && password.length > 0;
 
-  // Create shared styling for consistent appearance between PIN and T9
   const inputContainerStyle = {
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     border: "1px solid rgba(255, 255, 255, 0.5)",
     borderRadius: "4px",
-    padding: "8px 12px 12px 12px", // Increase bottom padding to prevent text clipping
-    height: "4vh", // Increase height from 3vh to 4vh
+    padding: "8px 12px 12px 12px",
+    height: "4vh",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -159,7 +143,7 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
             <Box sx={inputContainerStyle}>
               <PinInputs
                 pinShape="rectangle"
-                transparent={true} // Add the prop to make pins transparent
+                transparent={true}
                 pins={pins.map((status, index) => ({
                   status,
                   value: pinInput[index] || undefined,
@@ -187,8 +171,8 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "8px 16px", // Set explicit padding
-          overflowX: "hidden", // Prevent horizontal overflow
+          padding: "8px 16px",
+          overflowX: "hidden",
         }}
       >
         <div style={{ flexShrink: 1, overflow: "hidden" }}>
@@ -201,19 +185,19 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
                 padding: "0 8px",
                 "& .MuiAlert-icon": {
                   color: "#ff5959",
-                  padding: "2px 0", // Adjust padding to align with text
-                  marginRight: "8px", // Restore proper margin for icon
-                  alignSelf: "center", // Ensure vertical centering
+                  padding: "2px 0",
+                  marginRight: "8px",
+                  alignSelf: "center",
                 },
                 "& .MuiAlert-message": {
                   color: "#ff5959",
                   padding: "4px 0",
                   display: "flex",
-                  alignItems: "center", // Center align text vertically
-                  minHeight: "32px", // Ensure minimum height for proper alignment
+                  alignItems: "center",
+                  minHeight: "32px",
                 },
                 display: "flex",
-                alignItems: "center", // Center the flex children
+                alignItems: "center",
               }}
             >
               {error}
@@ -228,7 +212,6 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
             direction="row"
             padding="0 1vw"
             isEnabled={true}
-            // onClick={onClose}
           />
           <KeyButton
             label={t("adminAuthentication.enter")}
@@ -236,7 +219,6 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
             direction="row"
             padding="0 1vw"
             isEnabled={canAuthenticate}
-            //onClick={handleAuthenticate}
           />
         </div>
       </DialogActions>
