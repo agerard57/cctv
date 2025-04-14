@@ -1,0 +1,33 @@
+{
+  "captcha": {
+    "verificationPrompt": "Veuillez compléter la vérification pour accéder à cette ressource",
+    "refreshCaptcha": "Actualiser",
+    "enter": "Entrer"
+  },
+  "progressBar": {
+    "initializing": "Initialisation...",
+    "fetchingDatabase": "Récupération depuis la base de données...",
+    "decryptingData": "Décryptage des données utilisateur...",
+    "loadingAccessLevels": "Chargement des niveaux d'accès...",
+    "verifyingCredentials": "Vérification des identifiants...",
+    "error": "403 - Erreur{{loading}}",
+    "errorDescription": "Accès non-habituel détecté.",
+    "finalizing": "Finalisation..."
+  },
+  "table": {
+    "id": "ID",
+    "lastName": "Nom",
+    "firstName": "Prénom",
+    "password": "Mot de passe",
+    "accessLevel": "Niveau d'accès",
+    "accountStatus": "Statut du compte",
+    "accessLevels": {
+      "securityGuard": "Agent de sécurité",
+      "securityOfficer": "Officier de sécurité"
+    },
+    "accountStatuses": {
+      "active": "Actif",
+      "inactive": "Inactif"
+    }
+  }
+}

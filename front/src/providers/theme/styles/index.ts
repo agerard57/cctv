@@ -1,0 +1,1 @@
+export { MuiTypography } from "./MuiTypography";

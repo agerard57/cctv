@@ -1,0 +1,39 @@
+{
+  "insertMedia": {
+    "loading": {
+      "title": "Please wait",
+      "message": "Looking for the multimedia device"
+    },
+    "missing": {
+      "title": "No media detected",
+      "message": "Please insert a multimedia device and press Enter to continue."
+    },
+    "invalid": {
+      "title": "Media detected but invalid",
+      "message": "The inserted multimedia device is invalid. Please try with another device."
+    },
+    "valid": {
+      "title": "Media detected and valid",
+      "message": "Importing videos, please wait"
+    }
+  },
+  "fileName": "{{date}}_{{time}}_{{roomCode}}.avi",
+  "room": {
+    "SR": {
+      "code": "SR",
+      "full": "Security Room"
+    },
+    "MR": {
+      "code": "MR",
+      "full": "Main Room"
+    },
+    "LR": {
+      "code": "LR",
+      "full": "Locker Room"
+    },
+    "LO": {
+      "code": "LO",
+      "full": "Lobby"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "captcha": {
+    "verificationPrompt": "Please complete the verification to access this resource",
+    "refreshCaptcha": "Refresh",
+    "enter": "Enter"
+  },
+  "progressBar": {
+    "initializing": "Initializing",
+    "fetchingDatabase": "Fetching from database...",
+    "decryptingData": "Decrypting user data...",
+    "loadingAccessLevels": "Loading access levels...",
+    "verifyingCredentials": "Verifying credentials...",
+    "error": "403 - Error{{loading}}",
+    "errorDescription": "Unusual access detected.",
+    "finalizing": "Finalizing..."
+  },
+  "table": {
+    "id": "ID",
+    "lastName": "Last Name",
+    "firstName": "First Name",
+    "password": "Password",
+    "accessLevel": "Access Level",
+    "accountStatus": "Account Status",
+    "accessLevels": {
+      "securityGuard": "Security Guard",
+      "securityOfficer": "Security Officer"
+    },
+    "accountStatuses": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "insertMedia": {
+    "loading": {
+      "title": "Veuillez patienter",
+      "message": "Recherche du périphérique multimédia"
+    },
+    "missing": {
+      "title": "Aucun média détecté",
+      "message": "Veuillez insérer un périphérique multimédia et appuyer sur \"Enter\"."
+    },
+    "invalid": {
+      "title": "Média détecté mais invalide",
+      "message": "Le périphérique multimédia inséré est invalide. Veuillez essayer avec un autre périphérique."
+    },
+    "valid": {
+      "title": "Média détecté et valide",
+      "message": "Importation des vidéos, veuillez patienter"
+    }
+  },
+  "fileName": "{{date}}_{{time}}_{{roomCode}}.avi",
+  "room": {
+    "SR": { "code": "SS", "full": "Salle de sécurité" },
+    "MR": { "code": "SP", "full": "Salle principale" },
+    "LR": { "code": "VES", "full": "Vestiaire" },
+    "LO": { "code": "HAL", "full": "Hall d'entrée" }
+  }
+}

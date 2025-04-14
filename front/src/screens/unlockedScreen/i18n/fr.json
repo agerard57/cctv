@@ -1,0 +1,17 @@
+{
+  "controls": {
+    "pageUp": "PgUp",
+    "pageDown": "PgDn",
+
+    " ": "Space",
+    "backspace": "Bspace",
+    "cancel": "Cancel",
+    "enter": "Enter"
+  },
+  "title": {
+    "f1": "Lecteur Vidéo",
+    "f2": "Gestionnaire des utilisateurs",
+    "f3": "Alimentation du système",
+    "f4": "Paramètres"
+  }
+}

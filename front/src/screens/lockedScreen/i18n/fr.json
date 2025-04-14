@@ -1,0 +1,35 @@
+{
+  "otherMethods": {
+    "text": "Méthodes d'authentification"
+  },
+  "sessionStatus": {
+    "locked": {
+      "title": "Verrouillé"
+    },
+    "blocked": {
+      "title": "Bloqué",
+      "timer_one": "Veuillez réessayer dans {{count}} seconde.",
+      "timer_other": "Veuillez réessayer dans {{count}} secondes."
+    },
+    "unlocked": {
+      "title": "Déverrouillé"
+    }
+  },
+  "methods": {
+    "f1": {
+      "error": {
+        "title": "Mot de passe incorrect",
+        "remaining_one": "{{count}} tentative restante",
+        "remaining_other": "{{count}} tentatives restantes",
+        "description": "Veuillez saisir un code valide ou\nutiliser une méthode d'authentification alternative."
+      }
+    },
+    "f2": {
+      "action": "Présentez votre identifiant\nau lecteur de carte.",
+      "error": {
+        "title": "Carte non autorisée",
+        "description": "Veuillez utiliser une carte valide\nou une méthode d'authentification alternative."
+      }
+    }
+  }
+}

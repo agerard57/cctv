@@ -1,0 +1,35 @@
+{
+  "otherMethods": {
+    "text": "Authentication methods"
+  },
+  "sessionStatus": {
+    "locked": {
+      "title": "Locked"
+    },
+    "blocked": {
+      "title": "Blocked",
+      "timer_one": "Please try again in {{count}} second.",
+      "timer_other": "Please try again in {{count}} seconds."
+    },
+    "unlocked": {
+      "title": "Unlocked"
+    }
+  },
+  "methods": {
+    "f1": {
+      "error": {
+        "title": "Incorrect password",
+        "remaining_one": "{{count}} attempt remaining",
+        "remaining_other": "{{count}} attempts remaining",
+        "description": "Please enter a valid code\nor use an alternative authentication method."
+      }
+    },
+    "f2": {
+      "action": "Present your credentials\nto the card reader.",
+      "error": {
+        "title": "Unauthorized card",
+        "description": "Please use a valid card\nor an alternative authentication method."
+      }
+    }
+  }
+}

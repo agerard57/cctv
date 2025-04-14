@@ -1,0 +1,1 @@
+export { useLockedScreen } from "./useLockedScreen";

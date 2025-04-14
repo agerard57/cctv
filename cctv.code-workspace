@@ -1,0 +1,81 @@
+/* cspell:disable */
+{
+  "folders": [
+    {
+      "name": "🌲 - Root",
+      "path": "."
+    },
+    {
+      "name": "📜 - Scripts",
+      "path": "./scripts"
+    },
+    {
+      "name": "📚 - Documentation",
+      "path": "./docs"
+    },
+    {
+      "name": "🔌 - Backend",
+      "path": "./back"
+    },
+    {
+      "name": "🖥️ - Frontend",
+      "path": "./front"
+    }
+  ],
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "davidanson.vscode-markdownlint",
+      "esbenp.prettier-vscode",
+      "wayou.vscode-todo-highlight",
+      "streetsidesoftware.code-spell-checker",
+      "streetsidesoftware.code-spell-checker-french",
+      "vivaxy.vscode-conventional-commits",
+      "lokalise.i18n-ally"
+    ]
+  },
+  "settings": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "todohighlight.keywords": ["TODO", "FIX", "console.log"],
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.tsc.autoDetect": "off",
+
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "cSpell.words": ["Iconless", "languagedetector", "Lngs", "rfid", "Rfid"],
+
+    "i18n-ally.namespace": true,
+    "i18n-ally.sourceLanguage": "en",
+    "i18n-ally.displayLanguage": "en",
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.annotations": true,
+    "i18n-ally.enabledFrameworks": ["react-i18next"],
+    "i18n-ally.localesPaths": [
+      "front/src/screens/**/i18n",
+      "src/screens/**/i18n"
+    ],
+    "i18n-ally.extract.autoDetect": true
+  }
+}
