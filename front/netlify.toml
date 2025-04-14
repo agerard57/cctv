@@ -1,5 +1,7 @@
 [build]
-  publish = "build"  # or whatever your build directory is
+  base = "front"   
+  command = "npm run build"
+  publish = "dist"
 
 [[redirects]]
   from = "/*"
