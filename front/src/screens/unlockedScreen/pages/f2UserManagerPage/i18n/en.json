@@ -1,7 +1,7 @@
 {
   "captcha": {
     "verificationPrompt": "Please complete the verification to access this resource",
-    "refreshCaptcha": "Refresh",
+    "refreshCaptcha": "Space",
     "enter": "Enter"
   },
   "progressBar": {
@@ -10,7 +10,7 @@
     "decryptingData": "Decrypting user data...",
     "loadingAccessLevels": "Loading access levels...",
     "verifyingCredentials": "Verifying credentials...",
-    "error": "403 - Error{{loading}}",
+    "error": "403 - Error",
     "errorDescription": "Unusual access detected.",
     "finalizing": "Finalizing..."
   },

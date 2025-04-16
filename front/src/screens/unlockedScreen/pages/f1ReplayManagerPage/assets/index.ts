@@ -1,6 +1,7 @@
 import PgUpKeyIcon from "./pgUpKeyIcon.png";
 import PgDnKeyIcon from "./pgDnKeyIcon.png";
 // TODO Make it so default icons are a thing
+// TODO Also, delete EnterKeyIcon, unused
 import EnterKeyIcon from "./enterKeyIcon.png";
 import SpaceKeyIcon from "./spaceKeyIcon.png";
 import SpaceAltKeyIcon from "./spaceAltKeyIcon.png";

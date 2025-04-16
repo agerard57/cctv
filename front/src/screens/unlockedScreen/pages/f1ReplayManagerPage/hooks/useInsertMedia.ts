@@ -1,14 +1,13 @@
-import { useState, useRef, Dispatch, SetStateAction } from "react";
+import { useState, useRef, Dispatch, SetStateAction, useEffect, useCallback } from "react";
 import { UsbStatuses } from "../typings";
-import { getUsbStatus } from "../services/usbStatus.service";
-import { useKeyDown } from "@/providers/keyState/hooks";
-import { useConstants } from "@/providers/constants";
+import { getUsbDevices } from "../services/usbDevices.service";
 import { useLoadingDots } from "@/core";
 import { useProgress } from "../../../../../providers";
+import { useConstants } from "@/providers/constants";
 
 export type UseInsertMedia = (setCurrentUsbStatus: Dispatch<SetStateAction<UsbStatuses>>) => {
-  debugStatus: UsbStatuses;
-  setDebugStatus: Dispatch<SetStateAction<UsbStatuses>>;
+  debugDevices: string[];
+  setDebugDevices: Dispatch<SetStateAction<string[]>>;
   loading: boolean;
   shouldShake: boolean;
   progressBarValue: number;
@@ -17,66 +16,127 @@ export type UseInsertMedia = (setCurrentUsbStatus: Dispatch<SetStateAction<UsbSt
 
 export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
   const appConstants = useConstants();
-  const [debugStatus, setDebugStatus] = useState<UsbStatuses>(UsbStatuses.MISSING);
+  const { VALID_USB, INVALID_USB_LIST, POLLING_INTERVAL, LOADING_DELAY, PROGRESS_INTERVAL, SHAKE_DURATION } =
+    appConstants.unlockedScreen.replayManager.USB;
+
+  const [debugDevices, setDebugDevices] = useState<string[]>([]);
+  const [deviceList, setDeviceList] = useState<string[]>([]);
+  const prevDeviceListRef = useRef<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [shouldShake, setShouldShake] = useState<boolean>(false);
   const [progressBarValue, setProgressBarValue] = useState<number>(0);
-  const usbStatusRef = useRef<UsbStatuses | null>(null);
-  const { loadingDots } = useLoadingDots(loading || usbStatusRef.current === UsbStatuses.VALID);
+  const currentStatusRef = useRef<UsbStatuses>(UsbStatuses.MISSING);
+  const { loadingDots } = useLoadingDots(loading || currentStatusRef.current === UsbStatuses.VALID);
   const { setMediaProvided } = useProgress();
 
-  const checkUsbStatus = async () => {
-    if (loading) return;
-    setLoading(true);
-
-    try {
-      const { status } = await getUsbStatus(appConstants.DEBUG_MODE ? `?override_status=${debugStatus}` : "");
-
-      if (usbStatusRef.current !== status) {
-        usbStatusRef.current = status;
-        setCurrentUsbStatus(status);
+  // Determine USB status based on device list
+  const determineUsbStatus = useCallback(
+    (devices: string[]): UsbStatuses => {
+      if (devices.includes(VALID_USB)) {
+        return UsbStatuses.VALID;
       }
 
-      if (status !== UsbStatuses.VALID) {
-        setShouldShake(true);
+      // Check if any invalid devices are present
+      for (const invalidDevice of INVALID_USB_LIST) {
+        if (devices.includes(invalidDevice)) {
+          return UsbStatuses.INVALID;
+        }
+      }
+
+      return UsbStatuses.MISSING;
+    },
+    [VALID_USB, INVALID_USB_LIST],
+  );
+
+  // Check if device list has changed
+  const hasDeviceListChanged = (oldList: string[], newList: string[]): boolean => {
+    if (oldList.length !== newList.length) return true;
+
+    const oldSet = new Set(oldList);
+    return newList.some((device) => !oldSet.has(device));
+  };
+
+  const checkUsbDevices = async () => {
+    try {
+      // Use debug devices if in debug mode, otherwise fetch from API
+      let newDevices: string[] = [];
+
+      if (appConstants.DEBUG_MODE && debugDevices.length > 0) {
+        newDevices = [...debugDevices];
+      } else {
+        const response = await getUsbDevices();
+        newDevices = response.devices;
+      }
+
+      // Only process if device list has changed
+      if (hasDeviceListChanged(prevDeviceListRef.current, newDevices)) {
+        prevDeviceListRef.current = [...newDevices];
+        setDeviceList(newDevices);
+
+        const newStatus = determineUsbStatus(newDevices);
+        currentStatusRef.current = newStatus;
+
+        if (newStatus !== UsbStatuses.MISSING) {
+          setLoading(true);
+        }
+
+        setCurrentUsbStatus(newStatus);
+
+        if (newStatus === UsbStatuses.INVALID) {
+          setShouldShake(true);
+        }
+
+        // Simulate processing delay
+        setTimeout(() => {
+          setLoading(false);
+
+          if (newStatus === UsbStatuses.VALID) {
+            const interval = setInterval(() => {
+              setProgressBarValue((prev) => {
+                if (prev >= 100) {
+                  clearInterval(interval);
+                  setMediaProvided(true);
+                  return 100;
+                }
+                return prev + 10;
+              });
+            }, PROGRESS_INTERVAL);
+          } else if (newStatus === UsbStatuses.INVALID) {
+            setShouldShake(true);
+            setTimeout(() => setShouldShake(false), SHAKE_DURATION);
+          }
+        }, LOADING_DELAY);
       }
     } catch (error) {
-      console.error("Error fetching USB status:", error);
-      if (usbStatusRef.current !== UsbStatuses.MISSING) {
+      console.error("Error checking USB devices:", error);
+      if (currentStatusRef.current !== UsbStatuses.MISSING) {
         setCurrentUsbStatus(UsbStatuses.MISSING);
-        usbStatusRef.current = UsbStatuses.MISSING;
+        currentStatusRef.current = UsbStatuses.MISSING;
+        prevDeviceListRef.current = [];
       }
       setShouldShake(true);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-
-        if (usbStatusRef.current === UsbStatuses.VALID) {
-          const interval = setInterval(() => {
-            setProgressBarValue((prev) => {
-              if (prev >= 100) {
-                clearInterval(interval);
-                setMediaProvided(true);
-                return 100;
-              }
-              return prev + 10;
-            });
-          }, 300);
-        } else {
-          setShouldShake(true);
-          setTimeout(() => setShouldShake(false), 500);
-        }
-      }, 3000);
+      setTimeout(() => setShouldShake(false), SHAKE_DURATION);
     }
   };
 
-  useKeyDown({
-    Enter: checkUsbStatus,
-  });
+  useEffect(() => {
+    // Initial check
+    checkUsbDevices();
+
+    // Set up polling interval
+    const intervalId = setInterval(() => {
+      checkUsbDevices();
+    }, POLLING_INTERVAL);
+
+    // Clean up on unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [debugDevices]);
 
   return {
-    debugStatus,
-    setDebugStatus,
+    debugDevices,
+    setDebugDevices,
     loading,
     shouldShake,
     progressBarValue,

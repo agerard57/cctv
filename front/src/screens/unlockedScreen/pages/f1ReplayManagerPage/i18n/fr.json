@@ -6,7 +6,7 @@
     },
     "missing": {
       "title": "Aucun média détecté",
-      "message": "Veuillez insérer un périphérique multimédia et appuyer sur \"Enter\"."
+      "message": "Veuillez insérer un périphérique multimédia pour continuer."
     },
     "invalid": {
       "title": "Média détecté mais invalide",

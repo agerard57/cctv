@@ -7,12 +7,24 @@ import platform
 import threading
 from typing import Optional, Callable
 
-# Hardware detection
+# Better approach for importing from parent directory
+import sys
+# Use relative path from current file instead of hardcoded username
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+""" TODO Remove state in backend """
+from config import MOCK_RFID_CODE, VALID_RFID_CODE
+
+RPI_AVAILABLE = False
+GPIO = None
+SimpleMFRC522 = None
+
 try:
     import RPi.GPIO as GPIO
     from mfrc522 import SimpleMFRC522
     RPI_AVAILABLE = platform.system() == "Linux" and os.path.exists("/dev/gpiomem")
-except (ImportError, RuntimeError):
+    print(f"Hardware detection result: RPI_AVAILABLE={RPI_AVAILABLE}")
+except (ImportError, RuntimeError) as e:
+    print(f"Hardware imports failed: {e}")
     RPI_AVAILABLE = False
 
 
@@ -42,6 +54,7 @@ class RFIDReader:
     def start_scanner(self) -> bool:
         """Start the background RFID scanner thread."""
         if not RPI_AVAILABLE or self.reader is None:
+            print("Not starting RFID scanner - hardware not available")
             return False
             
         if self._scanner_thread is not None and self._scanner_thread.is_alive():

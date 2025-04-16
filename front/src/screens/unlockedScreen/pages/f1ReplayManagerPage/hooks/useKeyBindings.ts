@@ -1,15 +1,7 @@
 import { useKeyDown, useProgress } from "@/providers";
 import { SupportedKeys, useKeyState } from "@/providers/keyState";
 import { VideoListInfos, VideoControls } from "../typings";
-import {
-  BackspaceKeyIcon,
-  CancelKeyIcon,
-  EnterKeyIcon,
-  PgDnKeyIcon,
-  PgUpKeyIcon,
-  SpaceAltKeyIcon,
-  SpaceKeyIcon,
-} from "../assets";
+import { BackspaceKeyIcon, CancelKeyIcon, PgDnKeyIcon, PgUpKeyIcon, SpaceAltKeyIcon, SpaceKeyIcon } from "../assets";
 import { useEffect } from "react";
 
 export const useKeyBindings = ({
@@ -33,11 +25,7 @@ export const useKeyBindings = ({
   const { progress } = useProgress();
 
   useEffect(() => {
-    if (!progress.isMediaProvided) {
-      updateKeyState({
-        Enter: EnterKeyIcon,
-      });
-    } else {
+    if (progress.isMediaProvided) {
       updateKeyState({
         " ": !videoControls.isPlaying ? SpaceKeyIcon : SpaceAltKeyIcon,
         Backspace: BackspaceKeyIcon,

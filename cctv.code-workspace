@@ -39,7 +39,7 @@
     "editor.formatOnSave": true,
     "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
     "terminal.integrated.defaultProfile.linux": "bash",
-    "todohighlight.keywords": ["TODO", "FIX", "console.log"],
+    "todohighlight.keywords": ["TODO", "FIX", "console.log", "PROD"],
     "typescript.preferences.importModuleSpecifier": "relative",
     "typescript.tsc.autoDetect": "off",
 

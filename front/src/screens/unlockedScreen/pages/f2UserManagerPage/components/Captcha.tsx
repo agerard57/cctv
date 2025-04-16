@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 // @ts-ignore I really dislike putting this... Oh well...
 import { Noise } from "noisejs";
@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useConstants } from "../../../../../providers/constants";
 import styled from "@emotion/styled";
 import { useKeyDown } from "../../../../../providers/keyState/hooks";
-import { EnterKeyIcon, SpaceKeyIcon } from "../assets";
+import { SpaceKeyIcon } from "../assets";
 
 const CaptchaContainer = styled.div`
   padding: 10vh 0 0 0;
@@ -30,11 +30,11 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
   const { t } = useTranslation("UserManagerPage");
   const appConstants = useConstants();
 
-  const [input, setInput] = useState("");
   const [noiseLevel, setNoiseLevel] = useState(10);
   const [loading, setLoading] = useState(false);
   const [lastRefreshTime, setLastRefreshTime] = useState(0);
   const [isSpacebarHeld, setIsSpacebarHeld] = useState(false);
+  const inputRef = useRef<string>("");
 
   const CAPTCHA_CODE = appConstants.unlockedScreen.userManager.CAPTCHA_CODE;
 
@@ -42,6 +42,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
     pins,
     handlePinInput: originalHandlePinInput,
     handleBackspace: originalHandleBackspace,
+    resetPin,
   } = usePinInputs(
     {
       correctCode: CAPTCHA_CODE,
@@ -52,21 +53,43 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
         setLoading(false);
         onSolve();
       },
-      onError: () => setLoading(false),
+      onError: () => {
+        setLoading(false);
+        // Don't auto-reset, let user action trigger reset
+      },
     },
   );
 
-  // TODO Fix this mess. Reentering code doesnt work
+  // Custom handlers that keep our inputRef in sync
   const handlePinInput = (key: string) => {
-    if (input.length < CAPTCHA_CODE.length) {
-      setInput((prev) => prev + key);
+    if (loading) return;
+
+    // If we're in error state, reset first
+    if (pins.some((status) => status === "error")) {
+      resetPin();
+      inputRef.current = key;
+      originalHandlePinInput(key);
+      return;
+    }
+
+    // Otherwise, just append the key
+    if (inputRef.current.length < CAPTCHA_CODE.length) {
+      inputRef.current += key;
       originalHandlePinInput(key);
     }
   };
 
   const handleBackspace = () => {
-    if (input.length > 0) {
-      setInput((prev) => prev.slice(0, -1));
+    // If we're in error state, reset everything
+    if (pins.some((status) => status === "error")) {
+      resetPin();
+      inputRef.current = "";
+      return;
+    }
+
+    // Otherwise just remove the last character
+    if (inputRef.current.length > 0) {
+      inputRef.current = inputRef.current.slice(0, -1);
       originalHandleBackspace();
     }
   };
@@ -170,20 +193,8 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
     }, 1000);
   };
 
-  const handleSubmit = () => {
-    if (loading) return;
-
-    setLoading(true);
-    setTimeout(() => setLoading(false), 3000);
-
-    if (input === CAPTCHA_CODE) {
-      onSolve();
-    }
-  };
-
   useKeyDown(
     {
-      Enter: handleSubmit,
       " ": () => {
         if (!isSpacebarHeld) {
           setIsSpacebarHeld(true);
@@ -193,9 +204,11 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       Backspace: handleBackspace,
     },
     (digit: string) => {
-      handlePinInput(digit);
+      if (!loading) {
+        handlePinInput(digit);
+      }
     },
-    [loading, input, pins, isSpacebarHeld],
+    [loading, pins, isSpacebarHeld],
   );
 
   useEffect(() => {
@@ -236,7 +249,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
               pinShape="rectangle"
               pins={pins.map((status, index) => ({
                 status,
-                value: input[index] || undefined,
+                value: index < inputRef.current.length ? inputRef.current[index] : undefined,
               }))}
             />
           )}
@@ -248,15 +261,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
           label={t("captcha.refreshCaptcha")}
           icon={SpaceKeyIcon}
           direction="column"
-          padding="0.7vh 1vw"
-          // TODO IsEnabled State
-          isEnabled={!loading}
-        />
-        <KeyButton
-          label={t("captcha.enter")}
-          icon={EnterKeyIcon}
-          direction="column"
-          padding="0.7vh 1vw"
+          padding="0.7vh 3vw"
           // TODO IsEnabled State
           isEnabled={!loading}
         />

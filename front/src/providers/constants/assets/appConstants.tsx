@@ -9,6 +9,11 @@ import {
 
 export const appConstants = {
   DEBUG_MODE: import.meta.env.VITE_DEBUG === "true",
+  core: {
+    pins: {
+      VALIDATION_DELAY: 3000,
+    },
+  },
   lockedScreen: {
     keypad: {
       LOCK_SCREEN_CODE: "3630",
@@ -21,9 +26,19 @@ export const appConstants = {
     },
   },
   unlockedScreen: {
-    DEFAULT_PAGE: UnlockedScreenPages.REPLAY_MANAGER,
+    DEFAULT_PAGE: UnlockedScreenPages.USER_MANAGER,
+    replayManager: {
+      USB: {
+        VALID_USB: "T1", // PROD This will change
+        INVALID_USB_LIST: ["T2", "T3", "T4"], // PROD This will change
+        POLLING_INTERVAL: 2000,
+        LOADING_DELAY: 3000,
+        PROGRESS_INTERVAL: 300,
+        SHAKE_DURATION: 500,
+      },
+    },
     userManager: {
-      CAPTCHA_CODE: "11037", // Alt. code that is more complex to read: "868171"
+      CAPTCHA_CODE: "11037", // PROD Alt. code that is more complex to read: "868171"
       USERS: [
         {
           id: 4821,
@@ -160,6 +175,7 @@ export const appConstants = {
           accessLevel: AccessLevels.SECURITY_GUARD,
           accountStatus: AccountStatus.ACTIVE,
         },
+        // PROD This is the "right" user
         {
           id: 2342,
           lastName: "Matis",
@@ -169,6 +185,7 @@ export const appConstants = {
           accessLevel: AccessLevels.SECURITY_OFFICER,
           accountStatus: AccountStatus.ACTIVE,
         },
+        // -
         {
           id: 1347,
           lastName: "Ryan",

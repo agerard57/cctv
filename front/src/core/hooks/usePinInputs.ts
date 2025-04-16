@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { PinInputStatuses } from "../typings";
 import { KeyPressSFX, SuccessSFX, ErrorSFX } from "@/screens/lockedScreen/assets";
+import { useConstants } from "../../providers";
+import { playSound } from "../helpers";
 
 type UsePinInputs = (
   settings: {
@@ -22,7 +24,7 @@ type UsePinInputs = (
 
 export const usePinInputs: UsePinInputs = (settings, callbacks) => {
   const errorTriggered = useRef(false);
-
+  const appConstants = useConstants();
   const codeLength = settings.correctCode.length;
   const disableValidation = settings.disableValidation || false;
 
@@ -49,7 +51,7 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
       return;
     }
 
-    new Audio(KeyPressSFX).play().catch(() => {});
+    playSound(KeyPressSFX);
 
     setPin((prevPin) => {
       const newPin = prevPin + key;
@@ -80,7 +82,6 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
       return;
     }
 
-    // TODO REMOVE COMMENTS
     if (pin.length === 0) return;
 
     setPin((prevPin) => {
@@ -107,16 +108,16 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
       setLoading(false);
 
       if (enteredPin === settings.correctCode) {
-        new Audio(SuccessSFX).play().catch(() => {});
+        playSound(SuccessSFX);
         callbacks?.onSuccess?.();
       } else {
-        new Audio(ErrorSFX).play().catch(() => {});
+        playSound(ErrorSFX);
         setPins(Array(codeLength).fill(PinInputStatuses.ERROR));
         callbacks?.onError?.();
       }
 
       errorTriggered.current = false;
-    }, 5000);
+    }, appConstants.core.pins.VALIDATION_DELAY);
   };
 
   return {

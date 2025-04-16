@@ -1,7 +1,7 @@
 {
   "captcha": {
     "verificationPrompt": "Veuillez compléter la vérification pour accéder à cette ressource",
-    "refreshCaptcha": "Actualiser",
+    "refreshCaptcha": "Espace",
     "enter": "Entrer"
   },
   "progressBar": {
@@ -10,7 +10,7 @@
     "decryptingData": "Décryptage des données utilisateur...",
     "loadingAccessLevels": "Chargement des niveaux d'accès...",
     "verifyingCredentials": "Vérification des identifiants...",
-    "error": "403 - Erreur{{loading}}",
+    "error": "403 - Erreur",
     "errorDescription": "Accès non-habituel détecté.",
     "finalizing": "Finalisation..."
   },

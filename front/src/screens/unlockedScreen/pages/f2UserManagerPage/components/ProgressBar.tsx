@@ -105,7 +105,7 @@ export const ProgressBar: FC<{
   return (
     <ProgressBarContainer>
       <Typography variant="pageTitle" color={isError ? "red" : undefined}>
-        {!isError ? `${progressBarValue}%` : t("progressBar.error", { loading: loadingDots })}
+        {!isError ? `${progressBarValue}%` : t("progressBar.error")}
       </Typography>
       <StyledLinearProgress variant="determinate" value={progressBarValue} isError={isError} />
       <Typography style={{ color: isError ? "red" : undefined }}>{message}</Typography>

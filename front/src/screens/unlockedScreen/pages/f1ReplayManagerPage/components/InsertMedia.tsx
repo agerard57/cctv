@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { UsbMissingIcon, UsbValidIcon, UsbInvalidIcon, EnterKeyIcon } from "../assets";
 import { Typography, LinearProgress } from "@mui/material";
-import { KeyButton, LoadingSpinnerSvg } from "@/core";
+import { LoadingSpinnerSvg } from "@/core";
 import { useInsertMedia } from "../hooks/useInsertMedia";
 import { useConstants } from "@/providers/constants";
 import { UsbStatuses } from "../typings";
@@ -9,7 +9,6 @@ import { DebugInsertMedia } from "./DebugInsertMedia";
 import { BlackContainerBase } from "../../../styles";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
-import { SupportedKeys } from "../../../../../providers/keyState";
 
 const InsertMediaContainer = styled(BlackContainerBase)`
   padding: 10vh 10vw;
@@ -51,7 +50,7 @@ export const InsertMedia: FC<{
   const { t } = useTranslation("ReplayManagerPage");
   const appConstants = useConstants();
 
-  const { debugStatus, setDebugStatus, loading, shouldShake, progressBarValue, loadingDots } =
+  const { debugDevices, setDebugDevices, loading, shouldShake, progressBarValue, loadingDots } =
     useInsertMedia(setCurrentUsbStatus);
 
   const showProgressBar = !loading && currentUsbStatus === UsbStatuses.VALID;
@@ -90,9 +89,8 @@ export const InsertMedia: FC<{
                 ? t("insertMedia.invalid.message")
                 : t("insertMedia.missing.message")}
         </Typography>
-        {!showProgressBar && <KeyButton label={SupportedKeys.ENTER} icon={EnterKeyIcon} isEnabled={!loading} />}
       </InsertMediaContainer>
-      {appConstants.DEBUG_MODE && <DebugInsertMedia debugStatus={debugStatus} setDebugStatus={setDebugStatus} />}
+      {appConstants.DEBUG_MODE && <DebugInsertMedia debugDevices={debugDevices} setDebugDevices={setDebugDevices} />}
     </div>
   );
 };

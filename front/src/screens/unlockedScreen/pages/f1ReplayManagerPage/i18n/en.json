@@ -6,7 +6,7 @@
     },
     "missing": {
       "title": "No media detected",
-      "message": "Please insert a multimedia device and press Enter to continue."
+      "message": "Please insert a multimedia device to continue."
     },
     "invalid": {
       "title": "Media detected but invalid",

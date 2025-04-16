@@ -1,20 +1,27 @@
 """
 Main FastAPI application for the CCTV system.
 """
+import os
 from fastapi import FastAPI, Query
 from typing import Dict, Optional, Any
 
-# Import modules
-from modules.rfid import reader as rfid_reader
+# Use absolute imports
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# Import modules using absolute imports
+from modules.rfid import reader as rfid_reader, RPI_AVAILABLE
 from modules.usb import get_usb_status
+from modules.usb_devices import get_mounted_usb_devices
 
 # Create FastAPI app
 app = FastAPI(title="CCTV Control API")
 
-# Start RFID scanner on startup
+# Start RFID scanner on startup only if hardware is available
 @app.on_event("startup")
 def startup_event():
     """Initialize services on application startup."""
+    print(f"Starting application with RPI hardware: {RPI_AVAILABLE}")
     rfid_reader.start_scanner()
 
 @app.get("/usb-status")
@@ -62,6 +69,12 @@ def reset_system() -> Dict[str, str]:
     # Add any other module resets here if needed in the future
     
     return {"status": "success", "message": "System state has been reset"}
+
+@app.get("/usb-devices")
+def usb_devices() -> Dict[str, Any]:
+    """Return a list of all mounted USB devices without validation"""
+    devices = get_mounted_usb_devices()
+    return {"devices": devices}
 
 # Add cleanup for FastAPI shutdown
 @app.on_event("shutdown")
