@@ -114,7 +114,7 @@ const ControlsKeyContainer = styled(WhiteContainerBase, {
   position: absolute;
   bottom: 0;
   right: 0;
-  transform: ${({ isVisible }) => (isVisible ? "translateX(0)" : "translateX(50%)")};
+  transform: ${({ isVisible }) => (isVisible ? "translateX(0)" : "translateX(65%)")};
   transition: transform 0.2s ease-in-out;
   position: fixed;
   width: max-content;
@@ -138,9 +138,9 @@ export const UnlockedScreen: FC = () => {
   const { t } = useTranslation("UnlockedScreen");
   const [isVisible, setIsVisible] = useState(true);
   const [areControlsVisible, setAreControlsVisible] = useState(false);
-  const isAsteriskKeyPressed = useRef(false);
   const pressTimerRef = useRef<NodeJS.Timeout | null>(null);
   const keyHeldRef = useRef(false);
+  const isAsteriskHeldRef = useRef(false);
 
   const { settings } = useSettings();
 
@@ -190,11 +190,10 @@ export const UnlockedScreen: FC = () => {
               pressTimerRef.current = null;
             }, 90);
           } else if (key === SupportedKeys.ASTERISK) {
-            if (!isAsteriskKeyPressed.current) {
-              isAsteriskKeyPressed.current = true;
-              setAreControlsVisible(true);
-              setIsVisible(true);
-            }
+            if (isAsteriskHeldRef.current) return;
+            isAsteriskHeldRef.current = true;
+            setAreControlsVisible((prev) => !prev);
+            setIsVisible(true);
           }
         };
         return callbacks;
@@ -214,11 +213,7 @@ export const UnlockedScreen: FC = () => {
     }
 
     if (event.key === SupportedKeys.ASTERISK) {
-      isAsteriskKeyPressed.current = false;
-      setTimeout(() => {
-        setIsVisible(false);
-        setAreControlsVisible(false);
-      }, 1000);
+      isAsteriskHeldRef.current = false;
     }
   };
 
@@ -277,12 +272,18 @@ export const UnlockedScreen: FC = () => {
         </FunctionButtonsContainer>
       </div>
       <div style={{ position: "absolute", top: "13vh", right: 0, zIndex: 1 }}>
-        <ControlsKeyContainer isVisible={isVisible} background={theme.app.core.whiteTransparentBackground}>
-          <KeyButton label={"Keyboard"} icon={AsteriskKeyIcon} direction="column" isEnabled />
+        <ControlsKeyContainer isVisible={areControlsVisible} background={theme.app.core.whiteTransparentBackground}>
+          <KeyButton
+            label={t("controls.buttonLabel")}
+            icon={AsteriskKeyIcon}
+            reversed
+            isEnabled={areControlsVisible}
+            padding="0 1vw"
+          />
         </ControlsKeyContainer>
       </div>
 
-      {isVisible && areControlsVisible && <Controls />}
+      {areControlsVisible && <Controls />}
       <div
         style={{
           margin: "11vh 6vw 5vh 1vw",

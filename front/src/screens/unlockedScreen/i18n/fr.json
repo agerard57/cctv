@@ -1,5 +1,6 @@
 {
   "controls": {
+    "buttonLabel": "Touches",
     "pageUp": "PgUp",
     "pageDown": "PgDn",
 

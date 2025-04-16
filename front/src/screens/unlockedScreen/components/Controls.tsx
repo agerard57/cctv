@@ -14,7 +14,7 @@ const WhiteContainerBase = styled.div<{ background: string }>`
 const ControlsContainer = styled(WhiteContainerBase)`
   position: absolute;
   display: flex;
-  bottom: 9vh;
+  bottom: 8vh;
   right: 0;
   z-index: 2;
   padding: 10px;

@@ -8,6 +8,7 @@ type Props = {
   width?: string;
   padding?: string;
   direction?: "row" | "column";
+  reversed?: boolean;
 };
 
 /**
@@ -20,6 +21,7 @@ export const KeyButton: FC<Props> = ({
   width = "6vw",
   padding = "0.5vh 1vw",
   direction = "row",
+  reversed = false,
 }) => {
   const theme = useTheme();
 
@@ -34,7 +36,7 @@ export const KeyButton: FC<Props> = ({
         borderRadius: "5px",
         display: "flex",
         gap: "10%",
-        flexDirection: direction,
+        flexDirection: reversed ? (direction === "row" ? "row-reverse" : "column-reverse") : direction,
         alignItems: "center",
         justifyContent: "space-around",
         opacity: isEnabled ? 1 : 0.5,
