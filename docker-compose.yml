@@ -9,6 +9,8 @@ services:
       - "5173:5173"
     stdin_open: true
     tty: true
+    environment:
+      VITE_API_TARGET: "http://back:8000"
 
   back:
     build:
@@ -18,5 +20,7 @@ services:
       - "8000:8000"
     stdin_open: true
     tty: true
+    environment:
+      APP_ENV: "production"
 
 volumes:

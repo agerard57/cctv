@@ -14,7 +14,7 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api": {
-        target: "http://back:8000",
+        target: process.env.VITE_API_TARGET,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
