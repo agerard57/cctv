@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+RPi.GPIO
+mfrc522

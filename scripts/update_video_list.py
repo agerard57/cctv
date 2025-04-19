@@ -2,8 +2,6 @@ import os
 import shutil
 import subprocess
 
-""" TODO Comment, and update document """
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
@@ -14,22 +12,18 @@ THUMBNAIL_INDEX_FILE = os.path.join(THUMBNAIL_DIR, "index.ts")
 
 VIDEO_EXTENSIONS = {".mp4", ".avi", ".mkv", ".mov", ".webm"}
 
-# Step 1: Remove the thumbnails folder if it exists
 if os.path.exists(THUMBNAIL_DIR):
     shutil.rmtree(THUMBNAIL_DIR)
 
 os.makedirs(THUMBNAIL_DIR)
 
-# Step 2: Update the videos/index.ts file
 video_files = [f for f in os.listdir(VIDEO_DIR) if os.path.splitext(f)[1] in VIDEO_EXTENSIONS]
 
-# Prepare imports for index.ts file
 video_imports = []
 for video in video_files:
     video_name = os.path.splitext(video)[0]
     video_imports.append(f'import {video_name} from "./{video}";')
 
-# Write to the videos/index.ts file
 with open(INDEX_FILE_VIDEOS, "w") as f:
     f.write("\n".join(video_imports) + "\n\n")
     f.write('\nimport { Thumbnails } from "./thumbnails";\n\n')
@@ -38,7 +32,6 @@ with open(INDEX_FILE_VIDEOS, "w") as f:
 
 print("✅ videos/index.ts file updated!")
 
-# Step 3: Generate thumbnails and thumbnails/index.ts
 thumbnail_imports = []
 for video in video_files:
     video_path = os.path.join(VIDEO_DIR, video)
@@ -58,7 +51,6 @@ for video in video_files:
     except subprocess.CalledProcessError:
         print(f"❌ Failed to generate thumbnail for {video}")
 
-# Write to the thumbnails/index.ts file
 os.makedirs(os.path.dirname(THUMBNAIL_INDEX_FILE), exist_ok=True)
 with open(THUMBNAIL_INDEX_FILE, "w") as f:
     f.write("\n".join(thumbnail_imports) + "\n\n")
