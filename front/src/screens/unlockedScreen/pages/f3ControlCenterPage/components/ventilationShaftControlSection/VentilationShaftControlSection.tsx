@@ -45,13 +45,13 @@ interface Props {
 
 export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics }) => {
   const { t } = useTranslation("ControlCenterPage");
-  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState<boolean>(false);
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
 
   const { progress } = useProgress();
 
-  const [ventilationDoorStatus, setVentilationDoorStatus] = useState<boolean>(false);
-  const [ventilationLightStatus, setVentilationLightStatus] = useState<boolean>(false);
-  const [ventilationFanStatus, setVentilationFanStatus] = useState<boolean>(false);
+  const [ventilationDoorStatus, setVentilationDoorStatus] = useState(false);
+  const [ventilationLightStatus, setVentilationLightStatus] = useState(false);
+  const [ventilationFanStatus, setVentilationFanStatus] = useState(false);
 
   // TODO Add sfx for these buttons, F4, The dialogs and everything else really...
   useKeyDown(

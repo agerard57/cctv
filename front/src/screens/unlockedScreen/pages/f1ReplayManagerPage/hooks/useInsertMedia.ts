@@ -22,8 +22,8 @@ export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
   const [debugDevices, setDebugDevices] = useState<string[]>([]);
   const [deviceList, setDeviceList] = useState<string[]>([]);
   const prevDeviceListRef = useRef<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [shouldShake, setShouldShake] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const [shouldShake, setShouldShake] = useState(false);
   const [progressBarValue, setProgressBarValue] = useState<number>(0);
   const currentStatusRef = useRef<UsbStatuses>(UsbStatuses.MISSING);
   const { loadingDots } = useLoadingDots(loading || currentStatusRef.current === UsbStatuses.VALID);

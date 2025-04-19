@@ -82,6 +82,7 @@ export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages,
 
       <DialogContent>
         <Box sx={{ mt: 2, mb: 4 }}>
+          {/* TODO Remove all body2 */}
           <Typography variant="body2" sx={{ mb: 2, fontFamily: "monospace" }}>
             {currentMessage}
           </Typography>

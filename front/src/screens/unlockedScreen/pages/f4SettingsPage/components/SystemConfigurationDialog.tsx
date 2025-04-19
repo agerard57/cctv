@@ -1,11 +1,13 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Alert, Box } from "@mui/material";
-import { useKeyDown } from "@/providers";
-import { KeyButton } from "@/core";
-import axios from "axios";
-import { DebugSystemConfigurationRfidButtons } from "./DebugSystemConfigurationRfidButtons";
+import { useConstants, useKeyDown, useSettings } from "@/providers";
+import { KeyButton, LoadingSpinner, RfidStatuses, useLoadingDots } from "@/core";
 import { CancelKeyIcon } from "../../f1ReplayManagerPage/assets";
 import { useTranslation } from "react-i18next";
+import { DebugRfidButtons } from "../../../../../core/components/DebugRfidButtons";
+import { fetchRfidStatus } from "@/core/helpers/rfid";
+import { playSound } from "../../../../../core/helpers";
+import { ErrorSFX, SuccessSFX } from "../../../../lockedScreen/assets";
 
 interface SystemConfigurationDialogProps {
   open: boolean;
@@ -15,81 +17,71 @@ interface SystemConfigurationDialogProps {
 
 export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ open, onClose, onSuccess }) => {
   const { t } = useTranslation("SettingsPage");
-  const [rfidCode, setRfidCode] = useState("");
-  const [error, setError] = useState("");
-  const [progressDialogOpen, setProgressDialogOpen] = useState(false);
+  const [rfidStatus, setRfidStatus] = useState<RfidStatuses>(RfidStatuses.NONE);
+  const appConstants = useConstants();
+  const [loading, setLoading] = useState(false);
+  const { appSettings } = useSettings();
+  const { loadingDots } = useLoadingDots(rfidStatus === RfidStatuses.NONE);
+  const hasHandledRfid = useRef(false); // Track if RFID has been handled
+  const intervalRef = useRef<NodeJS.Timeout | null>(null); // Track the interval
 
   useEffect(() => {
-    let interval: NodeJS.Timeout | undefined;
-
     if (open) {
-      interval = setInterval(async () => {
-        try {
-          const response = await axios.get("/api/rfid-code");
-          const fetchedCode = response.data.rfid_code;
-
-          if (fetchedCode) {
-            setRfidCode(fetchedCode);
+      hasHandledRfid.current = false; // Reset when dialog opens
+      intervalRef.current = setInterval(() => {
+        fetchRfidStatus(appConstants.unlockedScreen.settings.VALID_RFID_CODE, undefined, (fetchedRfidStatus) => {
+          if (rfidStatus !== fetchedRfidStatus) {
+            setRfidStatus(fetchedRfidStatus);
           }
-        } catch (error) {
-          console.error("Failed to fetch RFID code:", error);
-        }
-      }, 1000);
+        });
+      }, 500);
     } else {
-      setRfidCode("");
-      setError("");
+      setRfidStatus(RfidStatuses.NONE);
     }
 
     return () => {
-      if (interval) clearInterval(interval);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, [open]);
 
   useEffect(() => {
-    const rootElement = document.getElementById("root");
-    if (rootElement) {
-      if (open || progressDialogOpen) {
-        rootElement.setAttribute("inert", "true");
-      } else {
-        rootElement.removeAttribute("inert");
-      }
+    if (rfidStatus !== RfidStatuses.NONE && !hasHandledRfid.current) {
+      onHandleRfid(rfidStatus);
+      hasHandledRfid.current = true; // Mark as handled
     }
-    return () => {
-      if (rootElement) {
-        rootElement.removeAttribute("inert");
-      }
-    };
-  }, [open, progressDialogOpen]);
+  }, [rfidStatus]);
 
-  const handleAuthenticate = () => {
-    // TODO See, 'cause maybe we need it
-    // setLoading(true);
+  const onHandleRfid = (rfidStatus: RfidStatuses) => {
+    if (rfidStatus === RfidStatuses.NONE || !open || loading) {
+      return;
+    }
+
+    setLoading(true);
+
     setTimeout(() => {
-      if (rfidCode) {
-        setProgressDialogOpen(true);
-        onClose();
+      setLoading(false);
+      if (rfidStatus === RfidStatuses.VALID) {
+        playSound(SuccessSFX, appSettings.volume);
+
+        setTimeout(() => {
+          onSuccess();
+        }, 3000);
       } else {
-        setError(t("systemConfiguration.dialog.invalidCard"));
+        playSound(ErrorSFX, appSettings.volume);
       }
-    }, 1000);
+    }, 5000);
   };
 
-  useKeyDown(
-    {
-      Delete: () => {
-        if (open) {
-          onClose();
-        }
-      },
-      Enter: () => {
-        if (open && rfidCode) {
-          handleAuthenticate();
-        }
-      },
+  useKeyDown({
+    Delete: () => {
+      if (open) {
+        onClose();
+      }
     },
-    undefined,
-    [open, onClose, handleAuthenticate, rfidCode],
-  );
+  });
 
   return (
     <>
@@ -125,53 +117,35 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
               marginTop: "8px",
             }}
           >
-            <Typography>{rfidCode || t("systemConfiguration.dialog.waitingForScan")}</Typography>
+            {loading ? (
+              <LoadingSpinner color="white" />
+            ) : (
+              <Typography variant="tableContent">
+                {rfidStatus === RfidStatuses.NONE
+                  ? `${t("systemConfiguration.dialog.waitingForScan")}${loadingDots}`
+                  : rfidStatus === RfidStatuses.VALID
+                    ? t("systemConfiguration.dialog.validCard")
+                    : t("systemConfiguration.dialog.invalidCard")}
+              </Typography>
+            )}
           </Box>
           <Box marginY={2}>
-            <DebugSystemConfigurationRfidButtons
-              handleRfidCode={(code) => setRfidCode(code)}
-              handleSkipRfid={() => onSuccess()}
+            <DebugRfidButtons
+              validRfidCode={appConstants.unlockedScreen.settings.VALID_RFID_CODE}
+              onHandleRfid={onHandleRfid}
+              onRfidSkip={onSuccess}
             />
           </Box>
         </DialogContent>
         <DialogActions
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             alignItems: "center",
             padding: "8px 16px",
           }}
         >
-          <div style={{ flexShrink: 1, overflow: "hidden" }}>
-            {error && (
-              <Alert
-                severity="error"
-                sx={{
-                  backgroundColor: "transparent",
-                  color: "red",
-                  padding: "0 8px",
-                  "& .MuiAlert-icon": {
-                    color: "#ff5959",
-                    padding: "2px 0",
-                    marginRight: "8px",
-                    alignSelf: "center",
-                  },
-                  "& .MuiAlert-message": {
-                    color: "#ff5959",
-                    padding: "4px 0",
-                    display: "flex",
-                    alignItems: "center",
-                    minHeight: "32px",
-                  },
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                {error}
-              </Alert>
-            )}
-          </div>
-
+          {/* TODO not the right icon */}
           <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
             <KeyButton
               label={t("systemConfiguration.dialog.closeButton")}

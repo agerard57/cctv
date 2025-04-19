@@ -13,34 +13,34 @@ export const SettingsCategoryContainer = styled.div`
 export const GeneralSettings: FC = () => {
   const { t } = useTranslation("SettingsPage");
 
-  const { settings, setLanguage, setWallpaper, setBrightness, setVolume } = useSettings();
+  const { appSettings, setLanguage, setWallpaper, setBrightness, setVolume } = useSettings();
 
   useKeyDown({
     2: () => {
-      const newVolume = Math.max(settings.volume - 5, 0);
+      const newVolume = Math.max(appSettings.volume - 5, 0);
       setVolume(newVolume);
     },
     3: () => {
-      const newVolume = Math.min(settings.volume + 5, 100);
+      const newVolume = Math.min(appSettings.volume + 5, 100);
       setVolume(newVolume);
     },
     4: () => {
-      const newBrightness = Math.max(settings.brightness - 5, 40);
+      const newBrightness = Math.max(appSettings.brightness - 5, 40);
       setBrightness(newBrightness);
     },
     5: () => {
-      const newBrightness = Math.min(settings.brightness + 5, 100);
+      const newBrightness = Math.min(appSettings.brightness + 5, 100);
       setBrightness(newBrightness);
     },
     9: () => {
       const wallpaperOptions = Object.values(Wallpapers);
-      const currentWallpaperIndex = wallpaperOptions.indexOf(settings.wallpaper);
+      const currentWallpaperIndex = wallpaperOptions.indexOf(appSettings.wallpaper);
       const nextWallpaperIndex = (currentWallpaperIndex + 1) % wallpaperOptions.length;
 
       setWallpaper(wallpaperOptions[nextWallpaperIndex]);
     },
     "#": () => {
-      const newLanguage = settings.language === Languages.FR ? Languages.EN : Languages.FR;
+      const newLanguage = appSettings.language === Languages.FR ? Languages.EN : Languages.FR;
 
       setLanguage(newLanguage);
     },
@@ -51,7 +51,7 @@ export const GeneralSettings: FC = () => {
     {
       label: t("generalSettings.volume"),
       type: "slider",
-      value: settings.volume,
+      value: appSettings.volume,
       onChange: (value: number) => setVolume(value),
       min: 0,
       max: 100,
@@ -60,7 +60,7 @@ export const GeneralSettings: FC = () => {
     {
       label: t("generalSettings.brightness"),
       type: "slider",
-      value: settings.brightness,
+      value: appSettings.brightness,
       onChange: (value: number) => setBrightness(value),
       min: 40,
       max: 100,
@@ -74,7 +74,7 @@ export const GeneralSettings: FC = () => {
       label: t("generalSettings.displaySettings.wallpaper"),
       type: "select",
       // TODO Infer type T
-      value: settings.wallpaper,
+      value: appSettings.wallpaper,
       onChange: (value: Wallpapers) => {
         setWallpaper(value);
       },
@@ -104,7 +104,7 @@ export const GeneralSettings: FC = () => {
       label: t("generalSettings.regionalSettings.timezone"),
       type: "select",
       // TODO The first shown language should be the one set in the settings
-      value: settings.language === Languages.FR ? "utc" : "est",
+      value: appSettings.language === Languages.FR ? "utc" : "est",
       options: [
         { value: "utc", label: t("generalSettings.regionalSettings.timezoneOptions.utc") },
         { value: "est", label: t("generalSettings.regionalSettings.timezoneOptions.est") },
@@ -115,7 +115,7 @@ export const GeneralSettings: FC = () => {
       type: "select",
       // TODO The first shown language should be the one set in the settings
       // default: settings.language
-      value: settings.language,
+      value: appSettings.language,
       onChange: (lang: Languages) => setLanguage(lang),
       options: [
         { value: Languages.FR, label: t("generalSettings.regionalSettings.languageOptions.french") },

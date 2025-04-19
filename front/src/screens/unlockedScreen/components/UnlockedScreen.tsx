@@ -142,7 +142,7 @@ export const UnlockedScreen: FC = () => {
   const keyHeldRef = useRef(false);
   const isAsteriskHeldRef = useRef(false);
 
-  const { settings } = useSettings();
+  const { appSettings } = useSettings();
 
   const appConstants = useConstants();
   const [currentPage, setCurrentPage] = useState<UnlockedScreenPages>(appConstants.unlockedScreen.DEFAULT_PAGE);
@@ -238,7 +238,7 @@ export const UnlockedScreen: FC = () => {
 
   return (
     <div style={{ height: "100vh", overflow: "hidden" }}>
-      <BackgroundImage wallpaper={getWallpaper(settings.wallpaper)} />
+      <BackgroundImage wallpaper={getWallpaper(appSettings.wallpaper)} />
       <Navbar isVisible={isVisible} background={theme.app.core.whiteTransparentBackground}>
         <SecurityBrandText size="small" />
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>

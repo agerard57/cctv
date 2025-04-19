@@ -1,8 +1,8 @@
 import { Languages, Wallpapers } from "../typings";
-import { Settings, SettingsInitializer } from "./Settings";
+import { AppSettings, AppSettingsInitializer } from "./AppSettings";
 
 export interface SettingsContextType {
-  settings: Settings;
+  appSettings: AppSettings;
   setVolume: (value: number) => void;
   setBrightness: (value: number) => void;
   setWallpaper: (value: Wallpapers) => void;
@@ -11,7 +11,7 @@ export interface SettingsContextType {
 }
 
 export const SettingsContextTypeInitializer: SettingsContextType = {
-  settings: SettingsInitializer,
+  appSettings: AppSettingsInitializer,
   setVolume: () => {},
   setBrightness: () => {},
   setWallpaper: () => {},

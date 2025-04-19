@@ -24,7 +24,7 @@ const getProgressMessages = (t: TFunction) => [
 
 interface AdminControlsCardProps {
   isDialogOpen: boolean;
-  setIsDialogOpen: Dispatch<React.SetStateAction<boolean>>;
+  setIsDialogOpen: Dispatch<React.SetStateAction>;
 }
 
 export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, setIsDialogOpen }) => {

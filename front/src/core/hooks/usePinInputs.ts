@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
 import { PinInputStatuses } from "../typings";
 import { KeyPressSFX, SuccessSFX, ErrorSFX } from "@/screens/lockedScreen/assets";
-import { useConstants } from "../../providers";
+import { useConstants, useSettings } from "../../providers";
 import { playSound } from "../helpers";
 
 type UsePinInputs = (
-  settings: {
+  pinSettings: {
     correctCode: string;
     disableValidation?: boolean;
   },
@@ -22,16 +22,15 @@ type UsePinInputs = (
   resetPin: () => void;
 };
 
-export const usePinInputs: UsePinInputs = (settings, callbacks) => {
+export const usePinInputs: UsePinInputs = (pinSettings, callbacks) => {
   const errorTriggered = useRef(false);
   const appConstants = useConstants();
-  const codeLength = settings.correctCode.length;
-  const disableValidation = settings.disableValidation || false;
-
+  const codeLength = pinSettings.correctCode.length;
+  const disableValidation = pinSettings.disableValidation || false;
   const [pin, setPin] = useState<string>("");
   const [pins, setPins] = useState<PinInputStatuses[]>(Array(codeLength).fill(PinInputStatuses.EMPTY));
-  const [loading, setLoading] = useState<boolean>(false);
-
+  const [loading, setLoading] = useState(false);
+  const { appSettings } = useSettings();
   const resetPin = () => {
     setPin("");
     setPins(Array(codeLength).fill(PinInputStatuses.EMPTY));
@@ -51,7 +50,7 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
       return;
     }
 
-    playSound(KeyPressSFX);
+    playSound(KeyPressSFX, appSettings.volume);
 
     setPin((prevPin) => {
       const newPin = prevPin + key;
@@ -107,11 +106,11 @@ export const usePinInputs: UsePinInputs = (settings, callbacks) => {
       if (loading) return;
       setLoading(false);
 
-      if (enteredPin === settings.correctCode) {
-        playSound(SuccessSFX);
+      if (enteredPin === pinSettings.correctCode) {
+        playSound(SuccessSFX, appSettings.volume);
         callbacks?.onSuccess?.();
       } else {
-        playSound(ErrorSFX);
+        playSound(ErrorSFX, appSettings.volume);
         setPins(Array(codeLength).fill(PinInputStatuses.ERROR));
         callbacks?.onError?.();
       }

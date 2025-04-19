@@ -25,7 +25,7 @@ const VideoDetailsContainer = styled(BlackContainerBase)`
 
 export const VideoDetails: FC<{ currentVideo: VideoListInfos }> = ({ currentVideo }) => {
   const { t } = useTranslation("ReplayManagerPage");
-  const { settings } = useSettings();
+  const { appSettings } = useSettings();
 
   return (
     <VideoDetailsContainer>
@@ -35,9 +35,11 @@ export const VideoDetails: FC<{ currentVideo: VideoListInfos }> = ({ currentVide
       </div>
       <div style={{ textAlign: "right" }}>
         <Typography variant="metadata">
-          {formatDateTime(currentVideo.dateTime, settings.language, "humanDate")}
+          {formatDateTime(currentVideo.dateTime, appSettings.language, "humanDate")}
         </Typography>
-        <Typography variant="metadata">{formatDateTime(currentVideo.dateTime, settings.language, "time")}</Typography>
+        <Typography variant="metadata">
+          {formatDateTime(currentVideo.dateTime, appSettings.language, "time")}
+        </Typography>
       </div>
     </VideoDetailsContainer>
   );

@@ -26,7 +26,7 @@ interface VideoListProps {
 }
 
 export const VideoList: FC<VideoListProps> = ({ videoList, currentVideo, setCurrentVideo, videoRefs }) => {
-  const { settings } = useSettings();
+  const { appSettings } = useSettings();
   const { t } = useTranslation("ReplayManagerPage");
 
   return (
@@ -60,8 +60,8 @@ export const VideoList: FC<VideoListProps> = ({ videoList, currentVideo, setCurr
           >
             <Typography>
               {t("fileName", {
-                date: formatDateTime(video.dateTime, settings.language, "date"),
-                time: formatDateTime(video.dateTime, settings.language, "time").replace(" ", "-"),
+                date: formatDateTime(video.dateTime, appSettings.language, "date"),
+                time: formatDateTime(video.dateTime, appSettings.language, "time").replace(" ", "-"),
                 roomCode: t(`room.${video.roomCode}.code`),
               })}
             </Typography>

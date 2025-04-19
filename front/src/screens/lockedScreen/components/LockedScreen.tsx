@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useTheme } from "@mui/material";
-import { SecurityProfilePicture, SecurityBrandText, PinInputs, LoadingSpinner } from "@/core";
-import { RfidStatuses, SessionStatuses } from "../typings";
+import { SecurityProfilePicture, SecurityBrandText, PinInputs, LoadingSpinner, RfidStatuses } from "@/core";
+import { SessionStatuses } from "../typings";
 import { useConstants } from "@/providers/constants";
 import { ErrorMessagesSection } from "./ErrorMessagesSection";
 import { LoginMethods } from "../typings/LoginMethods";
@@ -11,7 +11,7 @@ import { RfidPrompt } from "./RfidPrompt";
 import { SessionStatusDisplay } from "./SessionStatusDisplay";
 import { UserInfoDisplay } from "./UserInfoDisplay";
 import { BackgroundImage, LockedScreenContainer, LockedScreenBox } from "../styles";
-import { DebugRfidButtons } from "./DebugRfidButtons";
+import { DebugRfidButtons } from "../../../core/components/DebugRfidButtons";
 
 // TODO SFX For F1, F2, ... too
 // TODO Move the SFX hook to core since F1 menus are on multiple pages
@@ -22,8 +22,17 @@ export const LockedScreen: FC = () => {
   const theme = useTheme();
   const appConstants = useConstants();
 
-  const { selectedMethod, sessionStatus, loading, pins, remainingTries, blockedTimer, rfidStatus, handleRfidCode } =
-    useLockedScreen();
+  const {
+    selectedMethod,
+    sessionStatus,
+    loading,
+    pins,
+    remainingTries,
+    blockedTimer,
+    rfidStatus,
+    onHandleRfid,
+    unlockSession,
+  } = useLockedScreen();
 
   return (
     /* TODO Maybe set to <> */
@@ -46,7 +55,9 @@ export const LockedScreen: FC = () => {
               }
               isUnlocked={sessionStatus === SessionStatuses.UNLOCKED}
               remainingTries={remainingTries}
-              isCardReaderAndHasError={selectedMethod === LoginMethods.CARD_READER && rfidStatus === RfidStatuses.ERROR}
+              isCardReaderAndHasError={
+                selectedMethod === LoginMethods.CARD_READER && rfidStatus === RfidStatuses.INVALID
+              }
             />
           )}
           <img
@@ -75,7 +86,11 @@ export const LockedScreen: FC = () => {
         </LockedScreenBox>
 
         {appConstants.DEBUG_MODE && selectedMethod === LoginMethods.CARD_READER && (
-          <DebugRfidButtons handleRfidCode={handleRfidCode} />
+          <DebugRfidButtons
+            validRfidCode={appConstants.lockedScreen.cardReader.VALID_RFID_CODE}
+            onHandleRfid={onHandleRfid}
+            onRfidSkip={unlockSession}
+          />
         )}
       </LockedScreenContainer>
     </div>

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Button, Box, Snackbar } from "@mui/material";
+import { Button, Box, Snackbar, LinearProgress } from "@mui/material";
 import { SettingsCategory } from "./SettingsCategory";
 import { SettingsCategoryContainer } from "./GeneralSettings";
 import { enableIconlessKeys, SupportedKeys, useKeyDown, useKeyState } from "../../../../../providers/keyState";
@@ -7,46 +7,66 @@ import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
 import { ProgressDialog, ShortcutChip } from "../../../components";
 import { SystemConfigurationDialog } from "./SystemConfigurationDialog";
 import { ElectricalServices } from "@mui/icons-material";
-import { useProgress } from "../../../../../providers";
+import { useProgress, useSettings } from "../../../../../providers";
 import { useTranslation } from "react-i18next";
 
 export const SystemConfiguration: FC = () => {
   const { t } = useTranslation("SettingsPage");
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const [energySaver, setEnergySaver] = useState<boolean>(false);
-  const [autoUpdates, setAutoUpdates] = useState<boolean>(false);
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [progressDialogOpen, setProgressDialogOpen] = useState<boolean>(false);
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; progress?: boolean }>({
+    open: false,
+    message: "",
+    progress: false,
+  });
+  const [energySaver, setEnergySaver] = useState(false);
+  const [autoUpdates, setAutoUpdates] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [progressDialogOpen, setProgressDialogOpen] = useState(false);
+  const [checkUpdatesDisabled, setCheckUpdatesDisabled] = useState(false);
   const { progress, setCCTVSystemDown } = useProgress();
+  const { setBrightness } = useSettings();
+  const { updateKeyState, resetKeyStates } = useKeyState();
+
+  const showSnackbar = (message: string, progress = false, duration = 3000) => {
+    setSnackbar({ open: true, message, progress });
+    setTimeout(() => setSnackbar({ open: false, message: "", progress: false }), duration);
+  };
 
   const handleCheckUpdates = () => {
-    alert(t("systemConfiguration.checkingUpdates"));
+    if (checkUpdatesDisabled) return;
+
+    showSnackbar(t("systemConfiguration.checkingUpdates"), true, 3000);
+    setTimeout(() => {
+      showSnackbar(t("systemConfiguration.noUpdatesAvailable"), false, 5000);
+      setCheckUpdatesDisabled(true);
+      updateKeyState({
+        ...enableIconlessKeys([
+          SupportedKeys.DIGIT_1,
+          SupportedKeys.DIGIT_3,
+          ...(!progress.isCCTVSystemDown ? [SupportedKeys.DIGIT_7] : []),
+        ]),
+        PageUp: PgUpKeyIcon,
+        PageDown: PgDnKeyIcon,
+      });
+    }, 3000);
   };
 
   const handleManageStorage = () => {
-    alert(t("systemConfiguration.openingStorage"));
+    showSnackbar(t("systemConfiguration.openingStorage"));
   };
 
   const handleResetSystem = () => {
     setDialogOpen(true);
   };
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-  };
-
-  const handleAuthenticationSuccess = () => {
-    console.log("SystemConfiguration: handleAuthenticationSuccess called");
+  const authenticate = () => {
     setDialogOpen(false);
     setProgressDialogOpen(true);
   };
 
   const handleProgressDone = () => {
-    console.log("SystemConfiguration: handleProgressDone called");
     setProgressDialogOpen(false);
     setCCTVSystemDown(true);
-    setShowSuccess(true);
+    showSnackbar(t("systemConfiguration.shutdownSuccess"));
   };
 
   const systemConfiguration = [
@@ -54,14 +74,25 @@ export const SystemConfiguration: FC = () => {
       label: t("systemConfiguration.energySaverMode"),
       type: "toggle",
       value: energySaver,
-      onClick: setEnergySaver,
+      onClick: () => {
+        setEnergySaver((prev) => !prev);
+        showSnackbar(
+          energySaver ? t("systemConfiguration.energySaverDisabled") : t("systemConfiguration.energySaverEnabled"),
+        );
+        !energySaver ? setBrightness(60) : setBrightness(100);
+      },
       keyboardShortcut: "1",
     },
     {
       label: t("systemConfiguration.autoUpdates"),
       type: "toggle",
       value: autoUpdates,
-      onClick: setAutoUpdates,
+      onClick: () => {
+        setAutoUpdates((prev) => !prev);
+        showSnackbar(
+          autoUpdates ? t("systemConfiguration.autoUpdatesDeactivated") : t("systemConfiguration.autoUpdatesActivated"),
+        );
+      },
       keyboardShortcut: "3",
     },
     {
@@ -74,8 +105,8 @@ export const SystemConfiguration: FC = () => {
       label: t("systemConfiguration.checkForUpdates"),
       type: "button",
       onClick: handleCheckUpdates,
-      keyboardShortcut: "6",
       value: null,
+      keyboardShortcut: checkUpdatesDisabled ? undefined : "6",
     },
     {
       label: t("systemConfiguration.statsForNerds"),
@@ -94,12 +125,19 @@ export const SystemConfiguration: FC = () => {
     {
       1: () => {
         setEnergySaver((prev) => !prev);
+        showSnackbar(
+          energySaver ? t("systemConfiguration.energySaverDisabled") : t("systemConfiguration.energySaverEnabled"),
+        );
+        !energySaver ? setBrightness(60) : setBrightness(100);
       },
       3: () => {
         setAutoUpdates((prev) => !prev);
+        showSnackbar(
+          autoUpdates ? t("systemConfiguration.autoUpdatesDeactivated") : t("systemConfiguration.autoUpdatesActivated"),
+        );
       },
       6: () => {
-        handleCheckUpdates();
+        if (!checkUpdatesDisabled) handleCheckUpdates();
       },
       7: () => {
         if (!progress.isCCTVSystemDown) {
@@ -108,17 +146,14 @@ export const SystemConfiguration: FC = () => {
       },
     },
     undefined,
-    [progress.isCCTVSystemDown],
+    [progress.isCCTVSystemDown, checkUpdatesDisabled],
   );
-
-  const { updateKeyState, resetKeyStates } = useKeyState();
 
   useEffect(() => {
     updateKeyState({
       ...enableIconlessKeys([
         SupportedKeys.DIGIT_1,
         SupportedKeys.DIGIT_3,
-        SupportedKeys.DIGIT_6,
         ...(!progress.isCCTVSystemDown ? [SupportedKeys.DIGIT_7] : []),
       ]),
       PageUp: PgUpKeyIcon,
@@ -131,11 +166,7 @@ export const SystemConfiguration: FC = () => {
 
   return (
     <>
-      <SystemConfigurationDialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        onSuccess={handleAuthenticationSuccess}
-      />
+      <SystemConfigurationDialog open={dialogOpen} onClose={() => setDialogOpen(false)} onSuccess={authenticate} />
 
       <ProgressDialog
         open={progressDialogOpen}
@@ -159,7 +190,7 @@ export const SystemConfiguration: FC = () => {
       <SettingsCategoryContainer>
         <SettingsCategory settings={systemConfiguration} />
         {/* TODO Grey the button, not making it disappear */}
-        <Box marginY={2}>
+        <Box style={{ padding: "0 1vw" }}>
           <Button variant="contained" color="error" onClick={handleResetSystem} disabled={progress.isCCTVSystemDown}>
             {t("systemConfiguration.shutdownSystem")}
           </Button>
@@ -168,10 +199,32 @@ export const SystemConfiguration: FC = () => {
       </SettingsCategoryContainer>
 
       <Snackbar
-        open={showSuccess}
-        autoHideDuration={3000}
-        onClose={() => setShowSuccess(false)}
-        message={t("systemConfiguration.shutdownSuccess")}
+        open={snackbar.open}
+        autoHideDuration={snackbar.progress ? null : 5000}
+        onClose={() => setSnackbar({ open: false, message: "", progress: false })}
+        message={
+          snackbar.progress ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column", // Change to column to stack elements vertically
+                alignItems: "flex-start", // Align items to the left
+                gap: "10px", // Add spacing between the title and progress bar
+              }}
+            >
+              <span>{snackbar.message}</span>
+              <LinearProgress
+                color="primary" // Use the primary color from the MUI theme
+                sx={{
+                  width: "100%", // Make the progress bar take full width
+                  height: "4px", // Set a height for better visibility
+                }}
+              />
+            </Box>
+          ) : (
+            snackbar.message
+          )
+        }
       />
     </>
   );

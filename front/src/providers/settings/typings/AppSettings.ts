@@ -1,8 +1,7 @@
 import { Languages } from "@/providers";
 import { Wallpapers } from "./Wallpapers";
 
-export interface Settings {
-  // TODO
+export interface AppSettings {
   volume: number;
   brightness: number;
   wallpaper: Wallpapers;
@@ -10,8 +9,8 @@ export interface Settings {
   language: Languages;
 }
 
-export const SettingsInitializer: Settings = {
-  volume: 100,
+export const AppSettingsInitializer: AppSettings = {
+  volume: 50,
   brightness: 100,
   wallpaper: Wallpapers.DEFAULT,
   language: Languages.FR,

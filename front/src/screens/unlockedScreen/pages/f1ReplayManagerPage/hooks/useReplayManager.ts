@@ -13,7 +13,7 @@ export const useReplayManager = () => {
   const [videoControls, setVideoControls] = useState<VideoControls>({ isPlaying: false, progress: 0 });
   const videoRefs = useRef<(HTMLDivElement | null)[]>([]);
   const playerRef = useRef<ReactPlayer>(null);
-  const { settings } = useSettings();
+  const { appSettings } = useSettings();
   const currentTime = playerRef?.current?.getCurrentTime();
   const progressPercentage =
     (currentTime && currentVideo && Math.min(Math.max((currentTime / currentVideo.duration) * 100, 0), 100)) || 0;
@@ -33,14 +33,14 @@ export const useReplayManager = () => {
   }, [currentVideo, playerRef]);
 
   useEffect(() => {
-    Promise.all(Videos.map((video: string) => getVideoMetadata(video, settings.language)))
+    Promise.all(Videos.map((video: string) => getVideoMetadata(video, appSettings.language)))
       .then((metadataList) => {
         setVideoList(metadataList);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [settings.language]);
+  }, [appSettings.language]);
 
   useEffect(() => {
     if (currentVideo) {

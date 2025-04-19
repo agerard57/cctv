@@ -9,6 +9,7 @@ import {
 
 export const appConstants = {
   DEBUG_MODE: import.meta.env.VITE_DEBUG === "true",
+  DEBUG_BAD_RFID: "123BADRFID",
   core: {
     pins: {
       VALIDATION_DELAY: 3000,
@@ -16,17 +17,17 @@ export const appConstants = {
   },
   lockedScreen: {
     keypad: {
-      LOCK_SCREEN_CODE: "3630",
+      VALID_PIN_CODE: "3630",
       MAX_TRIES: 3,
       BLOCK_DURATION: 10,
     },
     cardReader: {
+      /* PROD Change */
       VALID_RFID_CODE: "A1B2C3D4E5F67890",
-      DEBUG_BAD_RFID: "123BADRFID",
     },
   },
   unlockedScreen: {
-    DEFAULT_PAGE: UnlockedScreenPages.USER_MANAGER,
+    DEFAULT_PAGE: UnlockedScreenPages.REPLAY_MANAGER,
     replayManager: {
       USB: {
         VALID_USB: "T1", // PROD This will change
@@ -226,9 +227,12 @@ export const appConstants = {
     },
     controlCenter: {
       DEFAULT_SECTION: ControlCenterPageSections.POWER_STATS,
+      /* TODO Add 2342 Marc */
     },
     settings: {
       DEFAULT_SECTION: SettingsPageSections.GENERAL_SETTINGS,
+      /* PROD Change */
+      VALID_RFID_CODE: "123456",
     },
   },
 } as const;

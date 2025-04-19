@@ -6,6 +6,6 @@ import F2KeyIcon from "./f2KeyIcon.png";
 import KeyPressSFX from "./keyPressSFX.mp3";
 import ErrorSFX from "./errorSFX.wav";
 import BlockedSFX from "./blockedSFX.wav";
-import SuccessSFX from "./successSFX.wav";
+import SuccessSFX from "./successSFX.mp3";
 
 export { LockedScreenBackground, BlockedSFX, SuccessSFX, ErrorSFX, F1KeyIcon, F2KeyIcon, KeyPressSFX };

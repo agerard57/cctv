@@ -6,12 +6,12 @@ interface Props {
 }
 
 export const Brightness: FC<Props> = ({ children }) => {
-  const { settings } = useSettings();
+  const { appSettings } = useSettings();
 
   return (
     <div
       style={{
-        filter: `brightness(${settings.brightness}%)`,
+        filter: `brightness(${appSettings.brightness}%)`,
       }}
     >
       {children}

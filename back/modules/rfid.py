@@ -5,14 +5,12 @@ import os
 import time
 import platform
 import threading
-from typing import Optional, Callable
+from typing import Optional, Callable, Tuple
 
 # Better approach for importing from parent directory
 import sys
 # Use relative path from current file instead of hardcoded username
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-""" TODO Remove state in backend """
-from config import MOCK_RFID_CODE, VALID_RFID_CODE
 
 RPI_AVAILABLE = False
 GPIO = None
@@ -30,15 +28,14 @@ except (ImportError, RuntimeError) as e:
 
 class RFIDReader:
     """
-    Handles RFID reader functionality with support for both
-    hardware-based reading and override for testing.
+    Handles RFID reader functionality with support for hardware-based reading.
     """
     def __init__(self):
         self.reader = None
-        self.last_scanned_rfid = None
-        self.current_override = None
         self._scanner_thread = None
         self._running = False
+        self.last_rfid_code: Optional[str] = None  # Cached RFID code
+        self.clear_timer: Optional[threading.Timer] = None  # Timer to clear the RFID code
         
         # Initialize hardware if available
         if RPI_AVAILABLE:
@@ -77,61 +74,56 @@ class RFIDReader:
                     # Read the RFID card (non-blocking)
                     id, text = self.reader.read_no_block()
                     if id is not None:
-                        # Convert ID to string
-                        self.last_scanned_rfid = str(id)
-                        print(f"RFID card detected: {self.last_scanned_rfid}")
-                        # Keep value for a short time before clearing
-                        time.sleep(2)
-                        self.last_scanned_rfid = None
+                        print(f"[RFID Reader] Card detected: {id}")  # Log detected card
+                        self._set_rfid_code(str(id))  # Cache the RFID code temporarily
+                    else:
+                        print("[RFID Reader] No card detected.")  # Log no card detected
                     
                     # Prevent CPU hogging
                     time.sleep(0.1)
                 except Exception as e:
-                    print(f"Error reading RFID: {e}")
+                    print(f"[RFID Reader] Error reading RFID: {e}")  # Log read error
                     time.sleep(1)  # Wait longer after error
         except Exception as e:
-            print(f"RFID scanner thread error: {e}")
+            print(f"[RFID Reader] Scanner thread error: {e}")  # Log thread error
         finally:
+            print("[RFID Reader] Cleaning up resources.")  # Log cleanup
             self.cleanup()
     
-    def get_rfid_code(self, override_code: Optional[str] = None) -> Optional[str]:
+    def _set_rfid_code(self, code: str) -> None:
         """
-        Returns the RFID code with priority handling:
-        1. New override code
-        2. Previously set override code
-        3. Hardware-detected RFID
-        4. None if no card detected
+        Set the RFID code and start a timer to clear it after 5 seconds.
         """
-        # Priority 1: Use new override if provided
-        if override_code:
-            self.current_override = override_code
-            return self.current_override
+        self.last_rfid_code = code
+        print(f"[RFID Reader] RFID Code set: {code}")  # Log when the code is set
+        if self.clear_timer:
+            self.clear_timer.cancel()  # Cancel any existing timer
+        self.clear_timer = threading.Timer(3.0, self._clear_rfid_code)  # Clear after 5 seconds
+        self.clear_timer.start()
 
-        # Priority 2: Use saved override if available
-        if self.current_override:
-            code = self.current_override
-            self.current_override = None
-            return code
-            
-        # Priority 3: Use hardware reading if available
-        if RPI_AVAILABLE and self.last_scanned_rfid:
-            return self.last_scanned_rfid
-        
-        # Priority 4: No RFID card detected
-        return None
-    
-    def reset(self) -> None:
+    def _clear_rfid_code(self) -> None:
         """
-        Reset all stored RFID values and state.
-        This clears any overrides or cached card readings.
+        Clear the cached RFID code.
         """
-        self.current_override = None
-        self.last_scanned_rfid = None
-        print("RFID reader state has been reset")
+        print("[RFID Reader] Clearing cached RFID Code.")
+        self.last_rfid_code = None
+
+    def get_rfid_code(self) -> Optional[str]:
+        """
+        Returns the last cached RFID code if it exists.
+        If the code is cleared, return None.
+        """
+        if self.last_rfid_code:
+            print(f"[RFID Reader] Returning cached RFID Code: {self.last_rfid_code}")  # Log the returned code
+        else:
+            print("[RFID Reader] No RFID Code available.")  # Log when no code is available
+        return self.last_rfid_code
     
     def cleanup(self) -> None:
-        """Cleanup GPIO resources."""
+        """Cleanup GPIO resources and stop the clear timer."""
         self._running = False
+        if self.clear_timer:
+            self.clear_timer.cancel()
         if RPI_AVAILABLE and GPIO:
             GPIO.cleanup()
 

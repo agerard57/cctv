@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { useKeyState, enableAllDigits } from "@/providers/keyState";
 import { EnterKeyIcon, PgDnKeyIcon, PgUpKeyIcon, SpaceKeyIcon } from "../assets";
 import { UserTable } from "./UserTable";
@@ -15,6 +15,7 @@ export const UserManagerPage: FC = () => {
 
   const [isCaptchaDisplayed, setIsCaptchaDisplayed] = useState(false);
   const [isProgressBarComplete, setIsProgressBarComplete] = useState(progress.isCaptchaSolved);
+  const tableRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!isProgressBarComplete) {
@@ -38,6 +39,12 @@ export const UserManagerPage: FC = () => {
       resetKeyStates();
     };
   }, [updateKeyState, resetKeyStates, isCaptchaDisplayed, isProgressBarComplete]);
+
+  useEffect(() => {
+    if (isProgressBarComplete && tableRef.current) {
+      tableRef.current.focus(); // Explicitly set focus to the table
+    }
+  }, [isProgressBarComplete]);
 
   const handleCaptchaSolve = () => {
     setIsCaptchaDisplayed(false);
@@ -68,5 +75,5 @@ export const UserManagerPage: FC = () => {
     );
   }
 
-  return <UserTable />;
+  return <UserTable ref={tableRef} />;
 };

@@ -71,11 +71,17 @@
     "poweringDown": "Powering down components...",
     "finalizingShutdown": "Finalizing shutdown...",
     "shutdownSuccess": "Electrical outlet disconnected successfully",
+    "noUpdatesAvailable": "No updates available",
+    "energySaverEnabled": "Energy Saver Mode Enabled",
+    "energySaverDisabled": "Energy Saver Mode Disabled",
+    "autoUpdatesActivated": "Auto Updates Activated",
+    "autoUpdatesDeactivated": "Auto Updates Deactivated",
     "dialog": {
       "title": "System Configuration Access",
       "instruction": "Please scan your RFID card to access the system configuration:",
-      "waitingForScan": "Waiting for RFID scan...",
+      "waitingForScan": "Waiting for RFID scan",
       "invalidCard": "Invalid RFID card. Please try again.",
+      "validCard": "Valid RFID card. Thank you.",
       "closeButton": "Close"
     }
   }

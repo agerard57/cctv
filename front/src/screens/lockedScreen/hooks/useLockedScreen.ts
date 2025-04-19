@@ -1,11 +1,12 @@
-import { useConstants, useKeyDown, useProgress } from "@/providers";
-import { PinInputStatuses, usePinInputs } from "@/core";
-import axios from "axios";
+import { useConstants, useKeyDown, useProgress, useSettings } from "@/providers";
+import { PinInputStatuses, RfidStatuses, usePinInputs } from "@/core";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Screens } from "../../Screens";
 import { BlockedSFX, ErrorSFX, SuccessSFX } from "../assets";
-import { LoginMethods, RfidStatuses, SessionStatuses } from "../typings";
+import { LoginMethods, SessionStatuses } from "../typings";
+import { playSound } from "../../../core/helpers";
+import { fetchRfidStatus } from "../../../core/helpers/rfid";
 
 type UseLockedScreen = () => {
   selectedMethod: LoginMethods;
@@ -15,7 +16,8 @@ type UseLockedScreen = () => {
   remainingTries: number;
   blockedTimer: number | null;
   rfidStatus: RfidStatuses | null;
-  handleRfidCode: (rfidCode: string) => void;
+  onHandleRfid: (rfidCode: RfidStatuses) => void;
+  unlockSession: () => void;
   handlePinInput: (key: string) => void;
   handleBackspace: () => void;
 };
@@ -25,28 +27,25 @@ export const useLockedScreen: UseLockedScreen = () => {
   const navigate = useNavigate();
   const { setSessionUnlocked } = useProgress();
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
+  const { appSettings } = useSettings();
   const [selectedMethod, setSelectedMethod] = useState<LoginMethods>(LoginMethods.KEYPAD);
   const [sessionStatus, setSessionStatus] = useState<SessionStatuses>(SessionStatuses.LOCKED);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const [rfidStatus, setRfidStatus] = useState<RfidStatuses | null>(null);
   const [blockedTimer, setBlockedTimer] = useState<number | null>(null);
   const [remainingTries, setRemainingTries] = useState<number>(appConstants.lockedScreen.keypad.MAX_TRIES);
 
   const { pins, handlePinInput, handleBackspace, resetPin } = usePinInputs(
-    { correctCode: appConstants.lockedScreen.keypad.LOCK_SCREEN_CODE },
+    { correctCode: appConstants.lockedScreen.keypad.VALID_PIN_CODE },
     {
       onFilled: () => setLoading(true),
       onSuccess: () => {
         setLoading(false);
         setSessionStatus(SessionStatuses.UNLOCKED);
 
-        const redirectTimer = setTimeout(() => {
-          setSessionUnlocked(true);
-          navigate(Screens.UNLOCKED_SCREEN);
-          // TODO remove magic number
-        }, 3000);
-        return () => clearTimeout(redirectTimer);
+        setTimeout(() => {
+          unlockSession();
+        }, 3000); // Removed redundant return
       },
       onError: () => {
         if (loading) return;
@@ -74,36 +73,35 @@ export const useLockedScreen: UseLockedScreen = () => {
     }
   };
 
-  const handleRfidCode = (rfidCode: string) => {
-    if (sessionStatus !== SessionStatuses.LOCKED || loading) return;
+  const unlockSession = () => {
+    setSessionUnlocked(true);
+    navigate(Screens.UNLOCKED_SCREEN);
+  };
 
-    setRfidStatus(null);
+  const onHandleRfid = (rfidStatus: RfidStatuses) => {
+    if (rfidStatus === RfidStatuses.NONE || sessionStatus !== SessionStatuses.LOCKED || loading) {
+      return;
+    }
+
     setLoading(true);
-
-    /* TODO Also add SFX when scanned */
 
     setTimeout(() => {
       setLoading(false);
-      if (rfidCode === appConstants.lockedScreen.cardReader.VALID_RFID_CODE) {
-        new Audio(SuccessSFX).play().catch(() => {});
-        setRfidStatus(RfidStatuses.SUCCESS);
+      if (rfidStatus === RfidStatuses.VALID) {
+        playSound(SuccessSFX, appSettings.volume);
         setSessionStatus(SessionStatuses.UNLOCKED);
 
-        const redirectTimer = setTimeout(() => {
-          setSessionUnlocked(true);
-          navigate(Screens.UNLOCKED_SCREEN);
-          // TODO remove magic number
-        }, 3000);
-        return () => clearTimeout(redirectTimer);
+        setTimeout(() => {
+          unlockSession();
+        }, 3000); // Removed redundant return
       } else {
-        new Audio(ErrorSFX).play().catch(() => {});
-        setRfidStatus(RfidStatuses.ERROR);
+        playSound(ErrorSFX, appSettings.volume);
       }
     }, 5000);
   };
 
   const blockSession = () => {
-    new Audio(BlockedSFX).play().catch(() => {});
+    playSound(BlockedSFX, appSettings.volume);
     setSessionStatus(SessionStatuses.BLOCKED);
     setBlockedTimer(appConstants.lockedScreen.keypad.BLOCK_DURATION);
 
@@ -147,20 +145,16 @@ export const useLockedScreen: UseLockedScreen = () => {
 
   useEffect(() => {
     if (selectedMethod === LoginMethods.CARD_READER && sessionStatus === SessionStatuses.LOCKED) {
-      const interval = setInterval(async () => {
-        try {
-          const response = await axios.get("/api/rfid-code");
-          const rfidCode = response.data.rfid_code;
+      const interval = setInterval(() => {
+        fetchRfidStatus(appConstants.lockedScreen.cardReader.VALID_RFID_CODE, undefined, (fetchedRfidStatus) => {
+          setRfidStatus(fetchedRfidStatus);
+          onHandleRfid(fetchedRfidStatus);
+        });
+      }, 500);
 
-          if (rfidCode) {
-            handleRfidCode(rfidCode);
-          }
-        } catch (error) {
-          console.error("Failed to fetch RFID code:", error);
-        }
-      }, 1000);
-
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(interval);
+      };
     }
   }, [selectedMethod, sessionStatus, loading]);
 
@@ -180,7 +174,8 @@ export const useLockedScreen: UseLockedScreen = () => {
     remainingTries,
     blockedTimer,
     rfidStatus,
-    handleRfidCode,
+    onHandleRfid,
+    unlockSession,
     handlePinInput,
     handleBackspace,
   };

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Chip, TableContainer } from "@mui/material";
-import { FC } from "react";
+import { forwardRef, Ref, FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useConstants } from "@/providers/constants";
 import { AccessLevels, AccountStatus } from "../typings";
@@ -16,6 +16,7 @@ const TableWrapper = styled(TableContainer)`
   flex-direction: column;
   align-items: center;
   min-height: 50vh;
+  outline: none; /* Remove focus highlight */
 `;
 
 const StyledTableHead = styled(TableHead)`
@@ -32,16 +33,16 @@ const StyledTableRow = styled(TableRow)`
   }
 `;
 
-export const UserTable: FC = () => {
+export const UserTable = forwardRef<HTMLDivElement, {}>((props, ref: Ref<HTMLDivElement>) => {
   const { t } = useTranslation("UserManagerPage");
-  const { settings } = useSettings();
+  const { appSettings } = useSettings();
   const appConstants = useConstants();
 
   const users = appConstants.unlockedScreen.userManager.USERS;
-  const isEnglish = settings.language === Languages.EN;
+  const isEnglish = appSettings.language === Languages.EN;
 
   return (
-    <TableWrapper>
+    <TableWrapper ref={ref} tabIndex={0}>
       <Table>
         <StyledTableHead>
           <TableRow>
@@ -81,7 +82,9 @@ export const UserTable: FC = () => {
         <TableBody>
           {users.map((user) => (
             <StyledTableRow key={user.id}>
-              <TableCell style={{ paddingLeft: "2vw" }}>{user.id}</TableCell>
+              <TableCell style={{ paddingLeft: "2vw" }}>
+                <Typography variant="tableContent">{user.id}</Typography>
+              </TableCell>
               {isEnglish ? (
                 <>
                   <TableCell>
@@ -133,4 +136,4 @@ export const UserTable: FC = () => {
       </Table>
     </TableWrapper>
   );
-};
+});

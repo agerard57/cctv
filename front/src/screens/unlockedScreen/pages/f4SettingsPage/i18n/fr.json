@@ -71,11 +71,17 @@
     "poweringDown": "Mise hors tension des composants...",
     "finalizingShutdown": "Finalisation de l'arrêt...",
     "shutdownSuccess": "Prise électrique déconnectée avec succès",
+    "noUpdatesAvailable": "Aucune mise à jour disponible",
+    "energySaverEnabled": "Mode économie d'énergie activé",
+    "energySaverDisabled": "Mode économie d'énergie désactivé",
+    "autoUpdatesActivated": "Mises à jour automatiques activées",
+    "autoUpdatesDeactivated": "Mises à jour automatiques désactivées",
     "dialog": {
       "title": "Accès à la configuration du système",
       "instruction": "Veuillez scanner votre carte RFID pour accéder à la configuration du système :",
-      "waitingForScan": "En attente du scan RFID...",
+      "waitingForScan": "En attente du scan RFID",
       "invalidCard": "Carte RFID invalide. Veuillez réessayer.",
+      "validCard": "Valid RFID card. Thank you.",
       "closeButton": "Fermer"
     }
   }
