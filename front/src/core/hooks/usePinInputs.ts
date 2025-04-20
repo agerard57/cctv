@@ -76,6 +76,10 @@ export const usePinInputs: UsePinInputs = (pinSettings, callbacks) => {
   };
 
   const handleBackspace = () => {
+    if (loading) {
+      return;
+    }
+
     if (pin.length === codeLength && !disableValidation) {
       resetPin();
       return;

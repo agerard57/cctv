@@ -1,13 +1,13 @@
 import { useState, useRef, Dispatch, SetStateAction, useEffect, useCallback } from "react";
 import { UsbStatuses } from "../typings";
-import { getUsbDevices } from "../services/usbDevices.service";
 import { useLoadingDots } from "@/core";
 import { useProgress } from "../../../../../providers";
 import { useConstants } from "@/providers/constants";
+import { getUsbDevices } from "../../../../../core/services/usbDevices.service";
 
 export type UseInsertMedia = (setCurrentUsbStatus: Dispatch<SetStateAction<UsbStatuses>>) => {
-  debugDevices: string[];
-  setDebugDevices: Dispatch<SetStateAction<string[]>>;
+  debugDevice: string | undefined;
+  setDebugDevice: Dispatch<SetStateAction<string | undefined>>;
   loading: boolean;
   shouldShake: boolean;
   progressBarValue: number;
@@ -19,7 +19,7 @@ export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
   const { VALID_USB, INVALID_USB_LIST, POLLING_INTERVAL, LOADING_DELAY, PROGRESS_INTERVAL, SHAKE_DURATION } =
     appConstants.unlockedScreen.replayManager.USB;
 
-  const [debugDevices, setDebugDevices] = useState<string[]>([]);
+  const [debugDevice, setDebugDevice] = useState<string | undefined>(undefined);
   const prevDeviceListRef = useRef<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [shouldShake, setShouldShake] = useState(false);
@@ -60,12 +60,8 @@ export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
       // Use debug devices if in debug mode, otherwise fetch from API
       let newDevices: string[] = [];
 
-      if (appConstants.DEBUG_MODE && debugDevices.length > 0) {
-        newDevices = [...debugDevices];
-      } else {
-        const response = await getUsbDevices();
-        newDevices = response.devices;
-      }
+      const response = await getUsbDevices(debugDevice);
+      newDevices = response.devices;
 
       // Only process if device list has changed
       if (hasDeviceListChanged(prevDeviceListRef.current, newDevices)) {
@@ -118,23 +114,20 @@ export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
   };
 
   useEffect(() => {
-    // Initial check
     checkUsbDevices();
 
-    // Set up polling interval
     const intervalId = setInterval(() => {
       checkUsbDevices();
     }, POLLING_INTERVAL);
 
-    // Clean up on unmount
     return () => {
       clearInterval(intervalId);
     };
-  }, [debugDevices]);
+  }, [debugDevice]);
 
   return {
-    debugDevices,
-    setDebugDevices,
+    debugDevice,
+    setDebugDevice,
     loading,
     shouldShake,
     progressBarValue,

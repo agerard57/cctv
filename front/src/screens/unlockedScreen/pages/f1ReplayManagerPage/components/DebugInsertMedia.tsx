@@ -4,9 +4,9 @@ import { useProgress } from "../../../../../providers";
 import { useConstants } from "@/providers/constants";
 
 export const DebugInsertMedia: FC<{
-  debugDevices: string[];
-  setDebugDevices: Dispatch<SetStateAction<string[]>>;
-}> = ({ setDebugDevices }) => {
+  debugDevice: string | undefined;
+  setDebugDevice: Dispatch<SetStateAction<string | undefined>>;
+}> = ({ setDebugDevice }) => {
   const { setMediaProvided } = useProgress();
   const appConstants = useConstants();
   const { VALID_USB, INVALID_USB_LIST } = appConstants.unlockedScreen.replayManager.USB;
@@ -18,18 +18,18 @@ export const DebugInsertMedia: FC<{
     switch (scenario) {
       case "valid-usb":
         console.log("Debug: Simulating valid USB device", VALID_USB);
-        setDebugDevices([VALID_USB]);
+        setDebugDevice(VALID_USB);
         break;
       case "invalid-usb":
         console.log("Debug: Simulating invalid USB device", INVALID_USB_LIST[0]);
-        setDebugDevices([INVALID_USB_LIST[0]]);
+        setDebugDevice(INVALID_USB_LIST[0]);
         break;
       case "no-usb":
         console.log("Debug: Simulating no USB devices");
-        setDebugDevices([]);
+        setDebugDevice(undefined);
         break;
       default:
-        setDebugDevices([]);
+        setDebugDevice(undefined);
     }
   };
 

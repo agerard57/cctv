@@ -49,7 +49,7 @@ export const InsertMedia: FC<{
   const { t } = useTranslation("ReplayManagerPage");
   const appConstants = useConstants();
 
-  const { debugDevices, setDebugDevices, loading, shouldShake, progressBarValue, loadingDots } =
+  const { debugDevice, setDebugDevice, loading, shouldShake, progressBarValue, loadingDots } =
     useInsertMedia(setCurrentUsbStatus);
 
   const showProgressBar = !loading && currentUsbStatus === UsbStatuses.VALID;
@@ -89,7 +89,7 @@ export const InsertMedia: FC<{
                 : t("insertMedia.missing.message")}
         </Typography>
       </InsertMediaContainer>
-      {appConstants.DEBUG_MODE && <DebugInsertMedia debugDevices={debugDevices} setDebugDevices={setDebugDevices} />}
+      {appConstants.DEBUG_MODE && <DebugInsertMedia debugDevice={debugDevice} setDebugDevice={setDebugDevice} />}
     </div>
   );
 };

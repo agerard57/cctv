@@ -3,7 +3,7 @@ Main FastAPI application for the CCTV system.
 """
 import os
 from fastapi import FastAPI
-from typing import Dict, Optional, Any
+from typing import Dict, Optional, Any, List
 
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -32,23 +32,30 @@ def rfid(override_code: Optional[str] = None) -> Dict[str, Optional[str]]:
         Dictionary with RFID code or None if no card detected.
     """
     if override_code:
-        print(f"[API] Override RFID Code provided: {override_code}")  # Log override code
-        rfid_reader._set_rfid_code(override_code)  # Cache the override code
+        print(f"[API] Override RFID Code provided: {override_code}")
+        rfid_reader._set_rfid_code(override_code)
         return {"rfid_code": override_code}
     
     code = rfid_reader.get_rfid_code()
-    print(f"[API] RFID Code fetched: {code}")  # Log fetched code
+    print(f"[API] RFID Code fetched: {code}")
     return {"rfid_code": code}
 
 @app.get("/usb-devices")
-def usb_devices() -> Dict[str, Any]:
+def usb_devices(override_device: Optional[str] = None) -> Dict[str, List[str]]:
     """Return a list of all mounted USB devices without validation
 
+    Args:
+        override_device: Optional test device for simulation.
+        
     Returns:
         Dictionary containing the list of all USB devices
     """
+    if override_device:
+        print(f"[API] Override USB device provided: {override_device}")
+        return {"devices": [override_device]}
+    
     devices = get_mounted_usb_devices()
-    return {"devices": devices}
+    return {"devices": devices if devices else []}
 
 @app.get("/health")
 def health() -> Dict[str, str]:

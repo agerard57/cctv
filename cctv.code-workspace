@@ -122,6 +122,7 @@
       "front/src/screens/**/i18n",
       "src/screens/**/i18n"
     ],
-    "i18n-ally.extract.autoDetect": true
+    "i18n-ally.extract.autoDetect": true,
+    "typescript.tsdk": "🖥️ - Frontend/node_modules/typescript/lib"
   }
 }
