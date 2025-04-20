@@ -9,6 +9,7 @@ import { useConstants } from "../../../../../providers/constants";
 import styled from "@emotion/styled";
 import { useKeyDown } from "../../../../../providers/keyState/hooks";
 import { SpaceKeyIcon } from "../assets";
+import { SupportedKeys } from "../../../../../providers";
 
 const CaptchaContainer = styled.div`
   padding: 10vh 0 0 0;
@@ -213,8 +214,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
 
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
-      // TODO Space has an enum
-      if (event.code === "Space") {
+      if (event.code === SupportedKeys.SPACE) {
         setIsSpacebarHeld(false);
       }
     };
@@ -225,7 +225,6 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
     };
   }, []);
 
-  // TODO This CSS is dis.cus.ting
   return (
     <CaptchaContainer>
       <Typography>{t("captcha.verificationPrompt")}</Typography>
@@ -241,28 +240,22 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       >
         <CaptchaImage id="captchaCanvas" />
         <div style={{ display: "flex", gap: 10 }}>
-          {loading ? (
-            // TODO Put loading spinner in PinInputs
-            <LoadingSpinner color="white" />
-          ) : (
-            <PinInputs
-              pinShape="rectangle"
-              pins={pins.map((status, index) => ({
-                status,
-                value: index < inputRef.current.length ? inputRef.current[index] : undefined,
-              }))}
-            />
-          )}
+          <PinInputs
+            loading={loading}
+            pinShape="rectangle"
+            pins={pins.map((status, index) => ({
+              status,
+              value: index < inputRef.current.length ? inputRef.current[index] : undefined,
+            }))}
+          />
         </div>
       </div>
       <Box display="flex" mt={1} gap={2}>
         <KeyButton
-          // TODO Icons and keyboard layout update
           label={t("captcha.refreshCaptcha")}
           icon={SpaceKeyIcon}
           direction="column"
           padding="0.7vh 3vw"
-          // TODO IsEnabled State
           isEnabled={!loading}
         />
       </Box>

@@ -1,4 +1,4 @@
-import { Dispatch, FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Typography, Button, Card, CardContent, Snackbar } from "@mui/material";
 import { AdminAuthenticationDialog } from "./AdminAuthenticationDialog";
 import { useProgress } from "@/providers";
@@ -24,7 +24,7 @@ const getProgressMessages = (t: TFunction) => [
 
 interface AdminControlsCardProps {
   isDialogOpen: boolean;
-  setIsDialogOpen: Dispatch<React.SetStateAction>;
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, setIsDialogOpen }) => {
@@ -129,7 +129,6 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
         open={showProgressDialog}
         title={
           <>
-            {/* TODO Change icon */}
             <ElectricalServices />
             {t("ventilationShaftControl.disconnectingTitle")}
           </>

@@ -58,29 +58,18 @@ const StyledButton = styled(Button)`
   text-transform: none;
 `;
 
-interface SettingProps {
+export interface SettingProps<T = any> {
   label: string;
   type: "select" | "slider" | "button" | "toggle";
-  value?: any;
-  onChange?: (value: any) => void;
-  options?: Array<{ value: string; label: string }>;
+  value?: T;
+  onChange?: (value: T) => void;
+  options?: Array<{ value: T; label: string }>;
   min?: number;
   max?: number;
   keyboardShortcut?: [string] | [string, string];
-  onClick?: () => void;
 }
 
-export const Setting: FC<SettingProps> = ({
-  label,
-  type,
-  value,
-  onChange,
-  options,
-  min,
-  max,
-  keyboardShortcut,
-  onClick,
-}) => {
+export const Setting: FC<SettingProps> = ({ label, type, value, onChange, options, min, max, keyboardShortcut }) => {
   return (
     <SettingContainer>
       <Typography variant="settingsLabel">{label}</Typography>
@@ -99,11 +88,7 @@ export const Setting: FC<SettingProps> = ({
           <StyledSlider value={value} onChange={(_e, val) => onChange?.(val)} min={min} max={max} />
         )}
         {type === "toggle" && <Switch checked={value} onChange={(e) => onChange?.(e.target.checked)} />}
-        {type === "button" && (
-          <StyledButton variant="contained" onClick={onClick}>
-            {label}
-          </StyledButton>
-        )}
+        {type === "button" && <StyledButton variant="contained">{label}</StyledButton>}
         {keyboardShortcut && keyboardShortcut[1] && <ShortcutChip shortcut={keyboardShortcut[1]} />}
       </ControlsContainer>
     </SettingContainer>

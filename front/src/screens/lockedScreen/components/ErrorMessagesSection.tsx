@@ -2,14 +2,14 @@ import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 
-type Props = {
+interface Props {
   isSessionBlocked: boolean;
   blockedTimer: number;
   isKeypadAndHasUsedTries: boolean;
   isUnlocked: boolean;
   remainingTries: number;
   isCardReaderAndHasError: boolean;
-};
+}
 
 export const ErrorMessagesSection: FC<Props> = ({
   isSessionBlocked,

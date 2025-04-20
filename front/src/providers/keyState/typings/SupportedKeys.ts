@@ -1,5 +1,3 @@
-// TODO Fix bspace to Backspace
-
 export enum SupportedKeys {
   F1 = "F1",
   F2 = "F2",
@@ -12,7 +10,7 @@ export enum SupportedKeys {
   SPACE = " ",
   BACKSPACE = "Backspace",
   CANCEL = "Cancel",
-  TODO_DELETE = "Delete",
+  PROD_DELETE = "Delete",
   ENTER = "Enter",
 
   DIGIT_0 = "0",

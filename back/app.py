@@ -10,6 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from modules.rfid import reader as rfid_reader, RPI_AVAILABLE
 from modules.usb_devices import get_mounted_usb_devices
+from modules.health import get_health_status
 
 app = FastAPI(title="CCTV App API")
 
@@ -19,8 +20,8 @@ def startup_event():
     print(f"Starting application with RPI hardware: {RPI_AVAILABLE}")
     rfid_reader.start_scanner()
 
-@app.get("/rfid-code")
-def rfid_code(override_code: Optional[str] = None) -> Dict[str, Optional[str]]:
+@app.get("/rfid")
+def rfid(override_code: Optional[str] = None) -> Dict[str, Optional[str]]:
     """
     Returns the RFID code from hardware or a test code if provided.
     
@@ -48,6 +49,16 @@ def usb_devices() -> Dict[str, Any]:
     """
     devices = get_mounted_usb_devices()
     return {"devices": devices}
+
+@app.get("/health")
+def health() -> Dict[str, str]:
+    """
+    Health check endpoint to verify backend status.
+
+    Returns:
+        Dictionary with health status and message.
+    """
+    return get_health_status()
 
 # Add cleanup for FastAPI shutdown
 @app.on_event("shutdown")

@@ -2,10 +2,11 @@ import { Fragment, JSX, ReactNode, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import styled from "@emotion/styled";
 import { useKeyDown } from "../../../providers/keyState/hooks";
-import { BlackContainerBase } from "../styles";
+import { BlackContainerBase } from "@/core";
 import { Chart, registerables } from "chart.js";
 import { useTranslation } from "react-i18next";
 import { ControlCenterPageSections, SettingsPageSections } from "../pages";
+import { WhiteContainerBase } from "../styles";
 
 Chart.register(...registerables);
 
@@ -19,9 +20,7 @@ interface CategoryLayoutProps<T = string> {
   namespace: string;
 }
 
-const WhiteContainerBase = styled.div<{ background: string }>`
-  backdrop-filter: blur(10px);
-  background: ${({ background }) => background};
+const ContentContainer = styled(WhiteContainerBase)`
   flex: 1;
   padding: 2%;
 `;
@@ -74,7 +73,6 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
     if (newIndex !== currentIndex) setSelectedCategory(categories[newIndex].categoryName);
   };
 
-  // TODO Remove SupportedKeys from all useKeyDown
   useKeyDown(
     {
       PageDown: () => handleCategoryNavigation("down"),
@@ -120,11 +118,10 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
         ))}
       </SidebarContainer>
 
-      {/* Content Area */}
-      <WhiteContainerBase background={theme.app.core.whiteTransparentBackground}>
+      <ContentContainer background={theme.app.core.whiteTransparentBackground}>
         <Typography variant="pageTitle">{t(`${selectedCategory}.title`)}</Typography>
         <Box marginTop={2}>{categories.find((c) => c.categoryName === selectedCategory)?.content}</Box>
-      </WhiteContainerBase>
+      </ContentContainer>
     </div>
   );
 };

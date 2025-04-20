@@ -9,4 +9,9 @@ export const playSound: (soundSrc: string, volume?: number) => void = (soundSrc,
   audio.play().catch(() => {});
 };
 
-// TODO This will be used in the future
+// TODO SFX For F1, F2, ... too
+// TODO Move the SFX hook to core since F1 menus are on multiple pages
+// TODO The GStreamer FDK AAC plugin is missing, AAC playback is unlikely to work.
+// TODO SFX The Flip Side Pager
+// TODO Make a list of all sfx and maybe change them all
+// TODO Normalize sound

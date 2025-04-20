@@ -1,13 +1,13 @@
 import { FC, useState, useEffect, useRef } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Alert, Box } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Box } from "@mui/material";
 import { useConstants, useKeyDown, useSettings } from "@/providers";
 import { KeyButton, LoadingSpinner, RfidStatuses, useLoadingDots } from "@/core";
-import { CancelKeyIcon } from "../../f1ReplayManagerPage/assets";
 import { useTranslation } from "react-i18next";
 import { DebugRfidButtons } from "../../../../../core/components/DebugRfidButtons";
 import { fetchRfidStatus } from "@/core/helpers/rfid";
 import { playSound } from "../../../../../core/helpers";
 import { ErrorSFX, SuccessSFX } from "../../../../lockedScreen/assets";
+import { CancelKeyIcon } from "../../f3ControlCenterPage/assets";
 
 interface SystemConfigurationDialogProps {
   open: boolean;
@@ -145,7 +145,6 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
             padding: "8px 16px",
           }}
         >
-          {/* TODO not the right icon */}
           <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
             <KeyButton
               label={t("systemConfiguration.dialog.closeButton")}

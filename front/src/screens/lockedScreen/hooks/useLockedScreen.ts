@@ -131,10 +131,8 @@ export const useLockedScreen: UseLockedScreen = () => {
       F1: () => handleLoginMethodChange(LoginMethods.KEYPAD),
       F2: () => handleLoginMethodChange(LoginMethods.CARD_READER),
 
-      // TODO Add cool spaces between all useKeyDown
       Backspace: handleBackspace,
     },
-    // TODO Not sure about string
     (digit: string) => {
       if (selectedMethod === LoginMethods.KEYPAD) {
         handlePinInput(digit);

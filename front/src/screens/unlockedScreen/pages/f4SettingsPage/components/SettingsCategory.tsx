@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Typography, Box } from "@mui/material";
 import styled from "@emotion/styled";
-import { Setting } from "./Setting";
+import { Setting, SettingProps } from "./Setting";
 
 const CategoryTitle = styled(Typography)`
   margin-bottom: 16px;
@@ -20,24 +20,12 @@ const DisabledWrapper = styled.div<{ disabled: boolean }>`
   pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
 `;
 
-interface Setting {
-  label: string;
-  type: "button" | "select" | "slider" | "toggle";
-  value: any;
-  onChange?: (value: any) => void;
-  options?: { value: string; label: string }[];
-  min?: number;
-  max?: number;
-  keyboardShortcut?: [string] | [string, string];
-}
-
-interface SettingsCategoryProps {
+interface Props {
   title?: string;
-  // TODO Naturally, this is a placeholder.
-  settings: any[];
+  settings: SettingProps<boolean | number | string>[];
 }
 
-export const SettingsCategory: FC<SettingsCategoryProps> = ({ title, settings }) => {
+export const SettingsCategory: FC<Props> = ({ title, settings }) => {
   return (
     <div style={{ marginBottom: "5vh" }}>
       {title && <CategoryTitle variant="h5">{title}</CategoryTitle>}

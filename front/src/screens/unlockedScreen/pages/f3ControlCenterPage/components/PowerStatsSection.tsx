@@ -103,7 +103,6 @@ export const StatCard: FC<{
             >
               {label}
             </Typography>
-            {/* TODO REMOVE H3 BODY2 SUBTITLE1 H5 H1 H2 H3 H4 H5 H6 */}
             <Typography
               variant="h6"
               sx={{

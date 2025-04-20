@@ -6,10 +6,12 @@ import { enableIconlessKeys, SupportedKeys, useKeyDown, useKeyState } from "../.
 import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
 import { ProgressDialog, ShortcutChip } from "../../../components";
 import { SystemConfigurationDialog } from "./SystemConfigurationDialog";
-import { ElectricalServices } from "@mui/icons-material";
+import { PowerOff } from "@mui/icons-material";
 import { useProgress, useSettings } from "../../../../../providers";
 import { useTranslation } from "react-i18next";
+import { SettingProps } from "./Setting";
 
+// PROD We have to add a screen after shutdown with snow
 export const SystemConfiguration: FC = () => {
   const { t } = useTranslation("SettingsPage");
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; progress?: boolean }>({
@@ -38,20 +40,7 @@ export const SystemConfiguration: FC = () => {
     setTimeout(() => {
       showSnackbar(t("systemConfiguration.noUpdatesAvailable"), false, 5000);
       setCheckUpdatesDisabled(true);
-      updateKeyState({
-        ...enableIconlessKeys([
-          SupportedKeys.DIGIT_1,
-          SupportedKeys.DIGIT_3,
-          ...(!progress.isCCTVSystemDown ? [SupportedKeys.DIGIT_7] : []),
-        ]),
-        PageUp: PgUpKeyIcon,
-        PageDown: PgDnKeyIcon,
-      });
     }, 3000);
-  };
-
-  const handleManageStorage = () => {
-    showSnackbar(t("systemConfiguration.openingStorage"));
   };
 
   const handleResetSystem = () => {
@@ -69,44 +58,29 @@ export const SystemConfiguration: FC = () => {
     showSnackbar(t("systemConfiguration.shutdownSuccess"));
   };
 
-  const systemConfiguration = [
+  const systemConfiguration: SettingProps[] = [
     {
       label: t("systemConfiguration.energySaverMode"),
       type: "toggle",
       value: energySaver,
-      onClick: () => {
-        setEnergySaver((prev) => !prev);
-        showSnackbar(
-          energySaver ? t("systemConfiguration.energySaverDisabled") : t("systemConfiguration.energySaverEnabled"),
-        );
-        !energySaver ? setBrightness(60) : setBrightness(100);
-      },
-      keyboardShortcut: "1",
+      keyboardShortcut: ["1"],
     },
     {
       label: t("systemConfiguration.autoUpdates"),
       type: "toggle",
       value: autoUpdates,
-      onClick: () => {
-        setAutoUpdates((prev) => !prev);
-        showSnackbar(
-          autoUpdates ? t("systemConfiguration.autoUpdatesDeactivated") : t("systemConfiguration.autoUpdatesActivated"),
-        );
-      },
-      keyboardShortcut: "3",
+      keyboardShortcut: ["3"],
     },
     {
       label: t("systemConfiguration.storageManagement"),
       type: "button",
-      onClick: handleManageStorage,
       value: null,
     },
     {
       label: t("systemConfiguration.checkForUpdates"),
       type: "button",
-      onClick: handleCheckUpdates,
       value: null,
-      keyboardShortcut: checkUpdatesDisabled ? undefined : "6",
+      keyboardShortcut: checkUpdatesDisabled ? undefined : ["6"],
     },
     {
       label: t("systemConfiguration.statsForNerds"),
@@ -154,6 +128,7 @@ export const SystemConfiguration: FC = () => {
       ...enableIconlessKeys([
         SupportedKeys.DIGIT_1,
         SupportedKeys.DIGIT_3,
+        ...(!checkUpdatesDisabled ? [SupportedKeys.DIGIT_6] : []),
         ...(!progress.isCCTVSystemDown ? [SupportedKeys.DIGIT_7] : []),
       ]),
       PageUp: PgUpKeyIcon,
@@ -162,7 +137,7 @@ export const SystemConfiguration: FC = () => {
     return () => {
       resetKeyStates();
     };
-  }, [updateKeyState, resetKeyStates, progress.isCCTVSystemDown]);
+  }, [updateKeyState, resetKeyStates, progress.isCCTVSystemDown, checkUpdatesDisabled]);
 
   return (
     <>
@@ -172,8 +147,7 @@ export const SystemConfiguration: FC = () => {
         open={progressDialogOpen}
         title={
           <>
-            {/* TODO Change icon */}
-            <ElectricalServices />
+            <PowerOff />
             {t("systemConfiguration.shuttingDown")}
           </>
         }
@@ -189,7 +163,6 @@ export const SystemConfiguration: FC = () => {
 
       <SettingsCategoryContainer>
         <SettingsCategory settings={systemConfiguration} />
-        {/* TODO Grey the button, not making it disappear */}
         <Box style={{ padding: "0 1vw" }}>
           <Button variant="contained" color="error" onClick={handleResetSystem} disabled={progress.isCCTVSystemDown}>
             {t("systemConfiguration.shutdownSystem")}

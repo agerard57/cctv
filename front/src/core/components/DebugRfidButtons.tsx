@@ -4,11 +4,11 @@ import { useConstants } from "@/providers/constants";
 import { RfidStatuses } from "../typings";
 import { fetchRfidStatus } from "../helpers/rfid";
 
-type Props = {
+interface Props {
   validRfidCode: string;
   onHandleRfid: (code: RfidStatuses) => void;
   onRfidSkip: () => void;
-};
+}
 
 export const DebugRfidButtons: FC<Props> = ({ validRfidCode, onHandleRfid, onRfidSkip }) => {
   const appConstants = useConstants();

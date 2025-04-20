@@ -3,9 +3,8 @@ import styled from "@emotion/styled";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { BlackContainerBase } from "../../screens/unlockedScreen/styles";
+import { BlackContainerBase } from "../styles";
 
-// TODO Make BlackContainerToCore
 const LoadingContainer = styled(BlackContainerBase)`
   display: flex;
   flex-direction: column;

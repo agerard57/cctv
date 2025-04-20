@@ -3,14 +3,8 @@ import { useTheme } from "@mui/material";
 import { KeyButton } from "@/core";
 import { useTranslation } from "react-i18next";
 import { SupportedKeys, useKeyState } from "@/providers/keyState";
+import { WhiteContainerBase } from "../styles";
 
-// TODO Make core generic
-const WhiteContainerBase = styled.div<{ background: string }>`
-  backdrop-filter: blur(10px);
-  background: ${({ background }) => background};
-`;
-
-// TODO Eventually add transition for style
 const ControlsContainer = styled(WhiteContainerBase)`
   position: absolute;
   display: flex;
@@ -80,7 +74,6 @@ export const Controls = () => {
       </KeypadGrid>
       <OtherButtonsContainer>
         <Row>
-          {/* TODO Fix labels to PgUp PgDn*/}
           {[SupportedKeys.PG_UP, SupportedKeys.PG_DOWN].map((key) => (
             <KeyButton
               key={key}
@@ -93,7 +86,6 @@ export const Controls = () => {
           ))}
         </Row>
         <Row>
-          {/* TODO Fix labels */}
           {[SupportedKeys.BACKSPACE, SupportedKeys.SPACE, SupportedKeys.CANCEL, SupportedKeys.ENTER].map((key) => (
             <KeyButton
               key={key}

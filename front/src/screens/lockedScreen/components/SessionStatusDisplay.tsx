@@ -17,7 +17,6 @@ export const SessionStatusDisplay: FC<Props> = ({ sessionStatus }) => {
       variant="sessionStatus"
       style={{
         color: theme.app.lockedScreen.sessionStatus.locked,
-        // TODO: This changes depending on stuff. You know.
       }}
     >
       {t(`sessionStatus.${sessionStatus}.title`)}

@@ -5,6 +5,7 @@ import { Languages, useKeyDown, useSettings, Wallpapers } from "@/providers";
 import { enableIconlessKeys, SupportedKeys, useKeyState } from "@/providers";
 import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
 import { useTranslation } from "react-i18next";
+import { SettingProps } from "./Setting";
 
 export const SettingsCategoryContainer = styled.div`
   margin: 4vh 0;
@@ -46,9 +47,10 @@ export const GeneralSettings: FC = () => {
     },
   });
 
-  const generalSettings = [
+  const generalSettings: SettingProps[] = [
     { label: t("generalSettings.darkMode"), type: "toggle", value: true },
     {
+      // TODO Add SFX
       label: t("generalSettings.volume"),
       type: "slider",
       value: appSettings.volume,
@@ -68,12 +70,11 @@ export const GeneralSettings: FC = () => {
     },
   ];
 
-  const displaySettings = [
+  const displaySettings: SettingProps[] = [
     { label: t("generalSettings.displaySettings.screenSaver"), type: "toggle", value: 0 },
     {
       label: t("generalSettings.displaySettings.wallpaper"),
       type: "select",
-      // TODO Infer type T
       value: appSettings.wallpaper,
       onChange: (value: Wallpapers) => {
         setWallpaper(value);
@@ -82,6 +83,7 @@ export const GeneralSettings: FC = () => {
         { value: Wallpapers.DEFAULT, label: t("generalSettings.displaySettings.wallpaperOptions.default") },
         { value: Wallpapers.LAS_VEGAS, label: t("generalSettings.displaySettings.wallpaperOptions.lasVegas") },
         { value: Wallpapers.MONEY, label: t("generalSettings.displaySettings.wallpaperOptions.money") },
+        { value: Wallpapers.POKER, label: t("generalSettings.displaySettings.wallpaperOptions.poker") },
         { value: Wallpapers.CATS, label: t("generalSettings.displaySettings.wallpaperOptions.cats") },
       ],
       keyboardShortcut: ["9"],
@@ -99,11 +101,10 @@ export const GeneralSettings: FC = () => {
     },
   ];
 
-  const regionalSettings = [
+  const regionalSettings: SettingProps[] = [
     {
       label: t("generalSettings.regionalSettings.timezone"),
       type: "select",
-      // TODO The first shown language should be the one set in the settings
       value: appSettings.language === Languages.FR ? "utc" : "est",
       options: [
         { value: "utc", label: t("generalSettings.regionalSettings.timezoneOptions.utc") },
@@ -113,8 +114,6 @@ export const GeneralSettings: FC = () => {
     {
       label: t("generalSettings.regionalSettings.language"),
       type: "select",
-      // TODO The first shown language should be the one set in the settings
-      // default: settings.language
       value: appSettings.language,
       onChange: (lang: Languages) => setLanguage(lang),
       options: [
@@ -132,7 +131,7 @@ export const GeneralSettings: FC = () => {
     { label: t("generalSettings.regionalSettings.autoCorrect"), type: "toggle", value: 0 },
   ];
 
-  const securitySettings = [
+  const securitySettings: SettingProps[] = [
     { label: t("generalSettings.securitySettings.gestureControl"), type: "toggle", value: 0 },
     { label: t("generalSettings.securitySettings.faceRecognition"), type: "toggle", value: 0 },
     {

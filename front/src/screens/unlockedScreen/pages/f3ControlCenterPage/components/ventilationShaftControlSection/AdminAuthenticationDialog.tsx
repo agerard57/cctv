@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, useCallback } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Alert, Box } from "@mui/material";
-import { useKeyDown } from "@/providers";
+import { useConstants, useKeyDown } from "@/providers";
 import { PinInputs, usePinInputs, KeyButton } from "@/core";
 import { MultiTapInput } from "./MultiTapInput";
 import { CancelKeyIcon, EnterKeyIcon } from "../../assets";
@@ -14,8 +14,9 @@ interface AdminAuthenticationDialogProps {
 
 export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ open, onClose, onSuccess }) => {
   const { t } = useTranslation("ControlCenterPage");
-  // TODO ADD PWD ID TO THE CONSTS
-  const CAPTCHA_CODE = "2342";
+  const appConstants = useConstants();
+  const CAPTCHA_CODE = appConstants.unlockedScreen.controlCenter.CAPTCHA.ID;
+  const CAPTCHA_PASSWORD = appConstants.unlockedScreen.controlCenter.CAPTCHA.PASSWORD;
   const [pinInput, setPinInput] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -46,9 +47,7 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
   };
 
   const handleAuthenticate = useCallback(() => {
-    const trimmedPassword = password.trim();
-
-    if (pinInput === CAPTCHA_CODE && trimmedPassword === "marc") {
+    if (pinInput === CAPTCHA_CODE && password.trim() === CAPTCHA_PASSWORD) {
       onSuccess?.();
       onClose();
     } else {

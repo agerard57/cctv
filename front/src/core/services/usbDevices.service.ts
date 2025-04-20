@@ -7,6 +7,7 @@ export interface UsbDevicesResponse {
 }
 
 // TODO Add override
+// TODO Add debug skips to other enigmas
 export const getUsbDevices = async (): Promise<UsbDevicesResponse> => {
   try {
     const response = await axios.get(URL);

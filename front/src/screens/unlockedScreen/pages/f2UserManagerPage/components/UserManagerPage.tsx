@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, useRef } from "react";
 import { useKeyState, enableAllDigits } from "@/providers/keyState";
-import { EnterKeyIcon, PgDnKeyIcon, PgUpKeyIcon, SpaceKeyIcon } from "../assets";
+import { PgDnKeyIcon, PgUpKeyIcon, SpaceKeyIcon } from "../assets";
 import { UserTable } from "./UserTable";
 import { ProgressBar } from "./ProgressBar";
 import { Captcha } from "./Captcha";
@@ -22,7 +22,6 @@ export const UserManagerPage: FC = () => {
       if (isCaptchaDisplayed) {
         updateKeyState({
           ...enableAllDigits(),
-          Enter: EnterKeyIcon,
           " ": SpaceKeyIcon,
         });
       } else {

@@ -227,7 +227,11 @@ export const appConstants = {
     },
     controlCenter: {
       DEFAULT_SECTION: ControlCenterPageSections.POWER_STATS,
-      /* TODO Add 2342 Marc */
+      CAPTCHA: {
+        ID: "2342",
+        /* PROD Change */
+        PASSWORD: "MARC",
+      },
     },
     settings: {
       DEFAULT_SECTION: SettingsPageSections.GENERAL_SETTINGS,

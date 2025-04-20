@@ -1,11 +1,10 @@
 import styled from "@emotion/styled";
 import { FC, useState, useEffect } from "react";
 import { Typography, LinearProgress } from "@mui/material";
-import { useLoadingDots } from "@/core";
+import { useLoadingDots, BlackContainerBase } from "@/core";
 
 import { useTranslation } from "react-i18next";
 import { JSX } from "@emotion/react/jsx-runtime";
-import { BlackContainerBase } from "../../../styles";
 import { useProgress } from "../../../../../providers";
 
 // TODO Find all comments in code and // and /* */

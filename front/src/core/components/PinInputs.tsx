@@ -1,30 +1,25 @@
 import { FC } from "react";
 import { PinInputStatuses } from "../typings";
-import { Theme, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
+import { LoadingSpinner } from "./LoadingSpinner";
+import { getInnerCircleColor } from "../helpers";
 
-// TODO Move helper
-const getInnerCircleColor = (theme: Theme, status: PinInputStatuses) => {
-  switch (status) {
-    case PinInputStatuses.EMPTY:
-      return theme.app.lockedScreen.PinInput.status.empty;
-    case PinInputStatuses.FILLED:
-      return theme.app.lockedScreen.PinInput.status.filled;
-    case PinInputStatuses.ERROR:
-      return theme.app.lockedScreen.PinInput.status.error;
-    default:
-      return theme.app.lockedScreen.PinInput.status.empty;
-  }
-};
+interface PinInput {
+  status: PinInputStatuses;
+  value?: string;
+}
 
-// TODO Enum for shape, interface for Props and Pin in another file
 interface Props {
-  pins: { status: PinInputStatuses; value?: string }[];
+  loading?: boolean;
+  pins: PinInput[];
   pinShape: "rectangle" | "circle";
   transparent?: boolean;
 }
 
-export const PinInputs: FC<Props> = ({ pins, pinShape, transparent = false }) => {
+export const PinInputs: FC<Props> = ({ loading = false, pins, pinShape, transparent = false }) => {
   const theme = useTheme();
+
+  if (loading) return <LoadingSpinner color="white" />;
 
   return pins.map((pin, index) => (
     <div

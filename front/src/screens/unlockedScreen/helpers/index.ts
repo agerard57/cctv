@@ -1,0 +1,1 @@
+export { getWallpaper } from "./wallpaper";

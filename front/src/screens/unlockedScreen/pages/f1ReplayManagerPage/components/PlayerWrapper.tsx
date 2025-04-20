@@ -3,7 +3,7 @@ import ReactPlayer from "react-player";
 import { FC, RefObject } from "react";
 import { VideoControls, VideoListInfos } from "../typings";
 import { useConstants } from "@/providers";
-import { BlackContainerBase } from "../../../styles";
+import { BlackContainerBase } from "@/core";
 
 const PlayerContainer = styled(BlackContainerBase)`
   width: 100%;

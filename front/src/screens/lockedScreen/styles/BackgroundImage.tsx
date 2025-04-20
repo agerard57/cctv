@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { LockedScreenBackground } from "../assets";
+import { PokerWallpaper } from "../../../core";
 
 export const BackgroundImage = styled.div`
   position: absolute;
@@ -7,7 +7,7 @@ export const BackgroundImage = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url(${LockedScreenBackground});
+  background-image: url(${PokerWallpaper});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

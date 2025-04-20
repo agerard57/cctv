@@ -8,12 +8,6 @@ import { useProgress } from "../../../../../providers";
 import { Loading } from "../../../../../core";
 
 // TODO when the video is over, first pause should put back the video to zero, instead, only the second pause restarts it directly
-
-// TODO Make core generic
-// TODO Remove other instances of this component on other files
-
-// TODO WHEN CHANGING VIDEOS, WE CAN SEE THE DIV CHANGING SIZE FOR A WHILE
-
 // TODO Reduce assets size and normalize to webp
 
 export const ReplayManagerPage: FC = () => {

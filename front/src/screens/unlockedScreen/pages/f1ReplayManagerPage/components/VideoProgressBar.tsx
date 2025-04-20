@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { FC } from "react";
 import { formatSecondsIntoMinutes } from "../helpers";
-import { BlackContainerBase } from "../../../styles";
+import { BlackContainerBase } from "@/core";
 
 const VideoProgressBarContainer = styled(BlackContainerBase)`
   height: 8vh;

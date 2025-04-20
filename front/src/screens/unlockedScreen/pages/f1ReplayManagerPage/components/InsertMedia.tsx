@@ -1,12 +1,11 @@
 import styled from "@emotion/styled";
-import { UsbMissingIcon, UsbValidIcon, UsbInvalidIcon, EnterKeyIcon } from "../assets";
+import { UsbMissingIcon, UsbValidIcon, UsbInvalidIcon } from "../assets";
 import { Typography, LinearProgress } from "@mui/material";
-import { LoadingSpinnerSvg } from "@/core";
+import { LoadingSpinnerSvg, BlackContainerBase } from "@/core";
 import { useInsertMedia } from "../hooks/useInsertMedia";
 import { useConstants } from "@/providers/constants";
 import { UsbStatuses } from "../typings";
 import { DebugInsertMedia } from "./DebugInsertMedia";
-import { BlackContainerBase } from "../../../styles";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 

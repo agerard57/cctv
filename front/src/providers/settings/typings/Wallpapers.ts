@@ -3,4 +3,5 @@ export enum Wallpapers {
   MONEY = "money",
   LAS_VEGAS = "lasVegas",
   CATS = "cats",
+  POKER = "poker",
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { TextField } from "@mui/material";
+import { useKeyDown } from "../../../../../../providers";
 
 interface MultiTapInputProps {
   onChange: (password: string) => void;
@@ -8,62 +9,44 @@ interface MultiTapInputProps {
 
 const keys = [
   {
-    name: "Numpad1",
-    display: "1",
+    key: "1",
     content: ["."],
   },
   {
-    name: "Numpad2",
-    display: "2",
-    content: ["a", "b", "c"],
+    key: "2",
+    content: ["A", "B", "C"],
   },
   {
-    name: "Numpad3",
-    display: "3",
-    content: ["d", "e", "f"],
+    key: "3",
+    content: ["D", "E", "F"],
   },
   {
-    name: "Numpad4",
-    display: "4",
-    content: ["g", "h", "i"],
+    key: "4",
+    content: ["G", "H", "I"],
   },
   {
-    name: "Numpad5",
-    display: "5",
-    content: ["j", "k", "l"],
+    key: "5",
+    content: ["J", "K", "L"],
   },
   {
-    name: "Numpad6",
-    display: "6",
-    content: ["m", "n", "o"],
+    key: "6",
+    content: ["M", "N", "O"],
   },
   {
-    name: "Numpad7",
-    display: "7",
-    content: ["p", "q", "r", "s"],
+    key: "7",
+    content: ["P", "Q", "R", "S"],
   },
   {
-    name: "Numpad8",
-    display: "8",
-    content: ["t", "u", "v"],
+    key: "8",
+    content: ["T", "U", "V"],
   },
   {
-    name: "Numpad9",
-    display: "9",
-    content: ["w", "x", "y", "z"],
+    key: "9",
+    content: ["W", "X", "Y", "Z"],
   },
   {
-    name: "NumpadMultiply",
-    display: "*",
-  },
-  {
-    name: "Numpad0",
-    display: "0",
+    key: "0",
     content: [" "],
-  },
-  {
-    name: "NumpadDivide",
-    display: "#",
   },
 ];
 
@@ -111,6 +94,18 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
     onChange(input);
   }, [input, onChange]);
 
+  useEffect(() => {
+    const handleKeyUp = (event: KeyboardEvent) => {
+      const key = event.key;
+      handleKeyRelease(key);
+    };
+
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [currentKey, state, lastKeyPressed, lastKeyPosition, input]);
+
   const finalizeCurrentCharacter = () => {
     setLastKeyPressed(null);
     setCurrentKey(null);
@@ -129,27 +124,19 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
     }
   };
 
-  // TODO Use useKeyDown hook
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Backspace" || event.code === "NumpadDecimal") {
-      if (enabled) {
-        handleBackspace();
-        return;
-      }
+  const handleKeyPress = (key: string) => {
+    const keyObj = keys.find((k) => k.key === key);
+
+    if (!keyObj) {
+      return;
     }
-
-    const key = event.code;
-    const keyObj = keys.find((k) => k.name === key);
-
-    if (!keyObj) return;
 
     startTimeRef.current = Date.now();
     setCurrentKey(key);
   };
 
-  const handleKeyUp = (event: KeyboardEvent) => {
-    const key = event.code;
-    const keyObj = keys.find((k) => k.name === key);
+  const handleKeyRelease = (key: string) => {
+    const keyObj = keys.find((k) => k.key === key);
 
     if (!keyObj || key !== currentKey) return;
 
@@ -160,7 +147,7 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
     }
 
     if (keyObj.content === undefined) {
-      setDisplayInput((prev) => prev + keyObj.display);
+      setDisplayInput((prev) => prev + keyObj.key);
       setLastKeyPosition(input.length);
       setLastKeyPressed(null);
     } else {
@@ -179,8 +166,8 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
           return updatedValue.join("");
         });
       } else if (keyPressTime >= 1000) {
-        setInput((prev) => prev + keyObj.display);
-        setDisplayInput((prev) => prev + keyObj.display);
+        setInput((prev) => prev + keyObj.key);
+        setDisplayInput((prev) => prev + keyObj.key);
         setLastKeyPosition(input.length);
         setLastKeyPressed(key);
         setState(0);
@@ -198,16 +185,21 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
     }
   };
 
-  useEffect(() => {
-    if (enabled) {
-      window.addEventListener("keydown", handleKeyDown);
-      window.addEventListener("keyup", handleKeyUp);
-      return () => {
-        window.removeEventListener("keydown", handleKeyDown);
-        window.removeEventListener("keyup", handleKeyUp);
-      };
-    }
-  }, [currentKey, state, lastKeyPressed, lastKeyPosition, input, enabled, handleBackspace]);
+  useKeyDown(
+    {
+      Backspace: () => {
+        if (enabled) {
+          handleBackspace();
+        }
+      },
+    },
+    (digit: string) => {
+      if (enabled && !isNaN(Number(digit))) {
+        handleKeyPress(digit);
+      }
+    },
+    [currentKey, state, lastKeyPressed, lastKeyPosition, input, enabled],
+  );
 
   return (
     <TextField

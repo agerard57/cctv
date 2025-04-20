@@ -53,7 +53,6 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
   const [ventilationLightStatus, setVentilationLightStatus] = useState(false);
   const [ventilationFanStatus, setVentilationFanStatus] = useState(false);
 
-  // TODO Add sfx for these buttons, F4, The dialogs and everything else really...
   useKeyDown(
     {
       "1": () => {
@@ -91,6 +90,7 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
         SupportedKeys.DIGIT_3,
         ...(!progress.isElectricalOutletDisconnected ? [SupportedKeys.DIGIT_4] : []),
       ]),
+      1: "a,b,c",
     });
     return () => {
       resetKeyStates();
@@ -171,8 +171,6 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
       icon: <VolumeUpOutlined />,
     },
   ];
-
-  // TODO Current load must be set to 0
 
   return (
     <Box sx={{ padding: "2vh 0px" }}>

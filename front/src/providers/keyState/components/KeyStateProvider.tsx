@@ -6,9 +6,7 @@ interface Props {
   children: ReactNode;
 }
 
-// TODO Move useKeyDown to here and merge the two features
 // TODO Make it so there are default icons if icons has "default" provided
-// TODO For that, we have to move UnlockedScreen's F1-F4 here to be enabled by default
 
 type NewKeyStates = Partial<Record<SupportedKeys, KeyState | string>>;
 

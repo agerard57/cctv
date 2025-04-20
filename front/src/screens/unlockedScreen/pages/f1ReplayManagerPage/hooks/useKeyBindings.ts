@@ -74,7 +74,7 @@ export const useKeyBindings = ({
         playerRef.current.seekTo(Math.max(0, (currentTime || 0) - 5), "seconds");
       }
     },
-    [SupportedKeys.TODO_DELETE]: () => {
+    [SupportedKeys.PROD_DELETE]: () => {
       if (currentVideo && playerRef.current) {
         setVideoControls({ isPlaying: false, progress: 0 });
         playerRef.current.seekTo(0);

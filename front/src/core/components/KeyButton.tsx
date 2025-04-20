@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Typography, useTheme } from "@mui/material";
 
-type Props = {
+interface Props {
   label: string;
   icon?: string;
   isEnabled?: boolean;
@@ -9,11 +9,8 @@ type Props = {
   padding?: string;
   direction?: "row" | "column";
   reversed?: boolean;
-};
+}
 
-/**
- * TODO Add the possibility of passing an array
- * TODO Add the management of size */
 export const KeyButton: FC<Props> = ({
   label,
   icon,

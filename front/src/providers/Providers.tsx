@@ -1,7 +1,6 @@
 import { FC, ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 
-// TODO Check if all projects' imports are sorted and using @/
 import { ThemeProvider } from "@mui/material";
 import { i18n } from "./i18n";
 import { ConstantsProvider } from "./constants";

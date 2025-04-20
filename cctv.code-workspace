@@ -39,7 +39,53 @@
     "editor.formatOnSave": true,
     "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
     "terminal.integrated.defaultProfile.linux": "bash",
-    "todohighlight.keywords": ["TODO", "FIX", "console.log", "PROD"],
+    "todohighlight.isCaseSensitive": true,
+    "todohighlight.keywords": [
+      {
+        "text": "TODO",
+        "color": "#679bf5",
+        "backgroundColor": "#ffe854",
+        "overviewRulerColor": "#ffe854",
+        "isWholeLine": true
+      },
+      {
+        "text": "console.log",
+        "color": "black",
+        "backgroundColor": "#f53c2f",
+        "overviewRulerColor": "#f53c2f",
+        "isWholeLine": true
+      },
+      {
+        "text": "FIX",
+        "color": "black",
+        "backgroundColor": "#00ff55",
+        "overviewRulerColor": "#00ff55",
+        "isWholeLine": true
+      },
+      {
+        "text": "PROD",
+        "color": "white",
+        "backgroundColor": "#6a40f5",
+        "overviewRulerColor": "#6a40f5",
+        "isWholeLine": true
+      }
+    ],
+    "todohighlight.exclude": [
+      "**/node_modules/**",
+      "**/bower_components/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.vscode/**",
+      "**/.github/**",
+      "**/_output/**",
+      "**/*.min.*",
+      "**/*.map",
+      "**/.next/**",
+      "/back/**/!(**/*.py)",
+      "/back/**/**___xxx__**",
+      "/front/node_modules/**",
+      "/front/dist/**"
+    ],
     "typescript.preferences.importModuleSpecifier": "relative",
     "typescript.tsc.autoDetect": "off",
 

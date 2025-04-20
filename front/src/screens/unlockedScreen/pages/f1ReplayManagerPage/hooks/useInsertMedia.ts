@@ -20,7 +20,6 @@ export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
     appConstants.unlockedScreen.replayManager.USB;
 
   const [debugDevices, setDebugDevices] = useState<string[]>([]);
-  const [deviceList, setDeviceList] = useState<string[]>([]);
   const prevDeviceListRef = useRef<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [shouldShake, setShouldShake] = useState(false);
@@ -71,7 +70,6 @@ export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
       // Only process if device list has changed
       if (hasDeviceListChanged(prevDeviceListRef.current, newDevices)) {
         prevDeviceListRef.current = [...newDevices];
-        setDeviceList(newDevices);
 
         const newStatus = determineUsbStatus(newDevices);
         currentStatusRef.current = newStatus;

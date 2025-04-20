@@ -5,7 +5,7 @@ import { VideoListInfos } from "../typings";
 import { formatDateTime, formatSecondsIntoMinutes } from "../helpers";
 import { useSettings } from "@/providers";
 import { useTranslation } from "react-i18next";
-import { BlackContainerBase } from "../../../styles";
+import { BlackContainerBase } from "@/core";
 
 const VideoListContainer = styled(BlackContainerBase)`
   display: flex;

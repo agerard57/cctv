@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useTheme } from "@mui/material";
-import { SecurityProfilePicture, SecurityBrandText, PinInputs, LoadingSpinner, RfidStatuses } from "@/core";
+import { SecurityProfilePicture, SecurityBrandText, PinInputs, RfidStatuses } from "@/core";
 import { SessionStatuses } from "../typings";
 import { useConstants } from "@/providers/constants";
 import { ErrorMessagesSection } from "./ErrorMessagesSection";
@@ -12,11 +12,6 @@ import { SessionStatusDisplay } from "./SessionStatusDisplay";
 import { UserInfoDisplay } from "./UserInfoDisplay";
 import { BackgroundImage, LockedScreenContainer, LockedScreenBox } from "../styles";
 import { DebugRfidButtons } from "../../../core/components/DebugRfidButtons";
-
-// TODO SFX For F1, F2, ... too
-// TODO Move the SFX hook to core since F1 menus are on multiple pages
-// TODO The GStreamer FDK AAC plugin is missing, AAC playback is unlikely to work.
-// TODO SFX The Flip Side Pager
 
 export const LockedScreen: FC = () => {
   const theme = useTheme();
@@ -35,8 +30,7 @@ export const LockedScreen: FC = () => {
   } = useLockedScreen();
 
   return (
-    /* TODO Maybe set to <> */
-    <div>
+    <>
       <BackgroundImage />
       <LockedScreenContainer>
         <div style={{ display: "flex", justifyContent: "flex-start", width: "70vw", marginBottom: "0.5vh" }}>
@@ -60,6 +54,7 @@ export const LockedScreen: FC = () => {
               }
             />
           )}
+          {/* PROD Change image */}
           <img
             src={SecurityProfilePicture}
             alt="Security profile picture"
@@ -71,15 +66,12 @@ export const LockedScreen: FC = () => {
             <div style={{ display: "grid", gap: "1.6vh" }}>
               <SessionStatusDisplay sessionStatus={sessionStatus} />
               <div style={{ display: "flex", gap: "1.4vw" }}>
-                {loading ? (
-                  <LoadingSpinner color="white" />
-                ) : selectedMethod === LoginMethods.KEYPAD && sessionStatus === SessionStatuses.LOCKED ? (
-                  <PinInputs pinShape="circle" pins={pins} />
-                ) : selectedMethod === LoginMethods.CARD_READER && sessionStatus === SessionStatuses.LOCKED ? (
-                  <RfidPrompt />
-                ) : (
-                  <div />
-                )}
+                {sessionStatus === SessionStatuses.LOCKED &&
+                  (selectedMethod === LoginMethods.KEYPAD ? (
+                    <PinInputs loading={loading} pinShape="circle" pins={pins} />
+                  ) : selectedMethod === LoginMethods.CARD_READER ? (
+                    <RfidPrompt loading={loading} />
+                  ) : null)}
               </div>
             </div>
           </div>
@@ -93,6 +85,6 @@ export const LockedScreen: FC = () => {
           />
         )}
       </LockedScreenContainer>
-    </div>
+    </>
   );
 };

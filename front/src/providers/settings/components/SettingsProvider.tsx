@@ -5,6 +5,7 @@ import { isLanguageCode } from "../helpers";
 import { Languages, Wallpapers } from "../typings";
 import { AppSettings, AppSettingsInitializer } from "../typings";
 import { SettingsContext } from "../contexts";
+import { logDebug } from "../../../core/helpers/logDebug";
 
 interface Props {
   children: ReactNode;
@@ -15,48 +16,40 @@ export const SettingsProvider: FC<Props> = ({ children }) => {
 
   const [appSettings, setAppSettings] = useState<AppSettings>(AppSettingsInitializer);
 
-  const setWallpaper = useCallback((value: Wallpapers) => {
-    setAppSettings((prev) => ({ ...prev, wallpaper: value }));
-    // TODO Make a logger that only logs if DEBUG_MODE is true
-    appConstants.DEBUG_MODE && console.info(`Settings updated: wallpaper = ${value}`);
-  }, []);
+  const updateSettings = useCallback(
+    <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
+      setAppSettings((prev) => ({ ...prev, [key]: value }));
+      logDebug(appConstants.DEBUG_MODE, "SETTINGS", `${key}: ${value}`);
+    },
+    [appConstants.DEBUG_MODE],
+  );
 
-  const setBrightness = useCallback((value: number) => {
-    setAppSettings((prev) => ({ ...prev, brightness: value }));
-    // TODO Make a logger that only logs if DEBUG_MODE is true
-    appConstants.DEBUG_MODE && console.info(`Settings updated: brightness = ${value}`);
-  }, []);
-
-  const setVolume = useCallback((value: number) => {
-    setAppSettings((prev) => ({ ...prev, volume: value }));
-    // TODO Make a logger that only logs if DEBUG_MODE is true
-    appConstants.DEBUG_MODE && console.info(`Settings updated: volume = ${value}`);
-  }, []);
-
-  const setLanguage = useCallback((lang: Languages) => {
-    if (!isLanguageCode(lang)) throw new Error(`Unknown language code: ${lang}`);
-    i18n.changeLanguage(lang);
-    setAppSettings((prev) => ({ ...prev, language: lang }));
-    appConstants.DEBUG_MODE && console.info(`Language changed to: ${lang}`);
-  }, []);
+  const setLanguage = useCallback(
+    (lang: Languages) => {
+      if (!isLanguageCode(lang)) throw new Error(`Unknown language code: ${lang}`);
+      i18n.changeLanguage(lang);
+      updateSettings("language", lang);
+    },
+    [appConstants.DEBUG_MODE, updateSettings],
+  );
 
   i18n.on("languageChanged", (newLanguage: string) => {
     if (!isLanguageCode(newLanguage)) throw new Error(`Unknown language code: ${newLanguage}`);
-    setAppSettings((prev) => ({ ...prev, language: newLanguage as Languages }));
+    updateSettings("language", newLanguage as Languages);
   });
 
   const resetSettings = useCallback(() => {
     setAppSettings(AppSettingsInitializer);
-    appConstants.DEBUG_MODE && console.info("Settings reset to initial state");
-  }, []);
+    logDebug(appConstants.DEBUG_MODE, "SETTINGS", "Reset to initial state");
+  }, [appConstants.DEBUG_MODE]);
 
   return (
     <SettingsContext.Provider
       value={{
         appSettings,
-        setBrightness,
-        setVolume,
-        setWallpaper,
+        setWallpaper: (value) => updateSettings("wallpaper", value),
+        setBrightness: (value) => updateSettings("brightness", value),
+        setVolume: (value) => updateSettings("volume", value),
         setLanguage,
         resetSettings,
       }}

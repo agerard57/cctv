@@ -9,8 +9,6 @@ interface ProgressDialogProps {
   onProgressDone: () => void;
 }
 
-// TODO We shouldn't be able to move from one page to another while the progress is made
-
 export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages, onProgressDone }) => {
   const { t } = useTranslation("UnlockedScreen");
   const [progress, setProgress] = useState(0);
@@ -82,7 +80,6 @@ export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages,
 
       <DialogContent>
         <Box sx={{ mt: 2, mb: 4 }}>
-          {/* TODO Remove all body2 */}
           <Typography variant="body2" sx={{ mb: 2, fontFamily: "monospace" }}>
             {currentMessage}
           </Typography>

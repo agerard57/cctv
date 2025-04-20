@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// TODO Rename to rfid
-const URL = "/api/rfid-code";
+const URL = "/api/rfid";
 
 export const getRfidStatus = async (overrideCode?: string): Promise<string> => {
   try {
