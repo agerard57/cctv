@@ -107,7 +107,7 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
                   (category.categoryName as SettingsPageSections) === SettingsPageSections.SYSTEM_CONFIGURATION
                     ? "red"
                     : category.content
-                      ? "inherit"
+                      ? "white"
                       : "grey",
               }}
             >
