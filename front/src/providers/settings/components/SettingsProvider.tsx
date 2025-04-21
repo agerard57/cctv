@@ -2,7 +2,7 @@ import { FC, useState, ReactNode, useCallback } from "react";
 import { useConstants } from "@/providers";
 import { i18n } from "@/providers/i18n";
 import { isLanguageCode } from "../helpers";
-import { Languages, Wallpapers } from "../typings";
+import { Languages } from "../typings";
 import { AppSettings, AppSettingsInitializer } from "../typings";
 import { SettingsContext } from "../contexts";
 import { logDebug } from "../../../core/helpers/logDebug";

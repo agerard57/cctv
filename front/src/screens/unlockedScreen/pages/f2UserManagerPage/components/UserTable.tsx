@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Chip, TableContainer } from "@mui/material";
-import { forwardRef, Ref, FC } from "react";
+import { forwardRef, Ref } from "react";
 import { useTranslation } from "react-i18next";
 import { useConstants } from "@/providers/constants";
 import { AccessLevels, AccountStatus } from "../typings";
@@ -33,7 +33,7 @@ const StyledTableRow = styled(TableRow)`
   }
 `;
 
-export const UserTable = forwardRef<HTMLDivElement, {}>((props, ref: Ref<HTMLDivElement>) => {
+export const UserTable = forwardRef<HTMLDivElement, {}>((_, ref: Ref<HTMLDivElement>) => {
   const { t } = useTranslation("UserManagerPage");
   const { appSettings } = useSettings();
   const appConstants = useConstants();

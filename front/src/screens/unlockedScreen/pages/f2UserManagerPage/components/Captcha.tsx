@@ -2,14 +2,15 @@ import { FC, useState, useEffect, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 // @ts-ignore I really dislike putting this... Oh well...
 import { Noise } from "noisejs";
-import { KeyButton } from "@/core";
-import { LoadingSpinner, PinInputs, usePinInputs } from "@/core";
+import { KeyButton, playSound } from "@/core";
+import { PinInputs, usePinInputs } from "@/core";
 import { useTranslation } from "react-i18next";
 import { useConstants } from "../../../../../providers/constants";
 import styled from "@emotion/styled";
 import { useKeyDown } from "../../../../../providers/keyState/hooks";
-import { SpaceKeyIcon } from "../assets";
-import { SupportedKeys } from "../../../../../providers";
+import { CaptchaRefreshSFX, CaptchaSuccessSFX, SpaceKeyIcon } from "../assets";
+import { useSettings } from "../../../../../providers";
+import { ButtonOnSFX } from "../../../assets";
 
 const CaptchaContainer = styled.div`
   padding: 10vh 0 0 0;
@@ -35,7 +36,9 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
   const [loading, setLoading] = useState(false);
   const [lastRefreshTime, setLastRefreshTime] = useState(0);
   const [isSpacebarHeld, setIsSpacebarHeld] = useState(false);
+  const [isRefreshBlocked, setIsRefreshBlocked] = useState(false); // Track if refresh is blocked
   const inputRef = useRef<string>("");
+  const { appSettings } = useSettings();
 
   const CAPTCHA_CODE = appConstants.unlockedScreen.userManager.CAPTCHA_CODE;
 
@@ -51,6 +54,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
     {
       onFilled: () => setLoading(true),
       onSuccess: () => {
+        playSound(CaptchaSuccessSFX, appSettings.volume);
         setLoading(false);
         onSolve();
       },
@@ -182,16 +186,30 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
 
   const handleRefresh = () => {
     const now = Date.now();
-    const cooldown = 1000;
+    const cooldown = 2000;
 
-    if (loading || now - lastRefreshTime < cooldown || isSpacebarHeld) return;
+    // TODO TRY TO REFACTOR LOGIC TO CLEAN
+    if (loading || now - lastRefreshTime < cooldown || isSpacebarHeld || isRefreshBlocked) {
+      return;
+    }
 
+    playSound(ButtonOnSFX, appSettings.volume);
     setLastRefreshTime(now);
     setLoading(true);
+
     setTimeout(() => {
-      setNoiseLevel((prev) => Math.max(prev * 0.5, 0.1));
+      setNoiseLevel((prev) => {
+        const newNoiseLevel = Math.max(prev * 0.5, 0.1);
+
+        if (newNoiseLevel <= 0.1) {
+          setIsRefreshBlocked(true);
+        }
+
+        return newNoiseLevel;
+      });
       setLoading(false);
-    }, 1000);
+      playSound(CaptchaRefreshSFX, appSettings.volume);
+    }, cooldown);
   };
 
   useKeyDown(
@@ -209,12 +227,12 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
         handlePinInput(digit);
       }
     },
-    [loading, pins, isSpacebarHeld],
+    [loading, pins, isSpacebarHeld, isRefreshBlocked],
   );
 
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.code === SupportedKeys.SPACE) {
+      if (event.code === "Space") {
         setIsSpacebarHeld(false);
       }
     };
@@ -256,7 +274,7 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
           icon={SpaceKeyIcon}
           direction="column"
           padding="0.7vh 3vw"
-          isEnabled={!loading}
+          isEnabled={!loading && !isRefreshBlocked}
         />
       </Box>
     </CaptchaContainer>

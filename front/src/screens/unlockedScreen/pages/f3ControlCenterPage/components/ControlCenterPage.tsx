@@ -34,7 +34,7 @@ export interface AllMetrics {
   ventilationCurrentLoad: number;
   airQuality: number;
   humidity: number;
-  noiseLevel: number;
+  co2Level: number;
 }
 
 export const ControlCenterPage: FC = () => {
@@ -74,7 +74,7 @@ export const ControlCenterPage: FC = () => {
 
     airQuality: 85,
     humidity: 45,
-    noiseLevel: 30,
+    co2Level: 400,
     ventilationCurrentLoad: 75,
   });
 
@@ -214,7 +214,7 @@ export const ControlCenterPage: FC = () => {
         ventilationCurrentLoad: Math.max(50, Math.min(100, prev.ventilationCurrentLoad + (Math.random() - 0.5) * 2)),
         airQuality: Math.max(70, Math.min(99, prev.airQuality + (Math.random() - 0.5) * 1)),
         humidity: Math.max(30, Math.min(60, prev.humidity + (Math.random() - 0.5) * 1)),
-        noiseLevel: Math.max(20, Math.min(60, prev.noiseLevel + (Math.random() - 0.5) * 1)),
+        co2Level: Math.max(300, Math.min(1000, prev.co2Level + (Math.random() - 0.5) * 10)),
       }));
 
       const nextInterval = getRandomInterval(800, 1500);

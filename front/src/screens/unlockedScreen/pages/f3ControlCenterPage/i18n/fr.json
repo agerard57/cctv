@@ -73,7 +73,8 @@
     "envStats": {
       "airQuality": "Qualité de l'Air",
       "humidity": "Humidité",
-      "noiseLevel": "Niveau Sonore"
+      "noiseLevel": "Niveau Sonore",
+      "co2Levels": "Niveaux de CO2"
     },
     "status": {
       "on": "Activé",

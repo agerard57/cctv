@@ -1,9 +1,9 @@
 import { useConstants, useKeyDown, useProgress, useSettings } from "@/providers";
-import { PinInputStatuses, RfidStatuses, usePinInputs } from "@/core";
+import { ErrorSFX, FunctionButtonSFX, PinInputStatuses, RfidScanSFX, RfidStatuses, usePinInputs } from "@/core";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Screens } from "../../Screens";
-import { BlockedSFX, ErrorSFX, SuccessSFX } from "../assets";
+import { BlockedSFX, SuccessSFX } from "../assets";
 import { LoginMethods, SessionStatuses } from "../typings";
 import { playSound } from "../../../core/helpers";
 import { fetchRfidStatus } from "../../../core/helpers/rfid";
@@ -42,10 +42,11 @@ export const useLockedScreen: UseLockedScreen = () => {
       onSuccess: () => {
         setLoading(false);
         setSessionStatus(SessionStatuses.UNLOCKED);
+        playSound(SuccessSFX, appSettings.volume);
 
         setTimeout(() => {
           unlockSession();
-        }, 3000); // Removed redundant return
+        }, 3000);
       },
       onError: () => {
         if (loading) return;
@@ -57,6 +58,8 @@ export const useLockedScreen: UseLockedScreen = () => {
 
           if (newTries <= 0) {
             blockSession();
+          } else {
+            playSound(ErrorSFX, appSettings.volume);
           }
 
           return newTries;
@@ -67,6 +70,7 @@ export const useLockedScreen: UseLockedScreen = () => {
 
   const handleLoginMethodChange = (method: LoginMethods) => {
     if (selectedMethod !== method && !loading) {
+      playSound(FunctionButtonSFX, appSettings.volume);
       setSelectedMethod(method);
       resetPin();
       setRfidStatus(null);
@@ -83,6 +87,7 @@ export const useLockedScreen: UseLockedScreen = () => {
       return;
     }
 
+    playSound(RfidScanSFX, appSettings.volume);
     setLoading(true);
 
     setTimeout(() => {
@@ -93,9 +98,10 @@ export const useLockedScreen: UseLockedScreen = () => {
 
         setTimeout(() => {
           unlockSession();
-        }, 3000); // Removed redundant return
-      } else {
+        }, 3000);
+      } else if (rfidStatus === RfidStatuses.INVALID) {
         playSound(ErrorSFX, appSettings.volume);
+        setRfidStatus(RfidStatuses.INVALID);
       }
     }, 5000);
   };
@@ -131,10 +137,14 @@ export const useLockedScreen: UseLockedScreen = () => {
       F1: () => handleLoginMethodChange(LoginMethods.KEYPAD),
       F2: () => handleLoginMethodChange(LoginMethods.CARD_READER),
 
-      Backspace: handleBackspace,
+      Backspace: () => {
+        if (sessionStatus !== SessionStatuses.BLOCKED) {
+          handleBackspace();
+        }
+      },
     },
     (digit: string) => {
-      if (selectedMethod === LoginMethods.KEYPAD) {
+      if (selectedMethod === LoginMethods.KEYPAD && sessionStatus !== SessionStatuses.BLOCKED) {
         handlePinInput(digit);
       }
     },
@@ -145,8 +155,10 @@ export const useLockedScreen: UseLockedScreen = () => {
     if (selectedMethod === LoginMethods.CARD_READER && sessionStatus === SessionStatuses.LOCKED) {
       const interval = setInterval(() => {
         fetchRfidStatus(appConstants.lockedScreen.cardReader.VALID_RFID_CODE, undefined, (fetchedRfidStatus) => {
-          setRfidStatus(fetchedRfidStatus);
-          onHandleRfid(fetchedRfidStatus);
+          if (fetchedRfidStatus !== RfidStatuses.NONE) {
+            setRfidStatus(fetchedRfidStatus);
+            onHandleRfid(fetchedRfidStatus);
+          }
         });
       }, 500);
 

@@ -28,3 +28,5 @@ export const App: FC = () => (
 // TODO convert to webp
 
 //TODO Remove hardcoded colors
+// TODO Check that I don't do imports then exports like I did with assets
+// TODO SFX DIALOGS

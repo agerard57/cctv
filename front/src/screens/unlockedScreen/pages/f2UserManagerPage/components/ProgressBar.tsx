@@ -1,11 +1,14 @@
 import styled from "@emotion/styled";
 import { FC, useState, useEffect } from "react";
 import { Typography, LinearProgress } from "@mui/material";
-import { useLoadingDots, BlackContainerBase } from "@/core";
+import { BlackContainerBase } from "@/core";
 
 import { useTranslation } from "react-i18next";
 import { JSX } from "@emotion/react/jsx-runtime";
-import { useProgress } from "../../../../../providers";
+import { useProgress, useSettings } from "../../../../../providers";
+import { playSound, playLoopingSound, pauseSound, resumeSound, stopSound } from "../../../../../core";
+import { ProgressInterruptedSFX, ProgressSFX } from "../assets";
+import { ProgressMessageSFX } from "../../../assets";
 
 // TODO Find all comments in code and // and /* */
 const ProgressBarContainer = styled(BlackContainerBase)`
@@ -46,10 +49,30 @@ export const ProgressBar: FC<{
   const [lastThreshold, setLastThreshold] = useState(0);
   const { progress } = useProgress();
   const [captchaNeeded, setCaptchaNeeded] = useState(false);
+  const { appSettings } = useSettings();
+  const PROGRESS_SOUND_ID = "progressbar-sound";
 
   const isError = !progress.isCaptchaSolved && progressBarValue >= 89;
 
-  const { loadingDots } = useLoadingDots(isError);
+  useEffect(() => {
+    playLoopingSound(PROGRESS_SOUND_ID, ProgressSFX, appSettings.volume);
+
+    return () => {
+      stopSound(PROGRESS_SOUND_ID);
+    };
+  }, [appSettings.volume]);
+
+  useEffect(() => {
+    if (isCaptchaDisplayed) {
+      pauseSound(PROGRESS_SOUND_ID);
+    } else if (progress.isCaptchaSolved && progressBarValue < 100) {
+      resumeSound(PROGRESS_SOUND_ID);
+    }
+
+    if (progressBarValue >= 100) {
+      stopSound(PROGRESS_SOUND_ID);
+    }
+  }, [isCaptchaDisplayed, progress.isCaptchaSolved, progressBarValue]);
 
   useEffect(() => {
     if (captchaNeeded && !isCaptchaDisplayed) {
@@ -72,6 +95,7 @@ export const ProgressBar: FC<{
       () => {
         setProgressBarValue((prev) => {
           if (!progress.isCaptchaSolved && prev + 5 >= 89 && !isCaptchaDisplayed && !captchaNeeded) {
+            playSound(ProgressInterruptedSFX, appSettings.volume);
             clearInterval(interval);
             setCaptchaNeeded(true);
             return 89;
@@ -88,6 +112,7 @@ export const ProgressBar: FC<{
 
           const nextMessage = messages.find((msg) => msg.threshold > lastThreshold && msg.threshold <= nextProgress);
           if (nextMessage) {
+            playSound(ProgressMessageSFX, appSettings.volume);
             setMessage(nextMessage.text);
             setLastThreshold(nextMessage.threshold);
           }

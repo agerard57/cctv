@@ -2,11 +2,12 @@ import { Fragment, JSX, ReactNode, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import styled from "@emotion/styled";
 import { useKeyDown } from "../../../providers/keyState/hooks";
-import { BlackContainerBase } from "@/core";
+import { BlackContainerBase, PgUpPgDnSFX, playSound } from "@/core";
 import { Chart, registerables } from "chart.js";
 import { useTranslation } from "react-i18next";
 import { ControlCenterPageSections, SettingsPageSections } from "../pages";
 import { WhiteContainerBase } from "../styles";
+import { useSettings } from "../../../providers";
 
 Chart.register(...registerables);
 
@@ -51,10 +52,12 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
   const [selectedCategory, setSelectedCategory] = useState<T | undefined>(categories[0]?.categoryName || undefined);
   const theme = useTheme();
   const { t } = useTranslation(namespace);
+  const { appSettings } = useSettings();
 
   const selectedIndex = categories.findIndex((c) => c.categoryName === selectedCategory);
 
   const handleCategoryNavigation = (direction: "up" | "down") => {
+    playSound(PgUpPgDnSFX, appSettings.volume);
     let currentIndex = selectedIndex < 0 ? 0 : selectedIndex;
     let newIndex = currentIndex;
 
@@ -92,7 +95,6 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
         overflow: "hidden",
       }}
     >
-      {/* Sidebar */}
       <SidebarContainer>
         {categories.map((category, index) => (
           <Fragment key={category.categoryName}>

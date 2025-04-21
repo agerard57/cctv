@@ -8,7 +8,7 @@ import { WhiteContainerBase } from "../styles";
 const ControlsContainer = styled(WhiteContainerBase)`
   position: absolute;
   display: flex;
-  bottom: 8vh;
+  bottom: 7vh;
   right: 0;
   z-index: 2;
   padding: 10px;

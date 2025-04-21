@@ -1,13 +1,13 @@
 import { FC, useState, useEffect, useRef } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Box } from "@mui/material";
 import { useConstants, useKeyDown, useSettings } from "@/providers";
-import { KeyButton, LoadingSpinner, RfidStatuses, useLoadingDots } from "@/core";
+import { ErrorSFX, KeyButton, LoadingSpinner, RfidStatuses, useLoadingDots } from "@/core";
 import { useTranslation } from "react-i18next";
 import { DebugRfidButtons } from "../../../../../core/components/DebugRfidButtons";
 import { fetchRfidStatus } from "@/core/helpers/rfid";
 import { playSound } from "../../../../../core/helpers";
-import { ErrorSFX, SuccessSFX } from "../../../../lockedScreen/assets";
 import { CancelKeyIcon } from "../../f3ControlCenterPage/assets";
+import { SuccessSFX } from "../../../../lockedScreen/assets";
 
 interface SystemConfigurationDialogProps {
   open: boolean;
@@ -22,12 +22,12 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
   const [loading, setLoading] = useState(false);
   const { appSettings } = useSettings();
   const { loadingDots } = useLoadingDots(rfidStatus === RfidStatuses.NONE);
-  const hasHandledRfid = useRef(false); // Track if RFID has been handled
-  const intervalRef = useRef<NodeJS.Timeout | null>(null); // Track the interval
+  const hasHandledRfid = useRef(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (open) {
-      hasHandledRfid.current = false; // Reset when dialog opens
+      hasHandledRfid.current = false;
       intervalRef.current = setInterval(() => {
         fetchRfidStatus(appConstants.unlockedScreen.settings.VALID_RFID_CODE, undefined, (fetchedRfidStatus) => {
           if (rfidStatus !== fetchedRfidStatus) {
@@ -50,7 +50,7 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
   useEffect(() => {
     if (rfidStatus !== RfidStatuses.NONE && !hasHandledRfid.current) {
       onHandleRfid(rfidStatus);
-      hasHandledRfid.current = true; // Mark as handled
+      hasHandledRfid.current = true;
     }
   }, [rfidStatus]);
 
@@ -118,7 +118,7 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
             }}
           >
             {loading ? (
-              <LoadingSpinner color="white" />
+              <LoadingSpinner color="white" height="1vw" />
             ) : (
               <Typography variant="tableContent">
                 {rfidStatus === RfidStatuses.NONE

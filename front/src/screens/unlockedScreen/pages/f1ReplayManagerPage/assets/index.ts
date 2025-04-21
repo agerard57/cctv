@@ -10,6 +10,8 @@ import UsbMissingIcon from "./usbMissingIcon.png";
 import UsbInvalidIcon from "./usbInvalidIcon.png";
 import UsbValidIcon from "./usbValidIcon.png";
 
+import { UsbPlugSFX, UsbValidSFX, UsbInvalidSFX } from "./sfx";
+
 import { Videos, Thumbnails } from "./videos";
 
 export {
@@ -24,4 +26,7 @@ export {
   UsbMissingIcon,
   UsbInvalidIcon,
   UsbValidIcon,
+  UsbPlugSFX,
+  UsbValidSFX,
+  UsbInvalidSFX,
 };

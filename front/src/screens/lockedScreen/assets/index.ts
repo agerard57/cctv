@@ -1,4 +1,4 @@
-import { BlockedSFX, SuccessSFX, ErrorSFX, KeyPressSFX } from "./sounds";
+import { BlockedSFX, SuccessSFX } from "./sounds";
 import { F1KeyIcon, F2KeyIcon } from "./icons";
 
-export { BlockedSFX, SuccessSFX, ErrorSFX, KeyPressSFX, F1KeyIcon, F2KeyIcon };
+export { BlockedSFX, SuccessSFX, F1KeyIcon, F2KeyIcon };

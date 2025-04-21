@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import { AsteriskKeyIcon, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon } from "../assets";
+import { AsteriskKeyIcon, ControlsCloseSFX, ButtonOnSFX, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon } from "../assets";
 import { Typography, useTheme } from "@mui/material";
 
-import { KeyButton, SecurityBrandText, SecurityProfilePicture } from "@/core";
+import { FunctionButtonSFX, KeyButton, SecurityBrandText, SecurityProfilePicture } from "@/core";
 import { FC, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { UnlockedScreenPages as UnlockedScreenPagesEnum } from "../typings";
@@ -17,6 +17,7 @@ import { useKeyDown } from "../../../providers/keyState/hooks";
 import { useConstants, useSettings } from "../../../providers";
 import { WhiteContainerBase } from "../styles";
 import { getWallpaper } from "../helpers";
+import { playSound } from "../../../core/helpers";
 
 const UnlockedScreenPagesComponentsMap: Record<UnlockedScreenPagesEnum, FC> = {
   [UnlockedScreenPagesEnum.REPLAY_MANAGER]: ReplayManagerPage,
@@ -95,9 +96,6 @@ export const UnlockedScreen: FC = () => {
   const theme = useTheme();
   const { t } = useTranslation("UnlockedScreen");
   const [isVisible, setIsVisible] = useState(true);
-  const [areControlsVisible, setAreControlsVisible] = useState(false);
-  const pressTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const keyHeldRef = useRef(false);
   const isAsteriskHeldRef = useRef(false);
 
   const { appSettings } = useSettings();
@@ -139,18 +137,14 @@ export const UnlockedScreen: FC = () => {
       (callbacks, key) => {
         callbacks[key] = () => {
           if (Object.values(UnlockedScreenPages).includes(key as UnlockedScreenPages)) {
-            if (pressTimerRef.current) return;
-            keyHeldRef.current = true;
+            if (currentPage === (key as UnlockedScreenPages)) return;
             setCurrentPage(key as UnlockedScreenPages);
-            pressTimerRef.current = setTimeout(() => {
-              setIsVisible(true);
-              pressTimerRef.current = null;
-            }, 90);
+            playSound(FunctionButtonSFX, appSettings.volume);
           } else if (key === SupportedKeys.ASTERISK) {
             if (isAsteriskHeldRef.current) return;
             isAsteriskHeldRef.current = true;
-            setAreControlsVisible((prev) => !prev);
-            setIsVisible(true);
+            setIsVisible((prev) => !prev);
+            playSound(isVisible ? ControlsCloseSFX : ButtonOnSFX, appSettings.volume);
           }
         };
         return callbacks;
@@ -160,15 +154,6 @@ export const UnlockedScreen: FC = () => {
   );
 
   const handleKeyUp = (event: KeyboardEvent) => {
-    if (Object.values(UnlockedScreenPages).includes(event.key as UnlockedScreenPages)) {
-      keyHeldRef.current = false;
-      if (pressTimerRef.current) {
-        clearTimeout(pressTimerRef.current);
-        pressTimerRef.current = null;
-      }
-      setIsVisible(false);
-    }
-
     if (event.key === SupportedKeys.ASTERISK) {
       isAsteriskHeldRef.current = false;
     }
@@ -179,18 +164,15 @@ export const UnlockedScreen: FC = () => {
 
     return () => {
       window.removeEventListener("keyup", handleKeyUp);
-      if (pressTimerRef.current) clearTimeout(pressTimerRef.current);
     };
   }, []);
 
   useEffect(() => {
-    if (!keyHeldRef.current) {
-      const timeout = setTimeout(() => {
-        setIsVisible(false);
-      }, 2000);
+    const timeout = setTimeout(() => {
+      setIsVisible(false);
+    }, 2000);
 
-      return () => clearTimeout(timeout);
-    }
+    return () => clearTimeout(timeout);
   }, [currentPage]);
 
   return (
@@ -230,18 +212,18 @@ export const UnlockedScreen: FC = () => {
         </FunctionButtonsContainer>
       </div>
       <div style={{ position: "absolute", top: "13vh", right: 0, zIndex: 1 }}>
-        <ControlsKeyContainer isVisible={areControlsVisible} background={theme.app.core.whiteTransparentBackground}>
+        <ControlsKeyContainer isVisible={isVisible} background={theme.app.core.whiteTransparentBackground}>
           <KeyButton
             label={t("controls.buttonLabel")}
             icon={AsteriskKeyIcon}
             reversed
-            isEnabled={areControlsVisible}
+            isEnabled={isVisible}
             padding="0 1vw"
           />
         </ControlsKeyContainer>
       </div>
 
-      {areControlsVisible && <Controls />}
+      {isVisible && <Controls />}
       <div
         style={{
           margin: "11vh 6vw 5vh 1vw",

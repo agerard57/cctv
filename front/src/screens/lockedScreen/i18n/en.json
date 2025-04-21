@@ -12,7 +12,7 @@
       "timer_other": "Please try again in {{count}} seconds."
     },
     "unlocked": {
-      "title": "Unlocked"
+      "title": "Welcome"
     }
   },
   "methods": {

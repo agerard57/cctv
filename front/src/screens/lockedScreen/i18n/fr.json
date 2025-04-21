@@ -12,7 +12,7 @@
       "timer_other": "Veuillez réessayer dans {{count}} secondes."
     },
     "unlocked": {
-      "title": "Déverrouillé"
+      "title": "Bienvenue"
     }
   },
   "methods": {

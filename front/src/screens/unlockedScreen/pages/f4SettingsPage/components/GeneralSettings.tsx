@@ -6,6 +6,8 @@ import { enableIconlessKeys, SupportedKeys, useKeyState } from "@/providers";
 import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
 import { useTranslation } from "react-i18next";
 import { SettingProps } from "./Setting";
+import { playSound } from "../../../../../core";
+import { ButtonOnSFX } from "../../../assets";
 
 export const SettingsCategoryContainer = styled.div`
   margin: 4vh 0;
@@ -38,11 +40,13 @@ export const GeneralSettings: FC = () => {
       const currentWallpaperIndex = wallpaperOptions.indexOf(appSettings.wallpaper);
       const nextWallpaperIndex = (currentWallpaperIndex + 1) % wallpaperOptions.length;
 
+      playSound(ButtonOnSFX, appSettings.volume);
       setWallpaper(wallpaperOptions[nextWallpaperIndex]);
     },
     "#": () => {
       const newLanguage = appSettings.language === Languages.FR ? Languages.EN : Languages.FR;
 
+      playSound(ButtonOnSFX, appSettings.volume);
       setLanguage(newLanguage);
     },
   });

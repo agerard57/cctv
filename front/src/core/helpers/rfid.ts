@@ -7,14 +7,16 @@ import { RfidStatuses } from "../typings";
  * @param validCode - The valid RFID code to compare against.
  * @returns The status of the RFID code, either VALID or INVALID or NONE.
  * */
-const evaluateRfidStatus = (receivedCode: string, validCode: string): RfidStatuses => {
-  if (receivedCode === null) {
+const evaluateRfidStatus = (receivedCode: string | null, validCode: string): RfidStatuses => {
+  if (!receivedCode) {
     return RfidStatuses.NONE;
   }
 
   if (receivedCode === validCode) {
     return RfidStatuses.VALID;
-  } else return RfidStatuses.INVALID;
+  }
+
+  return RfidStatuses.INVALID;
 };
 
 /**

@@ -2,20 +2,22 @@ import { FC, useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { AdminControlsCard } from "./AdminControlsCard";
 import {
-  DoorFrontOutlined,
   LightbulbOutlined,
   AirOutlined,
-  AirOutlined as AirQualityIcon,
   WaterDropOutlined,
-  VolumeUpOutlined,
+  Co2Outlined,
+  HvacOutlined,
+  VerifiedOutlined,
 } from "@mui/icons-material";
 import { StatCard } from "../PowerStatsSection";
-import { useKeyDown, useKeyState, useProgress } from "@/providers";
+import { useKeyDown, useKeyState, useProgress, useSettings } from "@/providers";
 import { enableIconlessKeys, SupportedKeys } from "@/providers/keyState";
 import { ControlCard } from "./ControlCard";
 import { LoadChart } from "./LoadChart";
 import { AllMetrics } from "../ControlCenterPage";
 import { useTranslation } from "react-i18next";
+import { playSound } from "../../../../../../core";
+import { ButtonOnSFX } from "../../../../assets";
 
 const styles = {
   statsGrid: {
@@ -36,7 +38,7 @@ const styles = {
   },
 };
 
-type VentilationMetrics = Pick<AllMetrics, "airQuality" | "humidity" | "noiseLevel" | "ventilationCurrentLoad">;
+type VentilationMetrics = Pick<AllMetrics, "airQuality" | "humidity" | "co2Level" | "ventilationCurrentLoad">;
 
 interface Props {
   metrics: VentilationMetrics;
@@ -46,7 +48,7 @@ interface Props {
 export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics }) => {
   const { t } = useTranslation("ControlCenterPage");
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
-
+  const { appSettings } = useSettings();
   const { progress } = useProgress();
 
   const [ventilationDoorStatus, setVentilationDoorStatus] = useState(false);
@@ -57,21 +59,25 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
     {
       "1": () => {
         if (!isAuthDialogOpen) {
+          playSound(ButtonOnSFX, appSettings.volume);
           setVentilationDoorStatus((prev) => !prev);
         }
       },
       "2": () => {
         if (!isAuthDialogOpen) {
+          playSound(ButtonOnSFX, appSettings.volume);
           setVentilationLightStatus((prev) => !prev);
         }
       },
       "3": () => {
         if (!isAuthDialogOpen) {
+          playSound(ButtonOnSFX, appSettings.volume);
           setVentilationFanStatus((prev) => !prev);
         }
       },
       "4": () => {
         if (!isAuthDialogOpen && !progress.isElectricalOutletDisconnected) {
+          playSound(ButtonOnSFX, appSettings.volume);
           setIsAuthDialogOpen(true);
         }
       },
@@ -90,7 +96,6 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
         SupportedKeys.DIGIT_3,
         ...(!progress.isElectricalOutletDisconnected ? [SupportedKeys.DIGIT_4] : []),
       ]),
-      1: "a,b,c",
     });
     return () => {
       resetKeyStates();
@@ -105,7 +110,7 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
         ? t("ventilationShaftControl.doorStatus.locked")
         : t("ventilationShaftControl.doorStatus.unlocked"),
       threshold: 1,
-      icon: <DoorFrontOutlined />,
+      icon: <HvacOutlined />,
       buttonLabel: ventilationDoorStatus
         ? t("ventilationShaftControl.controls.lockDoor")
         : t("ventilationShaftControl.controls.unlockDoor"),
@@ -154,7 +159,7 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
       value: metrics.airQuality,
       unit: "%",
       threshold: 90,
-      icon: <AirQualityIcon />,
+      icon: <VerifiedOutlined />,
     },
     {
       label: t("ventilationShaftControl.envStats.humidity"),
@@ -164,11 +169,11 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
       icon: <WaterDropOutlined />,
     },
     {
-      label: t("ventilationShaftControl.envStats.noiseLevel"),
-      value: metrics.noiseLevel,
-      unit: "dB",
-      threshold: 50,
-      icon: <VolumeUpOutlined />,
+      label: t("ventilationShaftControl.envStats.co2Levels"),
+      value: metrics.co2Level,
+      unit: "ppm",
+      threshold: 1000,
+      icon: <Co2Outlined />,
     },
   ];
 

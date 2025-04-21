@@ -10,6 +10,7 @@ export interface AppSettings {
 }
 
 export const AppSettingsInitializer: AppSettings = {
+  // PROD 100
   volume: 50,
   brightness: 100,
   wallpaper: Wallpapers.DEFAULT,

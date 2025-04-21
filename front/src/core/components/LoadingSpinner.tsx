@@ -3,13 +3,14 @@ import { LoadingSpinnerSvg } from "../assets";
 
 interface LoadingSpinnerProps {
   color?: "white" | "black";
+  height?: string;
 }
 
-export const LoadingSpinner: FC<LoadingSpinnerProps> = ({ color = "black" }) => (
+export const LoadingSpinner: FC<LoadingSpinnerProps> = ({ color = "black", height = "3vw" }) => (
   <img
     src={LoadingSpinnerSvg}
     style={{
-      height: "3vw",
+      height,
       filter: color === "white" ? "invert(1)" : "none",
     }}
   />

@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import ReactPlayer from "react-player";
 import { FC, RefObject } from "react";
 import { VideoControls, VideoListInfos } from "../typings";
-import { useConstants } from "@/providers";
+import { useSettings } from "@/providers";
 import { BlackContainerBase } from "@/core";
 
 const PlayerContainer = styled(BlackContainerBase)`
@@ -26,7 +26,7 @@ export const PlayerWrapper: FC<{
   videoControls: VideoControls;
   handleProgress: (state: { played: any; loaded: any }) => void;
 }> = ({ currentVideo, playerRef, videoControls, handleProgress }) => {
-  const appConstants = useConstants();
+  const { appSettings } = useSettings();
 
   return (
     <PlayerContainer>
@@ -34,12 +34,12 @@ export const PlayerWrapper: FC<{
         key={currentVideo.originalFileName}
         url={currentVideo.filePath}
         ref={playerRef}
+        volume={appSettings.volume / 100}
         width={"inherit"}
         height={"inherit"}
         onProgress={handleProgress}
         progressInterval={100}
         playing={videoControls.isPlaying}
-        muted={appConstants.DEBUG_MODE}
       />
     </PlayerContainer>
   );

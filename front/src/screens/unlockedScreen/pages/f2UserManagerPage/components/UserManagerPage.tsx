@@ -41,7 +41,7 @@ export const UserManagerPage: FC = () => {
 
   useEffect(() => {
     if (isProgressBarComplete && tableRef.current) {
-      tableRef.current.focus(); // Explicitly set focus to the table
+      tableRef.current.focus();
     }
   }, [isProgressBarComplete]);
 

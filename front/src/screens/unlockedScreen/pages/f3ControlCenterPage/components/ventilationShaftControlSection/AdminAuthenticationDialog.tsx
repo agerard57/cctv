@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useCallback } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Alert, Box } from "@mui/material";
 import { useConstants, useKeyDown } from "@/providers";
-import { PinInputs, usePinInputs, KeyButton } from "@/core";
+import { PinInputs, usePinInputs, KeyButton, PinInputStatuses } from "@/core";
 import { MultiTapInput } from "./MultiTapInput";
 import { CancelKeyIcon, EnterKeyIcon } from "../../assets";
 import { useTranslation } from "react-i18next";
@@ -61,11 +61,14 @@ export const AdminAuthenticationDialog: FC<AdminAuthenticationDialogProps> = ({ 
       setPassword("");
       setError("");
 
-      for (let i = 0; i < CAPTCHA_CODE.length; i++) {
-        handleBackspace();
+      // Reset pins only if the dialog was previously open
+      if (pins.some((pin) => pin !== PinInputStatuses.EMPTY)) {
+        for (let i = 0; i < CAPTCHA_CODE.length; i++) {
+          handleBackspace();
+        }
       }
     }
-  }, [open, handleBackspace, CAPTCHA_CODE.length]);
+  }, [open]);
 
   useKeyDown(
     {
