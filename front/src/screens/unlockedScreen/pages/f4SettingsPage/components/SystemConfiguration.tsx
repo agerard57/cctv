@@ -10,6 +10,8 @@ import { PowerOff } from "@mui/icons-material";
 import { useProgress, useSettings } from "../../../../../providers";
 import { useTranslation } from "react-i18next";
 import { SettingProps } from "./Setting";
+import { ButtonOffSFX, ButtonOnSFX, ProgressDoneSFX } from "../../../assets/sfx";
+import { playSound } from "../../../../../core";
 
 // PROD We have to add a screen after shutdown with snow
 export const SystemConfiguration: FC = () => {
@@ -25,7 +27,7 @@ export const SystemConfiguration: FC = () => {
   const [progressDialogOpen, setProgressDialogOpen] = useState(false);
   const [checkUpdatesDisabled, setCheckUpdatesDisabled] = useState(false);
   const { progress, setCCTVSystemDown } = useProgress();
-  const { setBrightness } = useSettings();
+  const { appSettings, setBrightness } = useSettings();
   const { updateKeyState, resetKeyStates } = useKeyState();
 
   const showSnackbar = (message: string, progress = false, duration = 3000) => {
@@ -39,6 +41,7 @@ export const SystemConfiguration: FC = () => {
     showSnackbar(t("systemConfiguration.checkingUpdates"), true, 3000);
     setTimeout(() => {
       showSnackbar(t("systemConfiguration.noUpdatesAvailable"), false, 5000);
+      playSound(ProgressDoneSFX, appSettings.volume);
       setCheckUpdatesDisabled(true);
     }, 3000);
   };
@@ -103,18 +106,23 @@ export const SystemConfiguration: FC = () => {
           energySaver ? t("systemConfiguration.energySaverDisabled") : t("systemConfiguration.energySaverEnabled"),
         );
         !energySaver ? setBrightness(60) : setBrightness(100);
+        playSound(!energySaver ? ButtonOnSFX : ButtonOffSFX, appSettings.volume);
       },
       3: () => {
         setAutoUpdates((prev) => !prev);
         showSnackbar(
           autoUpdates ? t("systemConfiguration.autoUpdatesDeactivated") : t("systemConfiguration.autoUpdatesActivated"),
         );
+        playSound(!autoUpdates ? ButtonOnSFX : ButtonOffSFX, appSettings.volume);
       },
       6: () => {
         if (!checkUpdatesDisabled) handleCheckUpdates();
+        playSound(energySaver ? ButtonOnSFX : ButtonOffSFX, appSettings.volume);
+        playSound(ButtonOnSFX, appSettings.volume);
       },
       7: () => {
         if (!progress.isCCTVSystemDown) {
+          playSound(ButtonOnSFX, appSettings.volume);
           handleResetSystem();
         }
       },

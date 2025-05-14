@@ -5,6 +5,6 @@ import F2KeyIcon from "./f2KeyIcon.png";
 import F3KeyIcon from "./f3KeyIcon.png";
 import F4KeyIcon from "./f4KeyIcon.png";
 
-export { ButtonOnSFX, ControlsCloseSFX, ProgressMessageSFX } from "./sfx";
+export { ButtonOnSFX, ButtonOffSFX, ProgressMessageSFX } from "./sfx";
 
 export { AsteriskKeyIcon, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon };

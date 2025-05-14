@@ -7,8 +7,9 @@ import { useTranslation } from "react-i18next";
 import { JSX } from "@emotion/react/jsx-runtime";
 import { useProgress, useSettings } from "../../../../../providers";
 import { playSound, playLoopingSound, pauseSound, resumeSound, stopSound } from "../../../../../core";
-import { ProgressInterruptedSFX, ProgressSFX } from "../assets";
+import { ProgressInterruptedSFX } from "../assets";
 import { ProgressMessageSFX } from "../../../assets";
+import { ProgressSFX } from "../../../assets/sfx";
 
 // TODO Find all comments in code and // and /* */
 const ProgressBarContainer = styled(BlackContainerBase)`
@@ -50,7 +51,7 @@ export const ProgressBar: FC<{
   const { progress } = useProgress();
   const [captchaNeeded, setCaptchaNeeded] = useState(false);
   const { appSettings } = useSettings();
-  const PROGRESS_SOUND_ID = "progressbar-sound";
+  const PROGRESS_SOUND_ID = "f2-progressbar-sound";
 
   const isError = !progress.isCaptchaSolved && progressBarValue >= 89;
 
@@ -60,7 +61,7 @@ export const ProgressBar: FC<{
     return () => {
       stopSound(PROGRESS_SOUND_ID);
     };
-  }, [appSettings.volume]);
+  }, [appSettings.volume, PROGRESS_SOUND_ID]);
 
   useEffect(() => {
     if (isCaptchaDisplayed) {

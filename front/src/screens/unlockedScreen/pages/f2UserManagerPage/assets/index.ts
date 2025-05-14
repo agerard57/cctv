@@ -4,6 +4,6 @@ import SpaceKeyIcon from "./spaceKeyIcon.png";
 import ActiveIcon from "./activeIcon.png";
 import InactiveIcon from "./inactiveIcon.png";
 
-export { ProgressInterruptedSFX, ProgressSFX, CaptchaSuccessSFX, CaptchaRefreshSFX } from "./sfx";
+export { ProgressInterruptedSFX, CaptchaSuccessSFX, CaptchaRefreshSFX } from "./sfx";
 
 export { ActiveIcon, InactiveIcon, SpaceKeyIcon, PgUpKeyIcon, PgDnKeyIcon };

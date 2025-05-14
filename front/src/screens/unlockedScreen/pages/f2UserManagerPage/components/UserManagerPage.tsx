@@ -1,5 +1,5 @@
 import { FC, useState, useEffect, useRef } from "react";
-import { useKeyState, enableAllDigits } from "@/providers/keyState";
+import { useKeyState, allDigits, enableIconlessKeys } from "@/providers/keyState";
 import { PgDnKeyIcon, PgUpKeyIcon, SpaceKeyIcon } from "../assets";
 import { UserTable } from "./UserTable";
 import { ProgressBar } from "./ProgressBar";
@@ -21,7 +21,7 @@ export const UserManagerPage: FC = () => {
     if (!isProgressBarComplete) {
       if (isCaptchaDisplayed) {
         updateKeyState({
-          ...enableAllDigits(),
+          ...enableIconlessKeys(allDigits),
           " ": SpaceKeyIcon,
         });
       } else {

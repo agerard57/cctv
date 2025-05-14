@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { AsteriskKeyIcon, ControlsCloseSFX, ButtonOnSFX, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon } from "../assets";
+import { AsteriskKeyIcon, ButtonOffSFX, ButtonOnSFX, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon } from "../assets";
 import { Typography, useTheme } from "@mui/material";
 
 import { FunctionButtonSFX, KeyButton, SecurityBrandText, SecurityProfilePicture } from "@/core";
@@ -144,7 +144,7 @@ export const UnlockedScreen: FC = () => {
             if (isAsteriskHeldRef.current) return;
             isAsteriskHeldRef.current = true;
             setIsVisible((prev) => !prev);
-            playSound(isVisible ? ControlsCloseSFX : ButtonOnSFX, appSettings.volume);
+            playSound(isVisible ? ButtonOffSFX : ButtonOnSFX, appSettings.volume);
           }
         };
         return callbacks;

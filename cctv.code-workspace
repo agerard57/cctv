@@ -20,6 +20,9 @@
     {
       "name": "🖥️ - Frontend",
       "path": "./front"
+    },
+    {
+      "path": "../Downloads/MP3"
     }
   ],
   "extensions": {

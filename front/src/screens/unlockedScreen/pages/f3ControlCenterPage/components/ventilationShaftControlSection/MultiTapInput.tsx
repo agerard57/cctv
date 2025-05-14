@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { TextField } from "@mui/material";
-import { useKeyDown } from "../../../../../../providers";
+import { useKeyDown, useSettings } from "../../../../../../providers";
+import { PinBackspaceSFX, PinInputSFX } from "../../../../../../core/assets";
+import { playSound } from "../../../../../../core";
 
 interface MultiTapInputProps {
   onChange: (password: string) => void;
@@ -57,6 +59,7 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
   const [lastKeyPressed, setLastKeyPressed] = useState<string | null>(null);
   const [lastKeyPosition, setLastKeyPosition] = useState(-1);
   const [state, setState] = useState(0);
+  const { appSettings } = useSettings();
 
   const [cursorVisible, setCursorVisible] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -114,6 +117,7 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
 
   const handleBackspace = () => {
     if (input.length > 0) {
+      playSound(PinBackspaceSFX, appSettings.volume);
       setInput((prev) => prev.slice(0, -1));
       setDisplayInput((prev) => prev.slice(0, -1));
 
@@ -131,6 +135,7 @@ export const MultiTapInput: React.FC<MultiTapInputProps> = ({ onChange, enabled 
       return;
     }
 
+    playSound(PinInputSFX, appSettings.volume);
     startTimeRef.current = Date.now();
     setCurrentKey(key);
   };

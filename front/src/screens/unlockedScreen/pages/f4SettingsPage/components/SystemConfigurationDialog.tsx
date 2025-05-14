@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useRef } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Box } from "@mui/material";
 import { useConstants, useKeyDown, useSettings } from "@/providers";
-import { ErrorSFX, KeyButton, LoadingSpinner, RfidStatuses, useLoadingDots } from "@/core";
+import { ErrorSFX, KeyButton, LoadingSpinner, RfidScanSFX, RfidStatuses, useLoadingDots } from "@/core";
 import { useTranslation } from "react-i18next";
 import { DebugRfidButtons } from "../../../../../core/components/DebugRfidButtons";
 import { fetchRfidStatus } from "@/core/helpers/rfid";
@@ -60,6 +60,7 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
     }
 
     setLoading(true);
+    playSound(RfidScanSFX, appSettings.volume);
 
     setTimeout(() => {
       setLoading(false);

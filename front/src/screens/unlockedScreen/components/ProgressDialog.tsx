@@ -1,6 +1,9 @@
 import { FC, useEffect, useState, ReactNode } from "react";
 import { Dialog, DialogTitle, DialogContent, LinearProgress, Typography, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { playLoopingSound, stopSound } from "../../../core";
+import { ProgressSFX } from "../assets/sfx";
+import { useSettings } from "../../../providers";
 
 interface ProgressDialogProps {
   open: boolean;
@@ -13,6 +16,18 @@ export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages,
   const { t } = useTranslation("UnlockedScreen");
   const [progress, setProgress] = useState(0);
   const [currentMessage, setCurrentMessage] = useState("");
+  const PROGRESS_SOUND_ID = "f3-progressbar-sound";
+  const { appSettings } = useSettings();
+
+  useEffect(() => {
+    if (open) {
+      playLoopingSound(PROGRESS_SOUND_ID, ProgressSFX, appSettings.volume);
+    }
+
+    return () => {
+      stopSound(PROGRESS_SOUND_ID);
+    };
+  }, [open, appSettings.volume, PROGRESS_SOUND_ID]);
 
   useEffect(() => {
     if (open) {
@@ -26,7 +41,7 @@ export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages,
     if (open) {
       timer = setInterval(() => {
         setProgress((prevProgress) => {
-          const newProgress = prevProgress + Math.random() * 4.5 + 3;
+          const newProgress = prevProgress + Math.random() * 6 + 5;
 
           const messageIndex = Math.min(Math.floor(newProgress / (100 / messages.length)), messages.length - 1);
           setCurrentMessage(messages[messageIndex]);
@@ -43,7 +58,7 @@ export const ProgressDialog: FC<ProgressDialogProps> = ({ open, title, messages,
 
           return newProgress;
         });
-      }, 250);
+      }, 200);
     }
 
     return () => {

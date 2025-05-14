@@ -12,4 +12,5 @@ export const BackgroundImage = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   filter: blur(15px) brightness(60%);
+  transform: scale(1.1);
 `;

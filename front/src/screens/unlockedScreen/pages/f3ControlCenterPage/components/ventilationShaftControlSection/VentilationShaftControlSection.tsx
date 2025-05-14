@@ -11,13 +11,14 @@ import {
 } from "@mui/icons-material";
 import { StatCard } from "../PowerStatsSection";
 import { useKeyDown, useKeyState, useProgress, useSettings } from "@/providers";
-import { enableIconlessKeys, SupportedKeys } from "@/providers/keyState";
+import { allDigits, enableIconlessKeys, SupportedKeys } from "@/providers/keyState";
 import { ControlCard } from "./ControlCard";
 import { LoadChart } from "./LoadChart";
 import { AllMetrics } from "../ControlCenterPage";
 import { useTranslation } from "react-i18next";
 import { playSound } from "../../../../../../core";
 import { ButtonOnSFX } from "../../../../assets";
+import { CancelKeyIcon, EnterKeyIcon } from "../../assets";
 
 const styles = {
   statsGrid: {
@@ -90,17 +91,27 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
 
   useEffect(() => {
     updateKeyState({
-      ...enableIconlessKeys([
-        SupportedKeys.DIGIT_1,
-        SupportedKeys.DIGIT_2,
-        SupportedKeys.DIGIT_3,
-        ...(!progress.isElectricalOutletDisconnected ? [SupportedKeys.DIGIT_4] : []),
-      ]),
+      ...enableIconlessKeys(
+        isAuthDialogOpen
+          ? allDigits
+          : [
+              SupportedKeys.DIGIT_1,
+              SupportedKeys.DIGIT_2,
+              SupportedKeys.DIGIT_3,
+              ...(!progress.isElectricalOutletDisconnected ? [SupportedKeys.DIGIT_4] : []),
+            ],
+      ),
+      ...(isAuthDialogOpen
+        ? {
+            Enter: EnterKeyIcon,
+            Cancel: CancelKeyIcon,
+          }
+        : []),
     });
     return () => {
       resetKeyStates();
     };
-  }, [updateKeyState, resetKeyStates, progress.isElectricalOutletDisconnected]);
+  }, [updateKeyState, resetKeyStates, progress.isElectricalOutletDisconnected, isAuthDialogOpen]);
 
   const controls = [
     {

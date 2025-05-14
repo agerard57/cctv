@@ -1,1 +1,1 @@
-export { enableIconlessKeys, enableAllDigits } from "./keyStateUtils";
+export { enableIconlessKeys, allDigits } from "./keyStateUtils";

@@ -1,7 +1,7 @@
-import CatsWallpaper from "./catsWallpaper.jpg";
-import DefaultWallpaper from "./defaultWallpaper.png";
-import LasVegasWallpaper from "./lasVegasWallpaper.jpg";
-import MoneyWallpaper from "./moneyWallpaper.jpg";
-import PokerWallpaper from "./pokerWallpaper.jpg";
+import CatsWallpaper from "./catsWallpaper.webp";
+import DefaultWallpaper from "./defaultWallpaper.webp";
+import LasVegasWallpaper from "./lasVegasWallpaper.webp";
+import MoneyWallpaper from "./moneyWallpaper.webp";
+import PokerWallpaper from "./pokerWallpaper.webp";
 
 export { CatsWallpaper, DefaultWallpaper, LasVegasWallpaper, MoneyWallpaper, PokerWallpaper };
