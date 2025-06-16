@@ -5,7 +5,7 @@ import subprocess
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
-VIDEO_DIR = os.path.join(PROJECT_ROOT, "front/src/replayManager/assets/videos")
+VIDEO_DIR = os.path.join(PROJECT_ROOT, "front/src/screens/unlockedScreen/pages/f1ReplayManagerPage/assets/videos")
 THUMBNAIL_DIR = os.path.join(VIDEO_DIR, "thumbnails")
 INDEX_FILE_VIDEOS = os.path.join(VIDEO_DIR, "index.ts")
 THUMBNAIL_INDEX_FILE = os.path.join(THUMBNAIL_DIR, "index.ts")
@@ -54,6 +54,6 @@ for video in video_files:
 os.makedirs(os.path.dirname(THUMBNAIL_INDEX_FILE), exist_ok=True)
 with open(THUMBNAIL_INDEX_FILE, "w") as f:
     f.write("\n".join(thumbnail_imports) + "\n\n")
-    f.write("export const Thumbnails = [\n  " + ",\n  ".join(os.path.splitext(v)[0] for v in video_files) + "\n];\n")
+    f.write("export const Thumbnails = {\n  " + ",\n  ".join(os.path.splitext(v)[0] for v in video_files) + "\n} as Record<string, string>;\n")
 
 print("✅ thumbnails/index.ts file created!")

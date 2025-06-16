@@ -1,13 +1,14 @@
-import SR_20030512_0845 from "./SR_20030512_0845.mp4";
-import SR_20150615_1720 from "./SR_20150615_1720.mp4";
-import SR_20200220_1640 from "./SR_20200220_1640.mp4";
-import MR_20101207_1430 from "./MR_20101207_1430.mp4";
-import MR_20170525_1350 from "./MR_20170525_1350.mp4";
-import MR_20211129_2205 from "./MR_20211129_2205.mp4";
-import LR_19991231_2359 from "./LR_19991231_2359.mp4";
-import LR_20230719_1910 from "./LR_20230719_1910.mp4";
-import LO_20180410_0915 from "./LO_20180410_0915.mp4";
 import LO_20080923_1155 from "./LO_20080923_1155.mp4";
+import LR_19991231_2359 from "./LR_19991231_2359.mp4";
+import SR_20200220_1640 from "./SR_20200220_1640.mp4";
+import MR_20170525_1350 from "./MR_20170525_1350.mp4";
+import LR_20230719_1910 from "./LR_20230719_1910.mp4";
+import MR_20211129_2205 from "./MR_20211129_2205.mp4";
+import LO_20180410_0915 from "./LO_20180410_0915.mp4";
+import SR_20150615_1720 from "./SR_20150615_1720.mp4";
+import SR_20030512_0845 from "./SR_20030512_0845.mp4";
+import MR_20101207_1430 from "./MR_20101207_1430.mp4";
+
 
 import { Thumbnails } from "./thumbnails";
 
@@ -21,7 +22,6 @@ const Videos = [
   LO_20180410_0915,
   SR_20150615_1720,
   SR_20030512_0845,
-  MR_20101207_1430,
+  MR_20101207_1430
 ];
-
 export { Videos, Thumbnails };

@@ -20,8 +20,14 @@ export const useReplayManager = () => {
 
   const handleProgress = () => {
     const currentTime = playerRef?.current?.getCurrentTime() || 0;
-    const progress = (currentTime / (currentVideo?.duration || 1)) * 100;
-    setVideoControls((prev) => ({ ...prev, progress }));
+    const duration = currentVideo?.duration || 1;
+    const progress = (currentTime / duration) * 100;
+
+    if (currentTime >= duration) {
+      setVideoControls((prev) => ({ ...prev, isPlaying: false, progress: 100 }));
+    } else {
+      setVideoControls((prev) => ({ ...prev, progress }));
+    }
   };
 
   useEffect(() => {

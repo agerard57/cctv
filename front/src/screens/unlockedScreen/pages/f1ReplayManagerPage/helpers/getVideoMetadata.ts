@@ -36,14 +36,18 @@ type GetVideoMetadata = (filePath: string, language: Languages) => Promise<Video
  * @throws Error if the filename format is invalid or if there is an issue loading the video.
  */
 export const getVideoMetadata: GetVideoMetadata = async (filePath) => {
-  const regex = /([^/_]+)_(\d{8})_(\d{4})/;
-  const match = filePath.match(regex);
+  const fileName = filePath.split("/").pop() ?? "";
+  const baseName = fileName.split("-")[0];
+
+  const match = baseName.match(/^([^/_]+)_(\d{8})_(\d{4})/);
 
   if (!match) {
     throw new Error(`Invalid filename format: ${filePath}`);
   }
 
-  const [originalFileName, unTypedRoomCode, date, time] = match;
+  const [, unTypedRoomCode, date, time] = match;
+  const originalFileName = `${unTypedRoomCode}_${date}_${time}`;
+
 
   if (!(unTypedRoomCode in RoomCodes)) {
     throw new Error(`Invalid room code: ${unTypedRoomCode}`);
@@ -52,7 +56,7 @@ export const getVideoMetadata: GetVideoMetadata = async (filePath) => {
   const roomCode = unTypedRoomCode as RoomCodes;
 
   const formattedDateTime = formatDateAndTimeIntoDateTime(date, time);
-  const thumbnailFilePath = Thumbnails.find((thumbnail) => thumbnail.includes(originalFileName)) || "";
+  const thumbnailFilePath = Thumbnails[originalFileName as keyof typeof Thumbnails] ?? "";
 
   const videoElement = document.createElement("video");
   videoElement.src = filePath;
@@ -64,7 +68,7 @@ export const getVideoMetadata: GetVideoMetadata = async (filePath) => {
         originalFileName,
         thumbnailFilePath,
         dateTime: formattedDateTime,
-        duration: videoElement.duration,
+        duration: isNaN(videoElement.duration) ? 0 : videoElement.duration,
         roomCode,
       });
       videoElement.removeEventListener("loadedmetadata", onLoadedMetadata);
@@ -77,11 +81,5 @@ export const getVideoMetadata: GetVideoMetadata = async (filePath) => {
 
     videoElement.addEventListener("loadedmetadata", onLoadedMetadata);
     videoElement.addEventListener("error", onError);
-
-    return () => {
-      videoElement.removeEventListener("loadedmetadata", onLoadedMetadata);
-      videoElement.removeEventListener("error", onError);
-      videoElement.src = "";
-    };
   });
 };

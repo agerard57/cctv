@@ -9,7 +9,7 @@ import SR_20150615_1720 from "./SR_20150615_1720.webp";
 import SR_20030512_0845 from "./SR_20030512_0845.webp";
 import MR_20101207_1430 from "./MR_20101207_1430.webp";
 
-export const Thumbnails = [
+export const Thumbnails = {
   LO_20080923_1155,
   LR_19991231_2359,
   SR_20200220_1640,
@@ -20,4 +20,4 @@ export const Thumbnails = [
   SR_20150615_1720,
   SR_20030512_0845,
   MR_20101207_1430
-];
+} as Record<string, string>;

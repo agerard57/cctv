@@ -1,13 +1,12 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Typography, Button, Card, CardContent, Snackbar } from "@mui/material";
 import { AdminAuthenticationDialog } from "./AdminAuthenticationDialog";
-import { useProgress, useSettings } from "@/providers";
+import { useProgress } from "@/providers";
 import { StatCard } from "../PowerStatsSection";
 import { ChargingStation, ElectricalServices } from "@mui/icons-material";
 import { ShortcutChip, ProgressDialog } from "../../../../components";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
-import { playSound } from "../../../../../../core";
 
 const getProgressMessages = (t: TFunction) => [
   t("ventilationShaftControl.progressMessages.initPower"),
@@ -33,7 +32,6 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
   const [showProgressDialog, setShowProgressDialog] = useState(false);
   const { progress, setElectricalOutletDisconnected } = useProgress();
   const { t } = useTranslation("ControlCenterPage");
-  const { appSettings } = useSettings();
 
   const handleAuthSuccess = () => {
     setShowProgressDialog(true);
@@ -42,7 +40,6 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
   const handleProgressDone = () => {
     setShowProgressDialog(false);
     setShowSuccess(true);
-    playSound(ProgressDoneSFX, appSettings.volume);
     setElectricalOutletDisconnected(true);
   };
 
