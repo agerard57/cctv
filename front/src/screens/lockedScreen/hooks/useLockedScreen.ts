@@ -1,5 +1,5 @@
 import { useConstants, useKeyDown, useProgress, useSettings } from "@/providers";
-import { ErrorSFX, FunctionButtonSFX, PinInputStatuses, RfidScanSFX, RfidStatuses, usePinInputs } from "@/core";
+import { ErrorSFX, PinInputStatuses, RfidScanSFX, RfidStatuses, usePinInputs } from "@/core";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Screens } from "../../Screens";
@@ -70,7 +70,6 @@ export const useLockedScreen: UseLockedScreen = () => {
 
   const handleLoginMethodChange = (method: LoginMethods) => {
     if (selectedMethod !== method && !loading) {
-      playSound(FunctionButtonSFX, appSettings.volume);
       setSelectedMethod(method);
       resetPin();
       setRfidStatus(null);

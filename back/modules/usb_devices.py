@@ -1,31 +1,38 @@
-"""
-USB device detection module that returns the list of all mounted devices.
-"""
 import os
-import platform
-from typing import List
+import glob
+import subprocess
+import re
 
-# Check if running on Linux
-IS_LINUX = platform.system() == "Linux"
-
-def get_mounted_usb_devices() -> List[str]:
+def get_device_id(device_name: str) -> str:
     """
-    Return a list of all mounted USB devices.
-    This function doesn't validate devices, just returns their names.
+    For a device (e.g., 'sda'), return "${VENDOR}:${MODEL}" using udevadm.
     """
-    if not IS_LINUX:
-        print("Not on Linux: Simulating no devices")
-        return []
-        
-    mount_path = "/media"  # Common mount location, adjust if needed
-    
-    # Check if mount path exists
-    if not os.path.exists(mount_path):
-        return []
-
-    # Return list of all mounted devices
+    cmd = ['udevadm', 'info', '--query=property', '--name=/dev/' + device_name]
     try:
-        return os.listdir(mount_path)
-    except Exception as e:
-        print(f"Error reading USB devices: {e}")
-        return []
+        output = subprocess.check_output(cmd, text=True)
+    except subprocess.CalledProcessError:
+        return None
+
+    vendor_id = None
+    model_id = None
+    for line in output.splitlines():
+        if line.startswith('ID_VENDOR_ID='):
+            vendor_id = line[len('ID_VENDOR_ID='):]
+        elif line.startswith('ID_MODEL_ID='):
+            model_id = line[len('ID_MODEL_ID='):]
+    
+    if vendor_id and model_id:
+        return f"{vendor_id}:{model_id}"
+    return None
+
+def get_device_ids() -> list:
+    """
+    Return a list of "${VENDOR}:${MODEL}" for all sd* devices.
+    """
+    result = []
+    for device in glob.glob('/dev/sd[a-z]'):
+        device_name = os.path.basename(device)
+        device_id = get_device_id(device_name)
+        if device_id:
+            result.append(device_id)
+    return result

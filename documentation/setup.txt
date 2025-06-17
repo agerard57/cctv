@@ -1,0 +1,12 @@
+cd front
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+nvm install
+npm install
+npm run dev
+
+cd back
+python -m venv venv
+source venv/bin/activate
+sudo apt install python3.11-dev
+pip install fastapi uvicorn sudo apt install python3.11-dev RPi.GPIO mfrc522
+uvicorn app:app

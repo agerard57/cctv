@@ -10,14 +10,12 @@ import {
   VerifiedOutlined,
 } from "@mui/icons-material";
 import { StatCard } from "../PowerStatsSection";
-import { useKeyDown, useKeyState, useProgress, useSettings } from "@/providers";
+import { useKeyDown, useKeyState, useProgress } from "@/providers";
 import { allDigits, enableIconlessKeys, SupportedKeys } from "@/providers/keyState";
 import { ControlCard } from "./ControlCard";
 import { LoadChart } from "./LoadChart";
 import { AllMetrics } from "../ControlCenterPage";
 import { useTranslation } from "react-i18next";
-import { playSound } from "../../../../../../core";
-import { ButtonOnSFX } from "../../../../assets";
 import { CancelKeyIcon, EnterKeyIcon } from "../../assets";
 
 const styles = {
@@ -49,7 +47,6 @@ interface Props {
 export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics }) => {
   const { t } = useTranslation("ControlCenterPage");
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
-  const { appSettings } = useSettings();
   const { progress } = useProgress();
 
   const [ventilationDoorStatus, setVentilationDoorStatus] = useState(false);
@@ -59,28 +56,17 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
   useKeyDown(
     {
       "1": () => {
-        if (!isAuthDialogOpen) {
-          playSound(ButtonOnSFX, appSettings.volume);
-          setVentilationDoorStatus((prev) => !prev);
-        }
+        if (!isAuthDialogOpen) setVentilationDoorStatus((prev) => !prev);
       },
       "2": () => {
-        if (!isAuthDialogOpen) {
-          playSound(ButtonOnSFX, appSettings.volume);
-          setVentilationLightStatus((prev) => !prev);
-        }
+        if (!isAuthDialogOpen) setVentilationLightStatus((prev) => !prev);
       },
       "3": () => {
-        if (!isAuthDialogOpen) {
-          playSound(ButtonOnSFX, appSettings.volume);
-          setVentilationFanStatus((prev) => !prev);
-        }
+        if (!isAuthDialogOpen) setVentilationFanStatus((prev) => !prev);
       },
       "4": () => {
-        if (!isAuthDialogOpen && !progress.isElectricalOutletDisconnected) {
-          playSound(ButtonOnSFX, appSettings.volume);
+        if (!isAuthDialogOpen && !progress.isElectricalOutletDisconnected)
           setIsAuthDialogOpen(true);
-        }
       },
     },
     undefined,

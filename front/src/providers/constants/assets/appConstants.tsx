@@ -9,7 +9,7 @@ import {
 
 export const appConstants = {
   DEBUG_MODE: import.meta.env.VITE_DEBUG === "true",
-  DEBUG_BAD_RFID: "123BADRFID",
+  DEBUG_BAD_RFID: "336B7980",
   core: {
     pins: {
       VALIDATION_DELAY: 3000,
@@ -23,16 +23,15 @@ export const appConstants = {
     },
     cardReader: {
       /* PROD Change */
-      VALID_RFID_CODE: "A1B2C3D4E5F67890",
+      VALID_RFID_CODE: "1C74B0CC",
     },
   },
   unlockedScreen: {
     DEFAULT_PAGE: UnlockedScreenPages.REPLAY_MANAGER,
     replayManager: {
       USB: {
-        VALID_USB: "T1", // PROD This will change
-        INVALID_USB_LIST: ["T2", "T3", "T4"], // PROD This will change
-        POLLING_INTERVAL: 2000,
+        VALID_USB: "8644:8003", // PROD This will change
+        POLLING_INTERVAL: 500,
         LOADING_DELAY: 3000,
         PROGRESS_INTERVAL: 300,
         SHAKE_DURATION: 500,
@@ -236,7 +235,7 @@ export const appConstants = {
     settings: {
       DEFAULT_SECTION: SettingsPageSections.GENERAL_SETTINGS,
       /* PROD Change */
-      VALID_RFID_CODE: "123456",
+      VALID_RFID_CODE: "D3446380",
     },
   },
 } as const;

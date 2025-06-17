@@ -6,8 +6,6 @@ import { enableIconlessKeys, SupportedKeys, useKeyState } from "@/providers";
 import { PgDnKeyIcon, PgUpKeyIcon } from "../../f1ReplayManagerPage/assets";
 import { useTranslation } from "react-i18next";
 import { SettingProps } from "./Setting";
-import { playSound } from "../../../../../core";
-import { ButtonOffSFX, ButtonOnSFX } from "../../../assets";
 
 export const SettingsCategoryContainer = styled.div`
   margin: 4vh 0;
@@ -21,36 +19,29 @@ export const GeneralSettings: FC = () => {
   useKeyDown({
     2: () => {
       const newVolume = Math.max(appSettings.volume - 5, 0);
-      playSound(ButtonOffSFX, appSettings.volume);
       setVolume(newVolume);
     },
     3: () => {
       const newVolume = Math.min(appSettings.volume + 5, 100);
       setVolume(newVolume);
-      playSound(ButtonOnSFX, appSettings.volume);
     },
     4: () => {
       const newBrightness = Math.max(appSettings.brightness - 5, 40);
       setBrightness(newBrightness);
-      playSound(ButtonOffSFX, appSettings.volume);
     },
     5: () => {
       const newBrightness = Math.min(appSettings.brightness + 5, 100);
       setBrightness(newBrightness);
-      playSound(ButtonOnSFX, appSettings.volume);
     },
     9: () => {
       const wallpaperOptions = Object.values(Wallpapers);
       const currentWallpaperIndex = wallpaperOptions.indexOf(appSettings.wallpaper);
       const nextWallpaperIndex = (currentWallpaperIndex + 1) % wallpaperOptions.length;
 
-      playSound(ButtonOnSFX, appSettings.volume);
       setWallpaper(wallpaperOptions[nextWallpaperIndex]);
     },
     "#": () => {
       const newLanguage = appSettings.language === Languages.FR ? Languages.EN : Languages.FR;
-
-      playSound(ButtonOnSFX, appSettings.volume);
       setLanguage(newLanguage);
     },
   });
@@ -58,7 +49,6 @@ export const GeneralSettings: FC = () => {
   const generalSettings: SettingProps[] = [
     { label: t("generalSettings.darkMode"), type: "toggle", value: true },
     {
-      // TODO Add SFX
       label: t("generalSettings.volume"),
       type: "slider",
       value: appSettings.volume,

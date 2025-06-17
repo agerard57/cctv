@@ -10,7 +10,7 @@ import { PowerOff } from "@mui/icons-material";
 import { useProgress, useSettings } from "../../../../../providers";
 import { useTranslation } from "react-i18next";
 import { SettingProps } from "./Setting";
-import { ButtonOffSFX, ButtonOnSFX, ProgressDoneSFX } from "../../../assets/sfx";
+import { ProgressDoneSFX } from "../../../assets/sfx";
 import { playSound } from "../../../../../core";
 
 // PROD We have to add a screen after shutdown with snow
@@ -106,25 +106,18 @@ export const SystemConfiguration: FC = () => {
           energySaver ? t("systemConfiguration.energySaverDisabled") : t("systemConfiguration.energySaverEnabled"),
         );
         !energySaver ? setBrightness(60) : setBrightness(100);
-        playSound(!energySaver ? ButtonOnSFX : ButtonOffSFX, appSettings.volume);
       },
       3: () => {
         setAutoUpdates((prev) => !prev);
         showSnackbar(
           autoUpdates ? t("systemConfiguration.autoUpdatesDeactivated") : t("systemConfiguration.autoUpdatesActivated"),
         );
-        playSound(!autoUpdates ? ButtonOnSFX : ButtonOffSFX, appSettings.volume);
       },
       6: () => {
         if (!checkUpdatesDisabled) handleCheckUpdates();
-        playSound(energySaver ? ButtonOnSFX : ButtonOffSFX, appSettings.volume);
-        playSound(ButtonOnSFX, appSettings.volume);
       },
       7: () => {
-        if (!progress.isCCTVSystemDown) {
-          playSound(ButtonOnSFX, appSettings.volume);
-          handleResetSystem();
-        }
+        if (!progress.isCCTVSystemDown) handleResetSystem();
       },
     },
     undefined,

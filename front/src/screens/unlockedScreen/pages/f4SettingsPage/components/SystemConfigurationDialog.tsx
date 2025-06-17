@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Box } from "@mui/material";
 import { useConstants, useKeyDown, useSettings } from "@/providers";
 import { ErrorSFX, KeyButton, LoadingSpinner, RfidScanSFX, RfidStatuses, useLoadingDots } from "@/core";
@@ -22,45 +22,16 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
   const [loading, setLoading] = useState(false);
   const { appSettings } = useSettings();
   const { loadingDots } = useLoadingDots(rfidStatus === RfidStatuses.NONE);
-  const hasHandledRfid = useRef(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (open) {
-      hasHandledRfid.current = false;
-      intervalRef.current = setInterval(() => {
-        fetchRfidStatus(appConstants.unlockedScreen.settings.VALID_RFID_CODE, undefined, (fetchedRfidStatus) => {
-          if (rfidStatus !== fetchedRfidStatus) {
-            setRfidStatus(fetchedRfidStatus);
-          }
-        });
-      }, 500);
-    } else {
-      setRfidStatus(RfidStatuses.NONE);
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (rfidStatus !== RfidStatuses.NONE && !hasHandledRfid.current) {
-      onHandleRfid(rfidStatus);
-      hasHandledRfid.current = true;
-    }
-  }, [rfidStatus]);
 
   const onHandleRfid = (rfidStatus: RfidStatuses) => {
-    if (rfidStatus === RfidStatuses.NONE || !open || loading) {
+    console.log(rfidStatus);
+        if (rfidStatus === RfidStatuses.NONE || !open || loading) {
       return;
     }
 
-    setLoading(true);
     playSound(RfidScanSFX, appSettings.volume);
+    setLoading(true);
 
     setTimeout(() => {
       setLoading(false);
@@ -70,11 +41,29 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
         setTimeout(() => {
           onSuccess();
         }, 3000);
-      } else {
+      } else if (rfidStatus === RfidStatuses.INVALID) {
         playSound(ErrorSFX, appSettings.volume);
+        setRfidStatus(RfidStatuses.INVALID);
       }
     }, 5000);
   };
+
+  useEffect(() => {
+    if (open || rfidStatus !== RfidStatuses.VALID || !loading) {
+      const interval = setInterval(() => {
+        fetchRfidStatus(appConstants.unlockedScreen.settings.VALID_RFID_CODE, undefined, (fetchedRfidStatus) => {
+          if (fetchedRfidStatus !== RfidStatuses.NONE) {
+            setRfidStatus(fetchedRfidStatus);
+            onHandleRfid(fetchedRfidStatus);
+          }
+        });
+      }, 500);
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [open, rfidStatus, loading]);
 
   useKeyDown({
     Delete: () => {
@@ -130,13 +119,15 @@ export const SystemConfigurationDialog: FC<SystemConfigurationDialogProps> = ({ 
               </Typography>
             )}
           </Box>
-          <Box marginY={2}>
-            <DebugRfidButtons
-              validRfidCode={appConstants.unlockedScreen.settings.VALID_RFID_CODE}
-              onHandleRfid={onHandleRfid}
-              onRfidSkip={onSuccess}
-            />
-          </Box>
+          {appConstants.DEBUG_MODE && (
+            <Box marginY={2}>
+              <DebugRfidButtons
+                validRfidCode={appConstants.unlockedScreen.settings.VALID_RFID_CODE}
+                onHandleRfid={onHandleRfid}
+                onRfidSkip={onSuccess}
+              />
+            </Box>
+          )}
         </DialogContent>
         <DialogActions
           sx={{

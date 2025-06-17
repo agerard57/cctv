@@ -9,7 +9,7 @@ export const DebugInsertMedia: FC<{
 }> = ({ setDebugDevice }) => {
   const { setMediaProvided } = useProgress();
   const appConstants = useConstants();
-  const { VALID_USB, INVALID_USB_LIST } = appConstants.unlockedScreen.replayManager.USB;
+  const { VALID_USB } = appConstants.unlockedScreen.replayManager.USB;
   const [selectedScenario, setSelectedScenario] = useState<string>("no-usb");
 
   const handleScenarioChange = (scenario: string) => {
@@ -17,12 +17,12 @@ export const DebugInsertMedia: FC<{
 
     switch (scenario) {
       case "valid-usb":
-        console.log("Debug: Simulating valid USB device", VALID_USB);
+        console.log("Debug: Simulating valid USB device");
         setDebugDevice(VALID_USB);
         break;
       case "invalid-usb":
-        console.log("Debug: Simulating invalid USB device", INVALID_USB_LIST[0]);
-        setDebugDevice(INVALID_USB_LIST[0]);
+        console.log("Debug: Simulating invalid USB device");
+        setDebugDevice("1");
         break;
       case "no-usb":
         console.log("Debug: Simulating no USB devices");

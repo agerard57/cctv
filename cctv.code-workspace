@@ -20,9 +20,6 @@
     {
       "name": "🖥️ - Frontend",
       "path": "./front"
-    },
-    {
-      "path": "../Downloads/MP3"
     }
   ],
   "extensions": {
@@ -91,7 +88,6 @@
     ],
     "typescript.preferences.importModuleSpecifier": "relative",
     "typescript.tsc.autoDetect": "off",
-
     "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
@@ -113,14 +109,21 @@
     "[markdown]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "cSpell.words": ["Iconless", "languagedetector", "Lngs", "rfid", "Rfid"],
-
+    "cSpell.words": [
+      "Iconless",
+      "languagedetector",
+      "Lngs",
+      "rfid",
+      "Rfid"
+    ],
     "i18n-ally.namespace": true,
     "i18n-ally.sourceLanguage": "en",
     "i18n-ally.displayLanguage": "en",
     "i18n-ally.keystyle": "nested",
     "i18n-ally.annotations": true,
-    "i18n-ally.enabledFrameworks": ["react-i18next"],
+    "i18n-ally.enabledFrameworks": [
+      "react-i18next"
+    ],
     "i18n-ally.localesPaths": [
       "front/src/screens/**/i18n",
       "src/screens/**/i18n"

@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
 import { PinInputStatuses } from "../typings";
-import { useConstants, useSettings } from "../../providers";
-import { playSound } from "../helpers";
-import { PinBackspaceSFX, PinInputSFX } from "../assets";
+import { useConstants } from "../../providers";
 
 type UsePinInputs = (
   pinSettings: {
@@ -30,7 +28,7 @@ export const usePinInputs: UsePinInputs = (pinSettings, callbacks) => {
   const [pin, setPin] = useState<string>("");
   const [pins, setPins] = useState<PinInputStatuses[]>(Array(codeLength).fill(PinInputStatuses.EMPTY));
   const [loading, setLoading] = useState(false);
-  const { appSettings } = useSettings();
+
   const resetPin = () => {
     setPin("");
     setPins(Array(codeLength).fill(PinInputStatuses.EMPTY));
@@ -38,8 +36,6 @@ export const usePinInputs: UsePinInputs = (pinSettings, callbacks) => {
 
   const handlePinInput = (key: string) => {
     if (loading) return;
-
-    playSound(PinInputSFX, appSettings.volume);
 
     if (pin.length >= codeLength) {
       resetPin();
@@ -79,8 +75,6 @@ export const usePinInputs: UsePinInputs = (pinSettings, callbacks) => {
     if (loading) {
       return;
     }
-
-    playSound(PinBackspaceSFX, appSettings.volume);
 
     if (pin.length === codeLength && !disableValidation) {
       resetPin();

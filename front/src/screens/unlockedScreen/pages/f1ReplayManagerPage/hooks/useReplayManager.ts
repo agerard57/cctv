@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { VideoListInfos, VideoControls, UsbStatuses } from "../typings";
 import { getVideoMetadata } from "../helpers";
 import ReactPlayer from "react-player";
-import { Videos } from "../assets";
 import { useSettings } from "../../../../../providers";
+import { Videos } from "../assets/videos";
 
 export const useReplayManager = () => {
   const [currentUsbStatus, setCurrentUsbStatus] = useState<UsbStatuses>(UsbStatuses.MISSING);

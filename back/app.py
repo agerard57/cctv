@@ -3,24 +3,21 @@ Main FastAPI application for the CCTV system.
 """
 import os
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 from typing import Dict, Optional, Any, List
 
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from modules.rfid import reader as rfid_reader, RPI_AVAILABLE
-from modules.usb_devices import get_mounted_usb_devices
+from modules.rfid import rfid_reader
+from modules.usb_devices import get_device_ids
 from modules.health import get_health_status
 
 app = FastAPI(title="CCTV App API")
 
-@app.on_event("startup")
-def startup_event():
-    """Initialize services on application startup."""
-    print(f"Starting application with RPI hardware: {RPI_AVAILABLE}")
-    rfid_reader.start_scanner()
-
-@app.get("/rfid")
+@app.get("/api/rfid")
 def rfid(override_code: Optional[str] = None) -> Dict[str, Optional[str]]:
     """
     Returns the RFID code from hardware or a test code if provided.
@@ -32,15 +29,13 @@ def rfid(override_code: Optional[str] = None) -> Dict[str, Optional[str]]:
         Dictionary with RFID code or None if no card detected.
     """
     if override_code:
-        print(f"[API] Override RFID Code provided: {override_code}")
         rfid_reader._set_rfid_code(override_code)
         return {"rfid_code": override_code}
     
     code = rfid_reader.get_rfid_code()
-    print(f"[API] RFID Code fetched: {code}")
     return {"rfid_code": code}
 
-@app.get("/usb-devices")
+@app.get("/api/usb-devices")
 def usb_devices(override_device: Optional[str] = None) -> Dict[str, List[str]]:
     """Return a list of all mounted USB devices without validation
 
@@ -51,13 +46,12 @@ def usb_devices(override_device: Optional[str] = None) -> Dict[str, List[str]]:
         Dictionary containing the list of all USB devices
     """
     if override_device:
-        print(f"[API] Override USB device provided: {override_device}")
         return {"devices": [override_device]}
     
-    devices = get_mounted_usb_devices()
+    devices = get_device_ids()
     return {"devices": devices if devices else []}
 
-@app.get("/health")
+@app.get("/api/health")
 def health() -> Dict[str, str]:
     """
     Health check endpoint to verify backend status.
@@ -66,6 +60,8 @@ def health() -> Dict[str, str]:
         Dictionary with health status and message.
     """
     return get_health_status()
+
+app.mount("/static", StaticFiles(directory="dist", html=True), name="static")
 
 # Add cleanup for FastAPI shutdown
 @app.on_event("shutdown")

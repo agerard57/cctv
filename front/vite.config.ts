@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
+  base:"/static/",
   plugins: [react()],
   resolve: {
     alias: {
@@ -14,9 +15,8 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api": {
-        target: process.env.VITE_API_TARGET || "http://localhost:8000",
+        target: "http://localhost:8000",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

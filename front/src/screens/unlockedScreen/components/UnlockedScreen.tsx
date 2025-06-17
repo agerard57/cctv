@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import { AsteriskKeyIcon, ButtonOffSFX, ButtonOnSFX, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon } from "../assets";
+import { AsteriskKeyIcon, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon } from "../assets";
 import { Typography, useTheme } from "@mui/material";
 
-import { FunctionButtonSFX, KeyButton, SecurityBrandText, SecurityProfilePicture } from "@/core";
+import { KeyButton, SecurityBrandText, SecurityProfilePicture } from "@/core";
 import { FC, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { UnlockedScreenPages as UnlockedScreenPagesEnum } from "../typings";
@@ -17,7 +17,6 @@ import { useKeyDown } from "../../../providers/keyState/hooks";
 import { useConstants, useSettings } from "../../../providers";
 import { WhiteContainerBase } from "../styles";
 import { getWallpaper } from "../helpers";
-import { playSound } from "../../../core/helpers";
 
 const UnlockedScreenPagesComponentsMap: Record<UnlockedScreenPagesEnum, FC> = {
   [UnlockedScreenPagesEnum.REPLAY_MANAGER]: ReplayManagerPage,
@@ -139,12 +138,10 @@ export const UnlockedScreen: FC = () => {
           if (Object.values(UnlockedScreenPages).includes(key as UnlockedScreenPages)) {
             if (currentPage === (key as UnlockedScreenPages)) return;
             setCurrentPage(key as UnlockedScreenPages);
-            playSound(FunctionButtonSFX, appSettings.volume);
           } else if (key === SupportedKeys.ASTERISK) {
             if (isAsteriskHeldRef.current) return;
             isAsteriskHeldRef.current = true;
             setIsVisible((prev) => !prev);
-            playSound(isVisible ? ButtonOffSFX : ButtonOnSFX, appSettings.volume);
           }
         };
         return callbacks;

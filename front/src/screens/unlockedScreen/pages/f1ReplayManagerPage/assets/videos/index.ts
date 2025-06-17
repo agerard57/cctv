@@ -9,7 +9,6 @@ import SR_20150615_1720 from "./SR_20150615_1720.mp4";
 import SR_20030512_0845 from "./SR_20030512_0845.mp4";
 import MR_20101207_1430 from "./MR_20101207_1430.mp4";
 
-
 import { Thumbnails } from "./thumbnails";
 
 const Videos = [
@@ -24,4 +23,5 @@ const Videos = [
   SR_20030512_0845,
   MR_20101207_1430
 ];
+
 export { Videos, Thumbnails };

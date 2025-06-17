@@ -4,7 +4,6 @@ import { VideoListInfos, VideoControls } from "../typings";
 import { BackspaceKeyIcon, CancelKeyIcon, PgDnKeyIcon, PgUpKeyIcon, SpaceAltKeyIcon, SpaceKeyIcon } from "../assets";
 import { useEffect, useRef } from "react";
 import { playSound } from "../../../../../core/helpers";
-import { PgUpPgDnSFX } from "../../../../../core";
 import { VideoPlayerSFX } from "../assets/sfx";
 
 export const useKeyBindings = ({
@@ -55,26 +54,18 @@ export const useKeyBindings = ({
 
   useKeyDown({
     PageUp: () => {
-      debounceAction("PageUp", () => {
-        if (progress.isMediaProvided) {
-          playSound(PgUpPgDnSFX, appSettings.volume);
-
-          const currentIndex = videoList.findIndex((video) => video.originalFileName === currentVideo?.originalFileName);
-          const newIndex = currentIndex === 0 ? videoList.length - 1 : currentIndex - 1;
-          setCurrentVideo(videoList[newIndex]);
-        }
-      });
+      if (progress.isMediaProvided) {
+        const currentIndex = videoList.findIndex((video) => video.originalFileName === currentVideo?.originalFileName);
+        const newIndex = currentIndex === 0 ? videoList.length - 1 : currentIndex - 1;
+        setCurrentVideo(videoList[newIndex]);
+      }
     },
     PageDown: () => {
-      debounceAction("PageDown", () => {
-        if (progress.isMediaProvided) {
-          playSound(PgUpPgDnSFX, appSettings.volume);
-
-          const currentIndex = videoList.findIndex((video) => video.originalFileName === currentVideo?.originalFileName);
-          const newIndex = currentIndex === videoList.length - 1 ? 0 : currentIndex + 1;
-          setCurrentVideo(videoList[newIndex]);
-        }
-      });
+      if (progress.isMediaProvided) {
+        const currentIndex = videoList.findIndex((video) => video.originalFileName === currentVideo?.originalFileName);
+        const newIndex = currentIndex === videoList.length - 1 ? 0 : currentIndex + 1;
+        setCurrentVideo(videoList[newIndex]);
+      }
     },
     [SupportedKeys.SPACE]: () => {
       debounceAction("Space", () => {
@@ -88,6 +79,14 @@ export const useKeyBindings = ({
           setVideoControls(updatedControls);
         }
       });
+      if (progress.isMediaProvided) {
+        const updatedControls: VideoControls = {
+          ...videoControls,
+          isPlaying: !videoControls.isPlaying,
+          progress: videoControls.progress || 0,
+        };
+        setVideoControls(updatedControls);
+      }
     },
     [SupportedKeys.BACKSPACE]: () => {
       debounceAction("Backspace", () => {
@@ -96,15 +95,15 @@ export const useKeyBindings = ({
           playerRef.current?.seekTo(Math.max(0, (currentTime || 0) - 5), "seconds");
         }
       });
+      if (progress.isMediaProvided) {
+        playerRef.current?.seekTo(Math.max(0, (currentTime || 0) - 5), "seconds");
+      }
     },
     [SupportedKeys.PROD_DELETE]: () => {
-      debounceAction("ProdDelete", () => {
-        if (progress.isMediaProvided) {
-          playSound(VideoPlayerSFX, appSettings.volume);
-          setVideoControls({ isPlaying: false, progress: 0 });
-          playerRef.current?.seekTo(0);
-        }
-      });
+      if (progress.isMediaProvided) {
+        setVideoControls({ isPlaying: false, progress: 0 });
+        playerRef.current?.seekTo(0);
+      }
     },
   });
 };

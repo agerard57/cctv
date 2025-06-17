@@ -6,8 +6,6 @@ export {
   LasVegasWallpaper,
   MoneyWallpaper,
   PokerWallpaper,
-  PgUpPgDnSFX,
-  FunctionButtonSFX,
   ErrorSFX,
   RfidScanSFX,
 } from "./assets";

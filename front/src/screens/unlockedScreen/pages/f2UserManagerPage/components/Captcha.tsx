@@ -10,7 +10,6 @@ import styled from "@emotion/styled";
 import { useKeyDown } from "../../../../../providers/keyState/hooks";
 import { CaptchaRefreshSFX, CaptchaSuccessSFX, SpaceKeyIcon } from "../assets";
 import { useSettings } from "../../../../../providers";
-import { ButtonOnSFX } from "../../../assets";
 
 const CaptchaContainer = styled.div`
   padding: 10vh 0 0 0;
@@ -193,7 +192,6 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       return;
     }
 
-    playSound(ButtonOnSFX, appSettings.volume);
     setLastRefreshTime(now);
     setLoading(true);
 

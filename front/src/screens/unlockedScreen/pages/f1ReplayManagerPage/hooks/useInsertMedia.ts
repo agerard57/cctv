@@ -18,7 +18,7 @@ export type UseInsertMedia = (setCurrentUsbStatus: Dispatch<SetStateAction<UsbSt
 
 export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
   const appConstants = useConstants();
-  const { VALID_USB, INVALID_USB_LIST, POLLING_INTERVAL, LOADING_DELAY, PROGRESS_INTERVAL, SHAKE_DURATION } =
+  const { VALID_USB, POLLING_INTERVAL, LOADING_DELAY, PROGRESS_INTERVAL, SHAKE_DURATION } =
     appConstants.unlockedScreen.replayManager.USB;
 
   const [debugDevice, setDebugDevice] = useState<string | undefined>(undefined);
@@ -35,17 +35,13 @@ export const useInsertMedia: UseInsertMedia = (setCurrentUsbStatus) => {
     (devices: string[]): UsbStatuses => {
       if (devices.includes(VALID_USB)) {
         return UsbStatuses.VALID;
+      } else if (devices.length > 0) {
+        return UsbStatuses.INVALID;
+      } else {
+        return UsbStatuses.MISSING;
       }
-
-      for (const invalidDevice of INVALID_USB_LIST) {
-        if (devices.includes(invalidDevice)) {
-          return UsbStatuses.INVALID;
-        }
-      }
-
-      return UsbStatuses.MISSING;
     },
-    [VALID_USB, INVALID_USB_LIST],
+    [VALID_USB]
   );
 
   const hasDeviceListChanged = (oldList: string[], newList: string[]): boolean => {

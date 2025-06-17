@@ -1,132 +1,65 @@
-"""
-RFID reader module for the CCTV application.
-"""
-import os
+import MFRC522
 import time
-import platform
 import threading
-from typing import Optional, Callable, Tuple
-
-# Better approach for importing from parent directory
-import sys
-# Use relative path from current file instead of hardcoded username
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-RPI_AVAILABLE = False
-GPIO = None
-SimpleMFRC522 = None
-
-try:
-    import RPi.GPIO as GPIO
-    from mfrc522 import SimpleMFRC522
-    RPI_AVAILABLE = platform.system() == "Linux" and os.path.exists("/dev/gpiomem")
-    print(f"Hardware detection result: RPI_AVAILABLE={RPI_AVAILABLE}")
-except (ImportError, RuntimeError) as e:
-    print(f"Hardware imports failed: {e}")
-    RPI_AVAILABLE = False
-
 
 class RFIDReader:
-    """
-    Handles RFID reader functionality with support for hardware-based reading.
-    """
     def __init__(self):
-        self.reader = None
-        self._scanner_thread = None
-        self._running = False
-        self.last_rfid_code: Optional[str] = None  # Cached RFID code
-        self.clear_timer: Optional[threading.Timer] = None  # Timer to clear the RFID code
-        
-        # Initialize hardware if available
-        if RPI_AVAILABLE:
-            try:
-                self.reader = SimpleMFRC522()
-                print("RFID reader initialized successfully")
-            except Exception as e:
-                print(f"Failed to initialize RFID reader: {e}")
-                self.reader = None
-        else:
-            print("Running in development mode: RFID hardware not available")
-    
-    def start_scanner(self) -> bool:
-        """Start the background RFID scanner thread."""
-        if not RPI_AVAILABLE or self.reader is None:
-            print("Not starting RFID scanner - hardware not available")
-            return False
-            
-        if self._scanner_thread is not None and self._scanner_thread.is_alive():
-            return True
-        
-        self._running = True
-        self._scanner_thread = threading.Thread(
-            target=self._scanner_loop, 
-            daemon=True
-        )
-        self._scanner_thread.start()
-        print("RFID scanner thread started")
-        return True
-    
-    def _scanner_loop(self) -> None:
-        """Background thread function that continuously scans for RFID cards."""
-        try:
-            while self._running:
-                try:
-                    # Read the RFID card (non-blocking)
-                    id, text = self.reader.read_no_block()
-                    if id is not None:
-                        print(f"[RFID Reader] Card detected: {id}")  # Log detected card
-                        self._set_rfid_code(str(id))  # Cache the RFID code temporarily
-                    else:
-                        print("[RFID Reader] No card detected.")  # Log no card detected
-                    
-                    # Prevent CPU hogging
-                    time.sleep(0.1)
-                except Exception as e:
-                    print(f"[RFID Reader] Error reading RFID: {e}")  # Log read error
-                    time.sleep(1)  # Wait longer after error
-        except Exception as e:
-            print(f"[RFID Reader] Scanner thread error: {e}")  # Log thread error
-        finally:
-            print("[RFID Reader] Cleaning up resources.")  # Log cleanup
-            self.cleanup()
-    
-    def _set_rfid_code(self, code: str) -> None:
-        """
-        Set the RFID code and start a timer to clear it after 5 seconds.
-        """
-        self.last_rfid_code = code
-        print(f"[RFID Reader] RFID Code set: {code}")  # Log when the code is set
-        if self.clear_timer:
-            self.clear_timer.cancel()  # Cancel any existing timer
-        self.clear_timer = threading.Timer(3.0, self._clear_rfid_code)  # Clear after 5 seconds
-        self.clear_timer.start()
+        self.reader = MFRC522.MFRC522()
+        self.rfid_code = None
+        self.lock = threading.Lock()
+        self.timer_event = threading.Event()
+        self.running = True
+        self._start_reader_thread()
 
-    def _clear_rfid_code(self) -> None:
-        """
-        Clear the cached RFID code.
-        """
-        print("[RFID Reader] Clearing cached RFID Code.")
-        self.last_rfid_code = None
+    def _uid_to_string(self, uid):
+        """Converts UID to a string."""
+        return ''.join([format(i, '02X') for i in uid])
 
-    def get_rfid_code(self) -> Optional[str]:
-        """
-        Returns the last cached RFID code if it exists.
-        If the code is cleared, return None.
-        """
-        if self.last_rfid_code:
-            print(f"[RFID Reader] Returning cached RFID Code: {self.last_rfid_code}")  # Log the returned code
-        else:
-            print("[RFID Reader] No RFID Code available.")  # Log when no code is available
-        return self.last_rfid_code
-    
-    def cleanup(self) -> None:
-        """Cleanup GPIO resources and stop the clear timer."""
-        self._running = False
-        if self.clear_timer:
-            self.clear_timer.cancel()
-        if RPI_AVAILABLE and GPIO:
-            GPIO.cleanup()
+    def _read_rfid(self):
+        """Reads RFID from the reader."""
+        (status, tag_type) = self.reader.MFRC522_Request(self.reader.PICC_REQIDL)
+        if status == self.reader.MI_OK:
+            # Card found, now fetch the UID
+            (status, uid) = self.reader.MFRC522_SelectTagSN()
+            if status == self.reader.MI_OK:
+                return self._uid_to_string(uid)
+        return None
 
+    def _set_rfid_code(self, code):
+        """Sets the RFID code and resets the 5-second timer if new code is detected."""
+        with self.lock:
+            self.rfid_code = code
+            self.timer_event.set()  # Reset the timer
+            self.timer_event.clear()  # Wait for 5 seconds before clearing the code
+            threading.Timer(5, self._clear_rfid_code).start()
 
-# Singleton instance
-reader = RFIDReader()
+    def _clear_rfid_code(self):
+        """Clears the RFID code after 5 seconds."""
+        with self.lock:
+            self.rfid_code = None
+
+    def start_reading(self):
+        """Starts the RFID reader to continuously look for badges."""
+        while self.running:
+            code = self._read_rfid()
+            if code and (self.rfid_code != code):
+                self._set_rfid_code(code)
+            time.sleep(0.1)  # Sleep a bit to avoid hogging the CPU
+
+    def _start_reader_thread(self):
+        """Starts the RFID reading in a background thread."""
+        reader_thread = threading.Thread(target=self.start_reading)
+        reader_thread.daemon = True
+        reader_thread.start()
+
+    def get_rfid_code(self):
+        """Returns the current RFID code if any."""
+        with self.lock:
+            return self.rfid_code
+
+    def cleanup(self):
+        """Stops the reader."""
+        self.running = False
+
+# Create a global RFID reader object
+rfid_reader = RFIDReader()
