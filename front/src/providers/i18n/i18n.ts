@@ -15,6 +15,7 @@ const i18nConfig: InitOptions = {
     order: DETECTION_ORDER,
     lookupQuerystring: LOOKUP_QUERYSTRING,
   },
+  lng: Languages.FR,
   fallbackLng: Languages.FR,
   interpolation: { escapeValue: false },
   preload: SUPPORTED_LANGUAGES,
