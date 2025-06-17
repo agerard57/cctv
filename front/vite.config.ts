@@ -25,6 +25,7 @@ export default defineConfig({
     target: "esnext",
     minify: "esbuild",
     sourcemap: false,
+    outDir: "../back/dist",
   },
   define: {
     "process.env": {},
