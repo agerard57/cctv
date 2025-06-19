@@ -4,6 +4,10 @@ import { PowerStatsSection } from "./PowerStatsSection";
 import { SystemHealthSection } from "./SystemHealthSection";
 import { VentilationShaftControlSection } from "./ventilationShaftControlSection";
 import { ControlCenterPageSections } from "../..";
+import { useProgress, useSettings } from "@/providers";
+import { AdminAuthenticationDialog } from "./ventilationShaftControlSection/AdminAuthenticationDialog";
+import { playSound } from "@/core";
+import { CaptchaSuccessSFX } from "../../f2UserManagerPage/assets";
 
 interface GraphData {
   voltageHistory: (number | null)[];
@@ -38,6 +42,11 @@ export interface AllMetrics {
 }
 
 export const ControlCenterPage: FC = () => {
+  const { progress, setAdminModeEnabled } = useProgress();
+  const { appSettings } = useSettings();
+
+  const [dialogOpen, setDialogOpen] = useState(!progress.isAdminModeEnabled);
+
   const [graphData, setGraphData] = useState<GraphData>({
     voltageHistory: Array(31)
       .fill(240)
@@ -72,10 +81,10 @@ export const ControlCenterPage: FC = () => {
     coolingLoad: 75,
     systemStability: 95,
 
-    airQuality: 85,
-    humidity: 45,
-    co2Level: 400,
-    ventilationCurrentLoad: 75,
+    airQuality: 0,
+    humidity: 0,
+    co2Level: 0,
+    ventilationCurrentLoad: 0,
   });
 
   useEffect(() => {
@@ -209,13 +218,14 @@ export const ControlCenterPage: FC = () => {
 
   useEffect(() => {
     const updateVentilationMetrics = () => {
-      setMetrics((prev) => ({
-        ...prev,
-        ventilationCurrentLoad: Math.max(50, Math.min(100, prev.ventilationCurrentLoad + (Math.random() - 0.5) * 2)),
-        airQuality: Math.max(70, Math.min(99, prev.airQuality + (Math.random() - 0.5) * 1)),
-        humidity: Math.max(30, Math.min(60, prev.humidity + (Math.random() - 0.5) * 1)),
-        co2Level: Math.max(300, Math.min(1000, prev.co2Level + (Math.random() - 0.5) * 10)),
-      }));
+      progress.isAdminModeEnabled &&
+        setMetrics((prev) => ({
+          ...prev,
+          ventilationCurrentLoad: Math.max(50, Math.min(100, prev.ventilationCurrentLoad + (Math.random() - 0.5) * 2)),
+          airQuality: Math.max(70, Math.min(99, prev.airQuality + (Math.random() - 0.5) * 1)),
+          humidity: Math.max(30, Math.min(60, prev.humidity + (Math.random() - 0.5) * 1)),
+          co2Level: Math.max(300, Math.min(1000, prev.co2Level + (Math.random() - 0.5) * 10)),
+        }));
 
       const nextInterval = getRandomInterval(800, 1500);
       timeoutRef.current = setTimeout(updateVentilationMetrics, nextInterval);
@@ -226,7 +236,19 @@ export const ControlCenterPage: FC = () => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, []);
+  }, [progress.isAdminModeEnabled]);
+
+  useEffect(() => {
+    if (progress.isAdminModeEnabled) {
+      setDialogOpen(false);
+    }
+  }, [progress.isAdminModeEnabled]);
+
+  const handleSuccess = () => {
+    setAdminModeEnabled(true);
+    // TODO refactor the import
+    playSound(CaptchaSuccessSFX, appSettings.volume);
+  };
 
   const categories = [
     {
@@ -248,6 +270,12 @@ export const ControlCenterPage: FC = () => {
               ...updatedVentilationMetrics,
             }))
           }
+        />
+      ),
+      dialog: (
+        <AdminAuthenticationDialog
+          open={dialogOpen}
+          onSuccess={handleSuccess}
         />
       ),
     },

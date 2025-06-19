@@ -4,5 +4,5 @@ export enum SettingsPageSections {
   PRIVACY_SETTINGS = "privacySettings",
   ACCESSIBILITY_SETTINGS = "accessibilitySettings",
   NOTIFICATION_SETTINGS = "notificationSettings",
-  SYSTEM_CONFIGURATION = "systemConfiguration",
+  SYSTEM_CONFIGURATION = "advancedSettings",
 }

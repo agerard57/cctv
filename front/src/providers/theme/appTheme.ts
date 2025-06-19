@@ -6,6 +6,7 @@ export const appTheme = {
     core: {
       securityBrandAlternativeColor: colorPalette.red,
       whiteTransparentBackground: alpha(colorPalette.white, 0.12),
+      adminTransparentBackground: alpha(colorPalette.red, 0.15),
       keyButtons: {
         backgroundColor: colorPalette.grey1,
         textColor: alpha(colorPalette.black, 0.7),

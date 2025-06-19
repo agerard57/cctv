@@ -1,10 +1,14 @@
 import MFRC522
 import time
 import threading
+import sys
+
+DEBUG_MODE = "--debug" in sys.argv
 
 class RFIDReader:
     def __init__(self):
-        self.reader = MFRC522.MFRC522()
+        if not DEBUG_MODE:
+            self.reader = MFRC522.MFRC522()
         self.rfid_code = None
         self.lock = threading.Lock()
         self.timer_event = threading.Event()
@@ -17,6 +21,8 @@ class RFIDReader:
 
     def _read_rfid(self):
         """Reads RFID from the reader."""
+        if DEBUG_MODE:
+            return None  # Skip hardware interaction in debug mode
         (status, tag_type) = self.reader.MFRC522_Request(self.reader.PICC_REQIDL)
         if status == self.reader.MI_OK:
             # Card found, now fetch the UID
@@ -40,6 +46,8 @@ class RFIDReader:
 
     def start_reading(self):
         """Starts the RFID reader to continuously look for badges."""
+        if DEBUG_MODE:
+            return  # Skip reader thread in debug mode
         while self.running:
             code = self._read_rfid()
             if code and (self.rfid_code != code):
@@ -48,6 +56,8 @@ class RFIDReader:
 
     def _start_reader_thread(self):
         """Starts the RFID reading in a background thread."""
+        if DEBUG_MODE:
+            return  # Skip thread creation in debug mode
         reader_thread = threading.Thread(target=self.start_reading)
         reader_thread.daemon = True
         reader_thread.start()

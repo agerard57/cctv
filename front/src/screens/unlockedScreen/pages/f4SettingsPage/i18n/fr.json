@@ -53,8 +53,8 @@
   "privacySettings": { "title": "Paramètres de confidentialité" },
   "accessibilitySettings": { "title": "Paramètres d'accessibilité" },
   "notificationSettings": { "title": "Paramètres de notification" },
-  "systemConfiguration": {
-    "title": "Configuration du système",
+  "advancedSettings": {
+    "title": "Paramètres avancés",
     "energySaverMode": "Mode économie d'énergie",
     "autoUpdates": "Mises à jour automatiques",
     "storageManagement": "Gestion du stockage",
@@ -78,12 +78,11 @@
     "autoUpdatesActivated": "Mises à jour automatiques activées",
     "autoUpdatesDeactivated": "Mises à jour automatiques désactivées",
     "dialog": {
-      "title": "Accès à la configuration du système",
-      "instruction": "Veuillez scanner votre carte RFID pour accéder à la configuration du système :",
+      "title": "Accès aux paramètres avancés du système",
+      "instruction": "Veuillez scanner votre carte RFID pour accéder aux paramètres avancés du système :",
       "waitingForScan": "En attente du scan RFID",
       "invalidCard": "Carte RFID invalide. Veuillez réessayer.",
-      "validCard": "Valid RFID card. Thank you.",
-      "closeButton": "Fermer"
+      "validCard": "Carte RFID valide. Merci."
     }
   }
 }

@@ -135,7 +135,8 @@ export const useLockedScreen: UseLockedScreen = () => {
     {
       F1: () => handleLoginMethodChange(LoginMethods.KEYPAD),
       F2: () => handleLoginMethodChange(LoginMethods.CARD_READER),
-
+      F3: () => { },
+      F4: () => { },
       Backspace: () => {
         if (sessionStatus !== SessionStatuses.BLOCKED) {
           handleBackspace();

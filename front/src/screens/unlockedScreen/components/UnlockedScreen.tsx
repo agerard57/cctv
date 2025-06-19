@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import { AsteriskKeyIcon, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon } from "../assets";
+import { AsteriskKeyIcon, F1KeyIcon, F2KeyIcon, F3KeyIcon, F4KeyIcon, ProfilePicture } from "../assets";
 import { Typography, useTheme } from "@mui/material";
 
-import { KeyButton, SecurityBrandText, SecurityProfilePicture } from "@/core";
+import { KeyButton, SecurityBrandText } from "@/core";
 import { FC, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { UnlockedScreenPages as UnlockedScreenPagesEnum } from "../typings";
@@ -14,7 +14,7 @@ import { ControlCenterPage } from "@/screens/unlockedScreen/pages/f3ControlCente
 import { SettingsPage } from "@/screens/unlockedScreen/pages/f4SettingsPage";
 import { SupportedKeys } from "@/providers/keyState";
 import { useKeyDown } from "../../../providers/keyState/hooks";
-import { useConstants, useSettings } from "../../../providers";
+import { useConstants, useProgress, useSettings } from "../../../providers";
 import { WhiteContainerBase } from "../styles";
 import { getWallpaper } from "../helpers";
 
@@ -27,7 +27,7 @@ const UnlockedScreenPagesComponentsMap: Record<UnlockedScreenPagesEnum, FC> = {
 
 const BackgroundImage = styled("div", {
   shouldForwardProp: (prop) => prop !== "wallpaper",
-})<{ wallpaper: string }>`
+}) <{ wallpaper: string }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -43,7 +43,7 @@ const BackgroundImage = styled("div", {
 
 const Navbar = styled(WhiteContainerBase, {
   shouldForwardProp: (prop) => prop !== "isVisible",
-})<{ isVisible: boolean }>`
+}) <{ isVisible: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -59,7 +59,7 @@ const Navbar = styled(WhiteContainerBase, {
 
 const FunctionButtonsContainer = styled(WhiteContainerBase, {
   shouldForwardProp: (prop) => prop !== "isVisible",
-})<{ isVisible: boolean }>`
+}) <{ isVisible: boolean }>`
   display: flex;
   flex-direction: column;
   padding: 10px 20px 10px 10px;
@@ -76,7 +76,7 @@ const FunctionButtonsContainer = styled(WhiteContainerBase, {
 
 const ControlsKeyContainer = styled(WhiteContainerBase, {
   shouldForwardProp: (prop) => prop !== "isVisible",
-})<{ isVisible: boolean }>`
+}) <{ isVisible: boolean }>`
   display: flex;
   flex-direction: column;
   padding: 10px 20px 10px 10px;
@@ -100,6 +100,8 @@ export const UnlockedScreen: FC = () => {
   const { appSettings } = useSettings();
 
   const appConstants = useConstants();
+  const { progress } = useProgress();
+
   const [currentPage, setCurrentPage] = useState<UnlockedScreenPages>(appConstants.unlockedScreen.DEFAULT_PAGE);
 
   const functionButtons = {
@@ -175,7 +177,7 @@ export const UnlockedScreen: FC = () => {
   return (
     <div style={{ height: "100vh", overflow: "hidden" }}>
       <BackgroundImage wallpaper={getWallpaper(appSettings.wallpaper)} />
-      <Navbar isVisible={isVisible} background={theme.app.core.whiteTransparentBackground}>
+      <Navbar isVisible={isVisible} background={!progress.isAdminModeEnabled ? theme.app.core.whiteTransparentBackground : theme.app.core.adminTransparentBackground}>
         <SecurityBrandText size="small" />
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <img
@@ -190,15 +192,15 @@ export const UnlockedScreen: FC = () => {
             {t(`title.${currentPage.toLowerCase()}`)}
           </Typography>
         </div>
-        <div style={{ display: "flex", alignItems: "center", paddingRight: "2vw" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
+          {progress.isAdminModeEnabled && <Typography style={{ color: theme.app.core.securityBrandAlternativeColor, paddingRight: "1vw" }}>{t("user.admin", { ns: "Core" })}</Typography>}
+          <Typography>{t("user.userName", { ns: "Core" })}</Typography>
           <img
             // PROD Change image
-            src={SecurityProfilePicture}
+            src={ProfilePicture}
             alt="Security profile picture"
-            style={{ padding: "0 1vw 0 0", height: "4vh" }}
+            style={{ marginLeft: "1vw", height: "5vh", borderRadius: "50%" }}
           />
-          {/* TODO This will have to be voided */}
-          <Typography>{t("user.userName", { ns: "Core" })}</Typography>
         </div>
       </Navbar>
       <div style={{ position: "absolute", top: "13vh", right: 0, zIndex: 1 }}>
@@ -233,6 +235,6 @@ export const UnlockedScreen: FC = () => {
       >
         <CurrentPage />
       </div>
-    </div>
+    </div >
   );
 };

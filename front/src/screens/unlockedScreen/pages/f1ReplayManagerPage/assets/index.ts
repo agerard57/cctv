@@ -1,8 +1,8 @@
 import PgUpKeyIcon from "./pgUpKeyIcon.png";
 import PgDnKeyIcon from "./pgDnKeyIcon.png";
 
-import SpaceKeyIcon from "./spaceKeyIcon.png";
-import SpaceAltKeyIcon from "./spaceAltKeyIcon.png";
+import EnterKeyIcon from "./enterKeyIcon.png";
+import EnterAltKeyIcon from "./enterAltKeyIcon.png";
 import BackspaceKeyIcon from "./backspaceKeyIcon.png";
 import CancelKeyIcon from "./cancelKeyIcon.png";
 
@@ -15,8 +15,8 @@ import { UsbPlugSFX, UsbValidSFX, UsbInvalidSFX } from "./sfx";
 import { Videos, Thumbnails } from "./videos";
 
 export {
-  SpaceKeyIcon,
-  SpaceAltKeyIcon,
+  EnterKeyIcon,
+  EnterAltKeyIcon,
   BackspaceKeyIcon,
   CancelKeyIcon,
   PgUpKeyIcon,

@@ -1,7 +1,7 @@
 import { useKeyDown, useProgress, useSettings } from "@/providers";
 import { SupportedKeys, useKeyState } from "@/providers/keyState";
 import { VideoListInfos, VideoControls } from "../typings";
-import { BackspaceKeyIcon, CancelKeyIcon, PgDnKeyIcon, PgUpKeyIcon, SpaceAltKeyIcon, SpaceKeyIcon } from "../assets";
+import { BackspaceKeyIcon, CancelKeyIcon, PgDnKeyIcon, PgUpKeyIcon, EnterAltKeyIcon, EnterKeyIcon } from "../assets";
 import { useEffect, useRef } from "react";
 import { playSound } from "../../../../../core/helpers";
 import { VideoPlayerSFX } from "../assets/sfx";
@@ -38,7 +38,7 @@ export const useKeyBindings = ({
   useEffect(() => {
     if (progress.isMediaProvided) {
       updateKeyState({
-        " ": !videoControls.isPlaying ? SpaceKeyIcon : SpaceAltKeyIcon,
+        Enter: !videoControls.isPlaying ? EnterKeyIcon : EnterAltKeyIcon,
         Backspace: BackspaceKeyIcon,
         PageUp: PgUpKeyIcon,
         PageDown: PgDnKeyIcon,
@@ -67,8 +67,8 @@ export const useKeyBindings = ({
         setCurrentVideo(videoList[newIndex]);
       }
     },
-    [SupportedKeys.SPACE]: () => {
-      debounceAction("Space", () => {
+    [SupportedKeys.ENTER]: () => {
+      debounceAction("Enter", () => {
         if (progress.isMediaProvided) {
           playSound(VideoPlayerSFX, appSettings.volume);
           const updatedControls: VideoControls = {

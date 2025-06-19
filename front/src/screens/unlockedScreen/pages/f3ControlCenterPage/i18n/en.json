@@ -42,7 +42,7 @@
     "outletStatus": "Electrical Outlet Status",
     "statusOn": "On",
     "statusOff": "Off",
-    "adminMessage": "You must be an admin to make this change",
+    "adminMessage": "Warning, this decision may affect system safety. Please proceed with caution.",
     "disconnectButton": "Disconnect Electrical Outlet",
     "disconnectingTitle": "Disconnecting Electrical Outlet",
     "successMessage": "Electrical outlet disconnected successfully",
@@ -123,7 +123,6 @@
     "password": "Password",
     "completePinFirst": "(Complete PIN first)",
     "invalidCredentials": "Invalid ID or password.",
-    "close": "Close",
     "enter": "Enter"
   }
 }

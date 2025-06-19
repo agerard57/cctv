@@ -30,7 +30,7 @@ export const appConstants = {
     DEFAULT_PAGE: UnlockedScreenPages.REPLAY_MANAGER,
     replayManager: {
       USB: {
-        VALID_USB: "8644:8003", // PROD This will change
+        VALID_USB: "8644:8003", // PROD This might change
         POLLING_INTERVAL: 500,
         LOADING_DELAY: 3000,
         PROGRESS_INTERVAL: 300,
@@ -38,7 +38,7 @@ export const appConstants = {
       },
     },
     userManager: {
-      CAPTCHA_CODE: "11037", // PROD Alt. code that is more complex to read: "868171"
+      CAPTCHA_CODE: "11037", // PROD Maybe a code that is more complex to read: "868171"
       USERS: [
         {
           id: 4821,

@@ -33,8 +33,10 @@ export const ProgressProvider: FC<Props> = ({ children }) => {
         setSessionUnlocked: (value) => updateProgress("isSessionUnlocked", value),
         setMediaProvided: (value) => updateProgress("isMediaProvided", value),
         setCaptchaSolved: (value) => updateProgress("isCaptchaSolved", value),
+        setAdminModeEnabled: (value) => updateProgress("isAdminModeEnabled", value),
         setElectricalOutletDisconnected: (value) => updateProgress("isElectricalOutletDisconnected", value),
         setCCTVSystemDown: (value) => updateProgress("isCCTVSystemDown", value),
+        setAdvancedSettingsGranted: (value) => updateProgress("isAdvancedSettingsGranted", value),
         resetProgress,
       }}
     >

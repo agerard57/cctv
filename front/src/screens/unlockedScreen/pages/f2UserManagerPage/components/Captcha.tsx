@@ -2,7 +2,7 @@ import { FC, useState, useEffect, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 // @ts-ignore I really dislike putting this... Oh well...
 import { Noise } from "noisejs";
-import { KeyButton, playSound } from "@/core";
+import { ErrorSFX, KeyButton, playSound } from "@/core";
 import { PinInputs, usePinInputs } from "@/core";
 import { useTranslation } from "react-i18next";
 import { useConstants } from "../../../../../providers/constants";
@@ -59,16 +59,14 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       },
       onError: () => {
         setLoading(false);
-        // Don't auto-reset, let user action trigger reset
+        playSound(ErrorSFX, appSettings.volume);
       },
     },
   );
 
-  // Custom handlers that keep our inputRef in sync
   const handlePinInput = (key: string) => {
     if (loading) return;
 
-    // If we're in error state, reset first
     if (pins.some((status) => status === "error")) {
       resetPin();
       inputRef.current = key;
@@ -76,7 +74,6 @@ export const Captcha: FC<{ onSolve: () => void }> = ({ onSolve }) => {
       return;
     }
 
-    // Otherwise, just append the key
     if (inputRef.current.length < CAPTCHA_CODE.length) {
       inputRef.current += key;
       originalHandlePinInput(key);

@@ -1,6 +1,5 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Typography, Button, Card, CardContent, Snackbar } from "@mui/material";
-import { AdminAuthenticationDialog } from "./AdminAuthenticationDialog";
 import { useProgress } from "@/providers";
 import { StatCard } from "../PowerStatsSection";
 import { ChargingStation, ElectricalServices } from "@mui/icons-material";
@@ -23,23 +22,18 @@ const getProgressMessages = (t: TFunction) => [
 ];
 
 interface AdminControlsCardProps {
-  isDialogOpen: boolean;
-  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
+  dialogOpen: boolean;
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, setIsDialogOpen }) => {
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showProgressDialog, setShowProgressDialog] = useState(false);
+export const AdminControlsCard: FC<AdminControlsCardProps> = ({ dialogOpen, setDialogOpen }) => {
+  const [openSnackbarMessage, setOpenSnackbarMessage] = useState(false);
   const { progress, setElectricalOutletDisconnected } = useProgress();
   const { t } = useTranslation("ControlCenterPage");
 
-  const handleAuthSuccess = () => {
-    setShowProgressDialog(true);
-  };
-
   const handleProgressDone = () => {
-    setShowProgressDialog(false);
-    setShowSuccess(true);
+    setDialogOpen(false);
+    setOpenSnackbarMessage(true);
     setElectricalOutletDisconnected(true);
   };
 
@@ -78,7 +72,7 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
           <StatCard
             label={t("ventilationShaftControl.outletStatus")}
             value={
-              progress.isElectricalOutletDisconnected && !showProgressDialog
+              progress.isElectricalOutletDisconnected
                 ? t("ventilationShaftControl.statusOff")
                 : t("ventilationShaftControl.statusOn")
             }
@@ -103,7 +97,7 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
             <Button
               variant="contained"
               fullWidth
-              onClick={() => setIsDialogOpen(true)}
+              onClick={() => setDialogOpen(true)}
               sx={{
                 backgroundColor: "#ff5252",
                 "&:hover": { backgroundColor: "#ff0000" },
@@ -119,14 +113,8 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
         </CardContent>
       </Card>
 
-      <AdminAuthenticationDialog
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onSuccess={handleAuthSuccess}
-      />
-
       <ProgressDialog
-        open={showProgressDialog}
+        open={dialogOpen}
         title={
           <>
             <ElectricalServices />
@@ -138,9 +126,9 @@ export const AdminControlsCard: FC<AdminControlsCardProps> = ({ isDialogOpen, se
       />
 
       <Snackbar
-        open={showSuccess}
+        open={openSnackbarMessage}
         autoHideDuration={3000}
-        onClose={() => setShowSuccess(false)}
+        onClose={() => setOpenSnackbarMessage(false)}
         message={t("ventilationShaftControl.successMessage")}
       />
     </>

@@ -53,8 +53,8 @@
   "privacySettings": { "title": "Privacy Settings" },
   "accessibilitySettings": { "title": "Accessibility Settings" },
   "notificationSettings": { "title": "Notification Settings" },
-  "systemConfiguration": {
-    "title": "System Configuration",
+  "advancedSettings": {
+    "title": "Advanced Settings",
     "energySaverMode": "Energy Saver Mode",
     "autoUpdates": "Auto Updates",
     "storageManagement": "Storage Management",
@@ -78,12 +78,11 @@
     "autoUpdatesActivated": "Auto Updates Activated",
     "autoUpdatesDeactivated": "Auto Updates Deactivated",
     "dialog": {
-      "title": "System Configuration Access",
-      "instruction": "Please scan your RFID card to access the system configuration:",
+      "title": "Advanced Settings Access",
+      "instruction": "Please scan your RFID card to access the advanced system settings:",
       "waitingForScan": "Waiting for RFID scan",
       "invalidCard": "Invalid RFID card. Please try again.",
-      "validCard": "Valid RFID card. Thank you.",
-      "closeButton": "Close"
+      "validCard": "Valid RFID card. Thank you."
     }
   }
 }

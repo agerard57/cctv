@@ -42,7 +42,7 @@
     "outletStatus": "État de la Prise Électrique",
     "statusOn": "Activée",
     "statusOff": "Désactivée",
-    "adminMessage": "Vous devez être administrateur pour effectuer ce changement",
+    "adminMessage": "Attention, cette décision peut affecter la sécurité du système. Veuillez procéder avec prudence.",
     "disconnectButton": "Déconnecter la Prise Électrique",
     "disconnectingTitle": "Déconnexion de la Prise Électrique",
     "successMessage": "Prise électrique déconnectée avec succès",
@@ -96,7 +96,6 @@
     "password": "Mot de passe",
     "completePinFirst": "(PIN en premier)",
     "invalidCredentials": "Identifiant ou mot de passe invalide.",
-    "close": "Fermer",
     "enter": "Entrer"
   },
   "stats": {

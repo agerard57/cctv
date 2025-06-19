@@ -1,6 +1,5 @@
 import { FC, useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import { AdminControlsCard } from "./AdminControlsCard";
 import {
   LightbulbOutlined,
   AirOutlined,
@@ -16,7 +15,8 @@ import { ControlCard } from "./ControlCard";
 import { LoadChart } from "./LoadChart";
 import { AllMetrics } from "../ControlCenterPage";
 import { useTranslation } from "react-i18next";
-import { CancelKeyIcon, EnterKeyIcon } from "../../assets";
+import { EnterKeyIcon } from "../../assets";
+import { AdminControlsCard } from "./AdminControlsCard";
 
 const styles = {
   statsGrid: {
@@ -46,31 +46,31 @@ interface Props {
 
 export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics }) => {
   const { t } = useTranslation("ControlCenterPage");
-  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const { progress } = useProgress();
 
   const [ventilationDoorStatus, setVentilationDoorStatus] = useState(false);
   const [ventilationLightStatus, setVentilationLightStatus] = useState(false);
   const [ventilationFanStatus, setVentilationFanStatus] = useState(false);
+  const [isElectricalDialogOpen, setIsAuthDialogOpen] = useState(false);
 
   useKeyDown(
     {
       "1": () => {
-        if (!isAuthDialogOpen) setVentilationDoorStatus((prev) => !prev);
+        if (progress.isAdminModeEnabled) setVentilationDoorStatus((prev) => !prev);
       },
       "2": () => {
-        if (!isAuthDialogOpen) setVentilationLightStatus((prev) => !prev);
+        if (progress.isAdminModeEnabled) setVentilationLightStatus((prev) => !prev);
       },
       "3": () => {
-        if (!isAuthDialogOpen) setVentilationFanStatus((prev) => !prev);
+        if (progress.isAdminModeEnabled) setVentilationFanStatus((prev) => !prev);
       },
       "4": () => {
-        if (!isAuthDialogOpen && !progress.isElectricalOutletDisconnected)
+        if (progress.isAdminModeEnabled && !isElectricalDialogOpen && !progress.isElectricalOutletDisconnected)
           setIsAuthDialogOpen(true);
       },
     },
     undefined,
-    [setMetrics, progress.isElectricalOutletDisconnected, isAuthDialogOpen],
+    [setMetrics, progress.isAdminModeEnabled, isElectricalDialogOpen, progress.isElectricalOutletDisconnected],
   );
 
   const { updateKeyState, resetKeyStates } = useKeyState();
@@ -78,34 +78,33 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
   useEffect(() => {
     updateKeyState({
       ...enableIconlessKeys(
-        isAuthDialogOpen
+        !progress.isAdminModeEnabled
           ? allDigits
           : [
-              SupportedKeys.DIGIT_1,
-              SupportedKeys.DIGIT_2,
-              SupportedKeys.DIGIT_3,
-              ...(!progress.isElectricalOutletDisconnected ? [SupportedKeys.DIGIT_4] : []),
-            ],
+            SupportedKeys.DIGIT_1,
+            SupportedKeys.DIGIT_2,
+            SupportedKeys.DIGIT_3,
+            ...(!progress.isElectricalOutletDisconnected ? [SupportedKeys.DIGIT_4] : []),
+          ],
       ),
-      ...(isAuthDialogOpen
+      ...(!progress.isAdminModeEnabled
         ? {
-            Enter: EnterKeyIcon,
-            Cancel: CancelKeyIcon,
-          }
+          Enter: EnterKeyIcon,
+        }
         : []),
     });
     return () => {
       resetKeyStates();
     };
-  }, [updateKeyState, resetKeyStates, progress.isElectricalOutletDisconnected, isAuthDialogOpen]);
+  }, [updateKeyState, resetKeyStates, progress.isAdminModeEnabled, progress.isAdminModeEnabled]);
 
   const controls = [
     {
       label: t("ventilationShaftControl.controls.ventilationDoor"),
       value: ventilationDoorStatus ? 1 : 0,
       customDisplay: ventilationDoorStatus
-        ? t("ventilationShaftControl.doorStatus.locked")
-        : t("ventilationShaftControl.doorStatus.unlocked"),
+        ? t("ventilationShaftControl.doorStatus.unlocked")
+        : t("ventilationShaftControl.doorStatus.locked"),
       threshold: 1,
       icon: <HvacOutlined />,
       buttonLabel: ventilationDoorStatus
@@ -192,7 +191,7 @@ export const VentilationShaftControlSection: FC<Props> = ({ metrics, setMetrics 
         </div>
 
         <div style={styles.chartContainer}>
-          <AdminControlsCard isDialogOpen={isAuthDialogOpen} setIsDialogOpen={setIsAuthDialogOpen} />
+          <AdminControlsCard dialogOpen={isElectricalDialogOpen} setDialogOpen={setIsAuthDialogOpen} />
         </div>
       </div>
     </Box>

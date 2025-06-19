@@ -1,4 +1,4 @@
-import { Fragment, JSX, ReactNode, useState } from "react";
+import { Fragment, JSX, ReactNode, useState, isValidElement, ReactElement } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import styled from "@emotion/styled";
 import { useKeyDown } from "../../../providers/keyState/hooks";
@@ -13,6 +13,7 @@ Chart.register(...registerables);
 interface Category<T = string> {
   categoryName: T;
   content?: ReactNode;
+  dialog?: ReactNode;
 }
 
 interface CategoryLayoutProps<T = string> {
@@ -34,7 +35,7 @@ const SidebarContainer = styled(BlackContainerBase)`
 
 const CategoryText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== "isSelected",
-})<{ isSelected: boolean }>`
+}) <{ isSelected: boolean }>`
   padding: 15px;
   opacity: ${(props) => (props.isSelected ? 1 : 0.6)};
   font-weight: ${(props) => (props.isSelected ? 700 : 400)}; /* Use numeric values for consistency */
@@ -48,7 +49,7 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
   categories,
   namespace,
 }: CategoryLayoutProps<T>): JSX.Element => {
-  const [selectedCategory, setSelectedCategory] = useState<T | undefined>(categories[0]?.categoryName || undefined);
+  const [selectedCategory, setSelectedCategory] = useState<T | undefined>(categories[0]?.categoryName);
   const theme = useTheme();
   const { t } = useTranslation(namespace);
 
@@ -82,6 +83,13 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
     [selectedCategory],
   );
 
+  const selectedCategoryData = categories.find((c) => c.categoryName === selectedCategory);
+
+  const dialogElement = selectedCategoryData?.dialog;
+  const dialogOpen =
+    isValidElement(dialogElement) &&
+    Boolean((dialogElement as ReactElement<{ open?: boolean }>).props.open);
+
   return (
     <div
       style={{
@@ -90,6 +98,7 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
         width: "100%",
         borderRadius: 15,
         overflow: "hidden",
+        position: "relative",
       }}
     >
       <SidebarContainer>
@@ -103,8 +112,8 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
                 alignItems: "center",
                 justifyContent: "space-between",
                 color:
-                  (category.categoryName as SettingsPageSections) === SettingsPageSections.SYSTEM_CONFIGURATION
-                    ? "red"
+                  category.dialog && dialogOpen
+                    ? "#f54842"
                     : category.content
                       ? "white"
                       : "grey",
@@ -119,7 +128,39 @@ export const CategoryLayout = <T extends ControlCenterPageSections | SettingsPag
 
       <ContentContainer background={theme.app.core.whiteTransparentBackground}>
         <Typography variant="pageTitle">{t(`${selectedCategory}.title`)}</Typography>
-        <Box marginTop={2}>{categories.find((c) => c.categoryName === selectedCategory)?.content}</Box>
+        <Box marginTop={2}>{selectedCategoryData?.content}</Box>
+        {dialogOpen && (
+          <>
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 0.81)",
+                zIndex: 1,
+              }}
+            />
+            <Box
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "60%",
+                padding: "5vh",
+                backgroundColor: "rgba(61, 19, 19, 0.88)",
+                borderRadius: 8,
+                boxShadow: "0 8px 16px rgba(0,0,0,0.3)",
+                maxWidth: 600,
+                zIndex: 10,
+              }}
+            >
+              {dialogElement}
+            </Box>
+          </>
+        )}
       </ContentContainer>
     </div>
   );
