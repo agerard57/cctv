@@ -1,4 +1,4 @@
-import { FC, useState, ReactNode, useCallback } from "react";
+import { FC, useState, ReactNode, useCallback, useEffect } from "react";
 import { useConstants } from "@/providers";
 import { i18n } from "@/providers/i18n";
 import { isLanguageCode } from "../helpers";
@@ -30,13 +30,19 @@ export const SettingsProvider: FC<Props> = ({ children }) => {
       i18n.changeLanguage(lang);
       updateSettings("language", lang);
     },
-    [appConstants.DEBUG_MODE, updateSettings],
+    [updateSettings],
   );
 
-  i18n.on("languageChanged", (newLanguage: string) => {
-    if (!isLanguageCode(newLanguage)) throw new Error(`Unknown language code: ${newLanguage}`);
-    updateSettings("language", newLanguage as Languages);
-  });
+  useEffect(() => {
+    const handleLangChange = (newLanguage: string) => {
+      if (!isLanguageCode(newLanguage)) throw new Error(`Unknown language code: ${newLanguage}`);
+      updateSettings("language", newLanguage as Languages);
+    };
+    i18n.on("languageChanged", handleLangChange);
+    return () => {
+      i18n.off("languageChanged", handleLangChange);
+    };
+  }, [updateSettings]);
 
   const resetSettings = useCallback(() => {
     setAppSettings(AppSettingsInitializer);
